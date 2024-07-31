@@ -1,0 +1,1213 @@
+{
+  "products": [
+    {
+      "id": 6,
+      "name": "Cheese - Cheddar, Mild",
+      "buyPrice": 342,
+      "salePrice": 980,
+      "description": "",
+      "active": false,
+      "unit": {
+        "code": "@",
+        "name": "Each",
+        "id": 2
+      }
+    },
+    {
+      "name": "Helo",
+      "buyPrice": 3434,
+      "salePrice": 343,
+      "description": "dsfsdf",
+      "id": 7
+    },
+    {
+      "name": "sdfdsf",
+      "buyPrice": 343434,
+      "salePrice": 3434,
+      "active": false,
+      "description": "sdfsdf",
+      "id": 8
+    }
+  ],
+  "units": [
+    {
+      "code": "K",
+      "name": "Kilog",
+      "id": 1
+    },
+    {
+      "code": "@",
+      "name": "Each",
+      "id": 2
+    }
+  ],
+  "expenses": [
+    {
+      "date": "2024-04-23",
+      "name": "Food",
+      "amount": 3434,
+      "description": "Food",
+      "id": 1
+    },
+    {
+      "date": "2024-04-11",
+      "name": "weewewe",
+      "amount": 2323,
+      "id": 2
+    },
+    {
+      "date": "2024-04-11",
+      "name": "weewewe",
+      "amount": 2323,
+      "id": 3
+    },
+    {
+      "date": "2024-04-11",
+      "name": "weewewe",
+      "amount": 2323,
+      "id": 4
+    },
+    {
+      "date": "2024-04-11",
+      "name": "weewewe",
+      "amount": 2323,
+      "id": 5
+    },
+    {
+      "date": "2024-04-11",
+      "name": "sdfdsf",
+      "amount": 899,
+      "description": "989",
+      "id": 6
+    },
+    {
+      "date": "2024-04-09",
+      "name": "sdfdsf",
+      "amount": 455,
+      "description": "dfdgf",
+      "id": 7
+    },
+    {
+      "date": "2024-04-12",
+      "name": "sdfdsf",
+      "amount": 787878,
+      "description": "hjbjhbhj",
+      "id": 8
+    },
+    {
+      "date": "2024-04-30",
+      "name": "Yona",
+      "amount": 1000,
+      "description": "Mahundi",
+      "id": 9
+    },
+    {
+      "date": "2024-04-04",
+      "name": "Vampc",
+      "amount": 7000,
+      "description": "yo yo",
+      "id": 10
+    }
+  ],
+  "stockonhands": [
+    {
+      "id": 1,
+      "productName": "Juice - Grapefruit, 341 Ml",
+      "buyPrice": 6870,
+      "salePrice": 9330,
+      "stockOnHand": 8910,
+      "saleQuantity": 0,
+      "saleDate": "3/30/2024"
+    },
+    {
+      "id": 2,
+      "productName": "English Muffin",
+      "buyPrice": 344,
+      "salePrice": 768,
+      "stockOnHand": 490,
+      "saleQuantity": 0,
+      "saleDate": "6/9/2023"
+    },
+    {
+      "id": 3,
+      "productName": "Wine - Savigny - Les - Beaune",
+      "buyPrice": 797,
+      "salePrice": 377,
+      "stockOnHand": 953,
+      "saleQuantity": 0,
+      "saleDate": "10/29/2023"
+    },
+    {
+      "id": 4,
+      "productName": "Oneshot Automatic Soap System",
+      "buyPrice": 534,
+      "salePrice": 369,
+      "stockOnHand": 814,
+      "saleQuantity": 0,
+      "saleDate": "4/13/2024"
+    },
+    {
+      "id": 5,
+      "productName": "Pickerel - Fillets",
+      "buyPrice": 512,
+      "salePrice": 963,
+      "stockOnHand": 489,
+      "saleQuantity": 0,
+      "saleDate": "7/15/2023"
+    },
+    {
+      "id": 6,
+      "productName": "Cheese - Cheddar, Mild",
+      "buyPrice": 342,
+      "salePrice": 980,
+      "stockOnHand": 608,
+      "saleQuantity": 0,
+      "saleDate": "2/20/2024"
+    },
+    {
+      "id": 7,
+      "productName": "Macaroons - Homestyle Two Bit",
+      "buyPrice": 932,
+      "salePrice": 845,
+      "stockOnHand": 641,
+      "saleQuantity": 0,
+      "saleDate": "1/22/2024"
+    },
+    {
+      "id": 8,
+      "productName": "Apple - Northern Spy",
+      "buyPrice": 396,
+      "salePrice": 759,
+      "stockOnHand": 994,
+      "saleQuantity": 0,
+      "saleDate": "7/28/2023"
+    },
+    {
+      "id": 9,
+      "productName": "Beef - Eye Of Round",
+      "buyPrice": 801,
+      "salePrice": 819,
+      "stockOnHand": 405,
+      "saleQuantity": 0,
+      "saleDate": "5/22/2023"
+    },
+    {
+      "id": 10,
+      "productName": "Mushroom - Chanterelle, Dry",
+      "buyPrice": 917,
+      "salePrice": 405,
+      "stockOnHand": 622,
+      "saleQuantity": 0,
+      "saleDate": "5/22/2023"
+    },
+    {
+      "id": 11,
+      "productName": "Crackers - Melba Toast",
+      "buyPrice": 614,
+      "salePrice": 807,
+      "stockOnHand": 978,
+      "saleQuantity": 0,
+      "saleDate": "7/23/2023"
+    },
+    {
+      "id": 12,
+      "productName": "Flour - Chickpea",
+      "buyPrice": 437,
+      "salePrice": 857,
+      "stockOnHand": 875,
+      "saleQuantity": 0,
+      "saleDate": "11/25/2023"
+    },
+    {
+      "id": 13,
+      "productName": "Ginger - Pickled",
+      "buyPrice": 383,
+      "salePrice": 692,
+      "stockOnHand": 290,
+      "saleQuantity": 0,
+      "saleDate": "7/19/2023"
+    },
+    {
+      "id": 14,
+      "productName": "Lady Fingers",
+      "buyPrice": 373,
+      "salePrice": 721,
+      "stockOnHand": 416,
+      "saleQuantity": 0,
+      "saleDate": "12/21/2023"
+    },
+    {
+      "id": 15,
+      "productName": "Tuna - Bluefin",
+      "buyPrice": 186,
+      "salePrice": 105,
+      "stockOnHand": 375,
+      "saleQuantity": 0,
+      "saleDate": "10/2/2023"
+    },
+    {
+      "id": 16,
+      "productName": "Remy Red",
+      "buyPrice": 852,
+      "salePrice": 281,
+      "stockOnHand": 801,
+      "saleQuantity": 0,
+      "saleDate": "6/1/2023"
+    },
+    {
+      "id": 17,
+      "productName": "Waffle Stix",
+      "buyPrice": 867,
+      "salePrice": 117,
+      "stockOnHand": 962,
+      "saleQuantity": 0,
+      "saleDate": "8/8/2023"
+    },
+    {
+      "id": 18,
+      "productName": "Tomatoes Tear Drop",
+      "buyPrice": 576,
+      "salePrice": 983,
+      "stockOnHand": 348,
+      "saleQuantity": 0,
+      "saleDate": "5/5/2023"
+    },
+    {
+      "id": 19,
+      "productName": "Rabbit - Frozen",
+      "buyPrice": 415,
+      "salePrice": 921,
+      "stockOnHand": 179,
+      "saleQuantity": 0,
+      "saleDate": "1/14/2024"
+    },
+    {
+      "id": 20,
+      "productName": "Milk - 2% 250 Ml",
+      "buyPrice": 435,
+      "salePrice": 455,
+      "stockOnHand": 166,
+      "saleQuantity": 0,
+      "saleDate": "2/2/2024"
+    },
+    {
+      "id": 21,
+      "productName": "Pastry - Banana Tea Loaf",
+      "buyPrice": 893,
+      "salePrice": 128,
+      "stockOnHand": 428,
+      "saleQuantity": 0,
+      "saleDate": "6/6/2023"
+    },
+    {
+      "id": 22,
+      "productName": "Juice - Lagoon Mango",
+      "buyPrice": 605,
+      "salePrice": 733,
+      "stockOnHand": 398,
+      "saleQuantity": 0,
+      "saleDate": "6/24/2023"
+    },
+    {
+      "id": 23,
+      "productName": "Pears - Fiorelle",
+      "buyPrice": 353,
+      "salePrice": 253,
+      "stockOnHand": 811,
+      "saleQuantity": 0,
+      "saleDate": "9/10/2023"
+    },
+    {
+      "id": 24,
+      "productName": "Wine - Rubyport",
+      "buyPrice": 854,
+      "salePrice": 265,
+      "stockOnHand": 601,
+      "saleQuantity": 0,
+      "saleDate": "1/2/2024"
+    },
+    {
+      "id": 25,
+      "productName": "Syrup - Monin - Passion Fruit",
+      "buyPrice": 978,
+      "salePrice": 474,
+      "stockOnHand": 465,
+      "saleQuantity": 0,
+      "saleDate": "6/29/2023"
+    },
+    {
+      "id": 26,
+      "productName": "Foam Dinner Plate",
+      "buyPrice": 546,
+      "salePrice": 816,
+      "stockOnHand": 959,
+      "saleQuantity": 0,
+      "saleDate": "12/8/2023"
+    },
+    {
+      "id": 27,
+      "productName": "Wine - Red, Cabernet Sauvignon",
+      "buyPrice": 402,
+      "salePrice": 512,
+      "stockOnHand": 975,
+      "saleQuantity": 0,
+      "saleDate": "9/6/2023"
+    },
+    {
+      "id": 28,
+      "productName": "Tuna - Fresh",
+      "buyPrice": 403,
+      "salePrice": 958,
+      "stockOnHand": 736,
+      "saleQuantity": 0,
+      "saleDate": "5/3/2023"
+    },
+    {
+      "id": 29,
+      "productName": "Wine - Riesling Alsace Ac 2001",
+      "buyPrice": 814,
+      "salePrice": 265,
+      "stockOnHand": 743,
+      "saleQuantity": 0,
+      "saleDate": "11/2/2023"
+    },
+    {
+      "id": 30,
+      "productName": "Kahlua",
+      "buyPrice": 320,
+      "salePrice": 1000,
+      "stockOnHand": 404,
+      "saleQuantity": 0,
+      "saleDate": "6/21/2023"
+    },
+    {
+      "id": 31,
+      "productName": "Coconut - Shredded, Sweet",
+      "buyPrice": 508,
+      "salePrice": 917,
+      "stockOnHand": 292,
+      "saleQuantity": 0,
+      "saleDate": "4/18/2023"
+    },
+    {
+      "id": 32,
+      "productName": "Yeast Dry - Fleischman",
+      "buyPrice": 511,
+      "salePrice": 646,
+      "stockOnHand": 134,
+      "saleQuantity": 0,
+      "saleDate": "2/2/2024"
+    },
+    {
+      "id": 33,
+      "productName": "Yogurt - Strawberry, 175 Gr",
+      "buyPrice": 454,
+      "salePrice": 107,
+      "stockOnHand": 919,
+      "saleQuantity": 0,
+      "saleDate": "2/6/2024"
+    },
+    {
+      "id": 34,
+      "productName": "Spinach - Spinach Leaf",
+      "buyPrice": 986,
+      "salePrice": 230,
+      "stockOnHand": 441,
+      "saleQuantity": 0,
+      "saleDate": "10/25/2023"
+    },
+    {
+      "id": 35,
+      "productName": "Veal - Shank, Pieces",
+      "buyPrice": 832,
+      "salePrice": 398,
+      "stockOnHand": 656,
+      "saleQuantity": 0,
+      "saleDate": "1/29/2024"
+    },
+    {
+      "id": 36,
+      "productName": "Silicone Paper 16.5x24",
+      "buyPrice": 210,
+      "salePrice": 979,
+      "stockOnHand": 912,
+      "saleQuantity": 0,
+      "saleDate": "4/24/2023"
+    },
+    {
+      "id": 37,
+      "productName": "Juice - Orange",
+      "buyPrice": 345,
+      "salePrice": 376,
+      "stockOnHand": 982,
+      "saleQuantity": 0,
+      "saleDate": "9/3/2023"
+    },
+    {
+      "id": 38,
+      "productName": "Longos - Chicken Wings",
+      "buyPrice": 412,
+      "salePrice": 752,
+      "stockOnHand": 251,
+      "saleQuantity": 0,
+      "saleDate": "2/28/2024"
+    },
+    {
+      "id": 39,
+      "productName": "Lychee - Canned",
+      "buyPrice": 682,
+      "salePrice": 941,
+      "stockOnHand": 609,
+      "saleQuantity": 0,
+      "saleDate": "12/27/2023"
+    },
+    {
+      "id": 40,
+      "productName": "Wine - Touraine Azay - Le - Rideau",
+      "buyPrice": 506,
+      "salePrice": 385,
+      "stockOnHand": 288,
+      "saleQuantity": 0,
+      "saleDate": "4/17/2023"
+    },
+    {
+      "id": 41,
+      "productName": "Lettuce - Treviso",
+      "buyPrice": 325,
+      "salePrice": 652,
+      "stockOnHand": 204,
+      "saleQuantity": 0,
+      "saleDate": "12/21/2023"
+    },
+    {
+      "id": 42,
+      "productName": "Calaloo",
+      "buyPrice": 678,
+      "salePrice": 472,
+      "stockOnHand": 995,
+      "saleQuantity": 0,
+      "saleDate": "1/2/2024"
+    },
+    {
+      "id": 43,
+      "productName": "Radish - Pickled",
+      "buyPrice": 959,
+      "salePrice": 230,
+      "stockOnHand": 634,
+      "saleQuantity": 0,
+      "saleDate": "10/15/2023"
+    },
+    {
+      "id": 44,
+      "productName": "Wine - Clavet Saint Emilion",
+      "buyPrice": 226,
+      "salePrice": 338,
+      "stockOnHand": 690,
+      "saleQuantity": 0,
+      "saleDate": "7/15/2023"
+    },
+    {
+      "id": 45,
+      "productName": "Pail - 15l White, With Handle",
+      "buyPrice": 953,
+      "salePrice": 955,
+      "stockOnHand": 117,
+      "saleQuantity": 0,
+      "saleDate": "11/29/2023"
+    },
+    {
+      "id": 46,
+      "productName": "Tea - Lemon Scented",
+      "buyPrice": 552,
+      "salePrice": 904,
+      "stockOnHand": 732,
+      "saleQuantity": 0,
+      "saleDate": "4/1/2024"
+    },
+    {
+      "id": 47,
+      "productName": "Liners - Baking Cups",
+      "buyPrice": 424,
+      "salePrice": 292,
+      "stockOnHand": 136,
+      "saleQuantity": 0,
+      "saleDate": "8/17/2023"
+    },
+    {
+      "id": 48,
+      "productName": "Carbonated Water - Lemon Lime",
+      "buyPrice": 263,
+      "salePrice": 450,
+      "stockOnHand": 773,
+      "saleQuantity": 0,
+      "saleDate": "1/13/2024"
+    },
+    {
+      "id": 49,
+      "productName": "Cheese - Brie,danish",
+      "buyPrice": 910,
+      "salePrice": 853,
+      "stockOnHand": 650,
+      "saleQuantity": 0,
+      "saleDate": "12/9/2023"
+    },
+    {
+      "id": 50,
+      "productName": "Pork Loin Cutlets",
+      "buyPrice": 586,
+      "salePrice": 174,
+      "stockOnHand": 658,
+      "saleQuantity": 0,
+      "saleDate": "11/20/2023"
+    },
+    {
+      "id": 51,
+      "productName": "Ham - Virginia",
+      "buyPrice": 898,
+      "salePrice": 731,
+      "stockOnHand": 859,
+      "saleQuantity": 0,
+      "saleDate": "9/27/2023"
+    },
+    {
+      "id": 52,
+      "productName": "Rice - Wild",
+      "buyPrice": 869,
+      "salePrice": 468,
+      "stockOnHand": 478,
+      "saleQuantity": 0,
+      "saleDate": "10/20/2023"
+    },
+    {
+      "id": 53,
+      "productName": "Calvados - Boulard",
+      "buyPrice": 355,
+      "salePrice": 216,
+      "stockOnHand": 493,
+      "saleQuantity": 0,
+      "saleDate": "11/1/2023"
+    },
+    {
+      "id": 54,
+      "productName": "Pate Pans Yellow",
+      "buyPrice": 889,
+      "salePrice": 504,
+      "stockOnHand": 531,
+      "saleQuantity": 0,
+      "saleDate": "12/3/2023"
+    },
+    {
+      "id": 55,
+      "productName": "Cups 10oz Trans",
+      "buyPrice": 129,
+      "salePrice": 888,
+      "stockOnHand": 768,
+      "saleQuantity": 0,
+      "saleDate": "1/15/2024"
+    },
+    {
+      "id": 56,
+      "productName": "Cut Wakame - Hanawakaba",
+      "buyPrice": 145,
+      "salePrice": 823,
+      "stockOnHand": 362,
+      "saleQuantity": 0,
+      "saleDate": "8/3/2023"
+    },
+    {
+      "id": 57,
+      "productName": "Spice - Paprika",
+      "buyPrice": 986,
+      "salePrice": 744,
+      "stockOnHand": 760,
+      "saleQuantity": 0,
+      "saleDate": "9/12/2023"
+    },
+    {
+      "id": 58,
+      "productName": "Zucchini - Yellow",
+      "buyPrice": 455,
+      "salePrice": 807,
+      "stockOnHand": 389,
+      "saleQuantity": 0,
+      "saleDate": "8/30/2023"
+    },
+    {
+      "id": 59,
+      "productName": "Boogies",
+      "buyPrice": 986,
+      "salePrice": 639,
+      "stockOnHand": 682,
+      "saleQuantity": 0,
+      "saleDate": "4/19/2023"
+    },
+    {
+      "id": 60,
+      "productName": "Venison - Denver Leg Boneless",
+      "buyPrice": 561,
+      "salePrice": 202,
+      "stockOnHand": 216,
+      "saleQuantity": 0,
+      "saleDate": "10/5/2023"
+    },
+    {
+      "id": 61,
+      "productName": "Frangelico",
+      "buyPrice": 649,
+      "salePrice": 310,
+      "stockOnHand": 590,
+      "saleQuantity": 0,
+      "saleDate": "7/26/2023"
+    },
+    {
+      "id": 62,
+      "productName": "Dish Towel",
+      "buyPrice": 979,
+      "salePrice": 349,
+      "stockOnHand": 618,
+      "saleQuantity": 0,
+      "saleDate": "10/20/2023"
+    },
+    {
+      "id": 63,
+      "productName": "Spice - Onion Powder Granulated",
+      "buyPrice": 760,
+      "salePrice": 558,
+      "stockOnHand": 554,
+      "saleQuantity": 0,
+      "saleDate": "10/17/2023"
+    },
+    {
+      "id": 64,
+      "productName": "Appetiser - Bought",
+      "buyPrice": 147,
+      "salePrice": 588,
+      "stockOnHand": 482,
+      "saleQuantity": 0,
+      "saleDate": "8/17/2023"
+    },
+    {
+      "id": 65,
+      "productName": "Pastry - French Mini Assorted",
+      "buyPrice": 246,
+      "salePrice": 532,
+      "stockOnHand": 110,
+      "saleQuantity": 0,
+      "saleDate": "11/14/2023"
+    },
+    {
+      "id": 66,
+      "productName": "Oil - Olive, Extra Virgin",
+      "buyPrice": 600,
+      "salePrice": 905,
+      "stockOnHand": 988,
+      "saleQuantity": 0,
+      "saleDate": "2/9/2024"
+    },
+    {
+      "id": 67,
+      "productName": "Water - Spring 1.5lit",
+      "buyPrice": 442,
+      "salePrice": 254,
+      "stockOnHand": 971,
+      "saleQuantity": 0,
+      "saleDate": "9/12/2023"
+    },
+    {
+      "id": 68,
+      "productName": "Bread Cranberry Foccacia",
+      "buyPrice": 671,
+      "salePrice": 743,
+      "stockOnHand": 394,
+      "saleQuantity": 0,
+      "saleDate": "3/22/2024"
+    },
+    {
+      "id": 69,
+      "productName": "Tomato - Plum With Basil",
+      "buyPrice": 146,
+      "salePrice": 385,
+      "stockOnHand": 559,
+      "saleQuantity": 0,
+      "saleDate": "11/30/2023"
+    },
+    {
+      "id": 70,
+      "productName": "Schnappes - Peach, Walkers",
+      "buyPrice": 950,
+      "salePrice": 512,
+      "stockOnHand": 999,
+      "saleQuantity": 0,
+      "saleDate": "8/22/2023"
+    },
+    {
+      "id": 71,
+      "productName": "Muffin Puck Ww Carrot",
+      "buyPrice": 835,
+      "salePrice": 952,
+      "stockOnHand": 985,
+      "saleQuantity": 0,
+      "saleDate": "10/20/2023"
+    },
+    {
+      "id": 72,
+      "productName": "Bread Sour Rolls",
+      "buyPrice": 966,
+      "salePrice": 344,
+      "stockOnHand": 495,
+      "saleQuantity": 0,
+      "saleDate": "6/30/2023"
+    },
+    {
+      "id": 73,
+      "productName": "Rosemary - Primerba, Paste",
+      "buyPrice": 931,
+      "salePrice": 477,
+      "stockOnHand": 931,
+      "saleQuantity": 0,
+      "saleDate": "7/11/2023"
+    },
+    {
+      "id": 74,
+      "productName": "Salmon - Whole, 4 - 6 Pounds",
+      "buyPrice": 284,
+      "salePrice": 965,
+      "stockOnHand": 585,
+      "saleQuantity": 0,
+      "saleDate": "5/16/2023"
+    },
+    {
+      "id": 75,
+      "productName": "Pie Shell - 5",
+      "buyPrice": 287,
+      "salePrice": 526,
+      "stockOnHand": 197,
+      "saleQuantity": 0,
+      "saleDate": "5/12/2023"
+    },
+    {
+      "id": 76,
+      "productName": "Parasol Pick Stir Stick",
+      "buyPrice": 661,
+      "salePrice": 802,
+      "stockOnHand": 972,
+      "saleQuantity": 0,
+      "saleDate": "10/12/2023"
+    },
+    {
+      "id": 77,
+      "productName": "Ice Cream - Chocolate",
+      "buyPrice": 469,
+      "salePrice": 536,
+      "stockOnHand": 702,
+      "saleQuantity": 0,
+      "saleDate": "4/17/2023"
+    },
+    {
+      "id": 78,
+      "productName": "Foam Tray S2",
+      "buyPrice": 493,
+      "salePrice": 465,
+      "stockOnHand": 893,
+      "saleQuantity": 0,
+      "saleDate": "5/2/2023"
+    },
+    {
+      "id": 79,
+      "productName": "Turkey - Breast, Smoked",
+      "buyPrice": 250,
+      "salePrice": 208,
+      "stockOnHand": 306,
+      "saleQuantity": 0,
+      "saleDate": "6/7/2023"
+    },
+    {
+      "id": 80,
+      "productName": "Extract - Almond",
+      "buyPrice": 132,
+      "salePrice": 151,
+      "stockOnHand": 635,
+      "saleQuantity": 0,
+      "saleDate": "7/31/2023"
+    },
+    {
+      "id": 81,
+      "productName": "Salami - Genova",
+      "buyPrice": 581,
+      "salePrice": 462,
+      "stockOnHand": 151,
+      "saleQuantity": 0,
+      "saleDate": "8/26/2023"
+    },
+    {
+      "id": 82,
+      "productName": "Mousse - Passion Fruit",
+      "buyPrice": 452,
+      "salePrice": 998,
+      "stockOnHand": 602,
+      "saleQuantity": 0,
+      "saleDate": "1/25/2024"
+    },
+    {
+      "id": 83,
+      "productName": "Cheese - Boursin, Garlic / Herbs",
+      "buyPrice": 305,
+      "salePrice": 780,
+      "stockOnHand": 918,
+      "saleQuantity": 0,
+      "saleDate": "10/16/2023"
+    },
+    {
+      "id": 84,
+      "productName": "Yoghurt Tubes",
+      "buyPrice": 276,
+      "salePrice": 189,
+      "stockOnHand": 401,
+      "saleQuantity": 0,
+      "saleDate": "7/20/2023"
+    },
+    {
+      "id": 85,
+      "productName": "Lettuce - Lolla Rosa",
+      "buyPrice": 835,
+      "salePrice": 723,
+      "stockOnHand": 696,
+      "saleQuantity": 0,
+      "saleDate": "10/19/2023"
+    },
+    {
+      "id": 86,
+      "productName": "Coffee Cup 8oz 5338cd",
+      "buyPrice": 727,
+      "salePrice": 351,
+      "stockOnHand": 968,
+      "saleQuantity": 0,
+      "saleDate": "7/18/2023"
+    },
+    {
+      "id": 87,
+      "productName": "Pastry - Apple Muffins - Mini",
+      "buyPrice": 106,
+      "salePrice": 495,
+      "stockOnHand": 639,
+      "saleQuantity": 0,
+      "saleDate": "6/13/2023"
+    },
+    {
+      "id": 88,
+      "productName": "Celery",
+      "buyPrice": 345,
+      "salePrice": 100,
+      "stockOnHand": 527,
+      "saleQuantity": 0,
+      "saleDate": "12/16/2023"
+    },
+    {
+      "id": 89,
+      "productName": "Melon - Cantaloupe",
+      "buyPrice": 440,
+      "salePrice": 264,
+      "stockOnHand": 302,
+      "saleQuantity": 0,
+      "saleDate": "12/7/2023"
+    },
+    {
+      "id": 90,
+      "productName": "Kiwi",
+      "buyPrice": 165,
+      "salePrice": 683,
+      "stockOnHand": 426,
+      "saleQuantity": 0,
+      "saleDate": "4/25/2023"
+    },
+    {
+      "id": 91,
+      "productName": "Tortillas - Flour, 8",
+      "buyPrice": 828,
+      "salePrice": 925,
+      "stockOnHand": 100,
+      "saleQuantity": 0,
+      "saleDate": "9/10/2023"
+    },
+    {
+      "id": 92,
+      "productName": "Emulsifier",
+      "buyPrice": 905,
+      "salePrice": 634,
+      "stockOnHand": 231,
+      "saleQuantity": 0,
+      "saleDate": "3/4/2024"
+    },
+    {
+      "id": 93,
+      "productName": "Cheese Cheddar Processed",
+      "buyPrice": 376,
+      "salePrice": 272,
+      "stockOnHand": 552,
+      "saleQuantity": 0,
+      "saleDate": "9/14/2023"
+    },
+    {
+      "id": 94,
+      "productName": "Apron",
+      "buyPrice": 133,
+      "salePrice": 797,
+      "stockOnHand": 144,
+      "saleQuantity": 0,
+      "saleDate": "9/25/2023"
+    },
+    {
+      "id": 95,
+      "productName": "Pasta - Spaghetti, Dry",
+      "buyPrice": 363,
+      "salePrice": 404,
+      "stockOnHand": 816,
+      "saleQuantity": 0,
+      "saleDate": "11/3/2023"
+    },
+    {
+      "id": 96,
+      "productName": "Veal - Brisket, Provimi,bnls",
+      "buyPrice": 492,
+      "salePrice": 650,
+      "stockOnHand": 790,
+      "saleQuantity": 0,
+      "saleDate": "7/2/2023"
+    },
+    {
+      "id": 97,
+      "productName": "Water - Mineral, Natural",
+      "buyPrice": 373,
+      "salePrice": 9170,
+      "stockOnHand": 4730,
+      "saleQuantity": 0,
+      "saleDate": "3/24/2024"
+    },
+    {
+      "id": 98,
+      "productName": "Cheese - St. Andre",
+      "buyPrice": 555,
+      "salePrice": 847,
+      "stockOnHand": 974,
+      "saleQuantity": 0,
+      "saleDate": "7/11/2023"
+    },
+    {
+      "id": 99,
+      "productName": "Table Cloth 62x120 White",
+      "buyPrice": 395,
+      "salePrice": 491,
+      "stockOnHand": 437,
+      "saleQuantity": 0,
+      "saleDate": "1/30/2024"
+    },
+    {
+      "id": 100,
+      "productName": "Roe - White Fish",
+      "buyPrice": 731,
+      "salePrice": 642,
+      "stockOnHand": 247,
+      "saleQuantity": 0,
+      "saleDate": "4/14/2024"
+    }
+  ],
+  "dashboard": {
+    "totalSales": 453434,
+    "totalExpenses": 4532235,
+    "totalProfit": 93489,
+    "productsSold": 234,
+    "topSales": [
+      [
+        {
+          "name": "Wine - Barossa Valley Estate",
+          "quantity": 29,
+          "total": 339
+        },
+        {
+          "name": "Cherries - Bing, Canned",
+          "quantity": 85,
+          "total": 643
+        },
+        {
+          "name": "Pork - Sausage Casing",
+          "quantity": 62,
+          "total": 609
+        },
+        {
+          "name": "Praline Paste",
+          "quantity": 40,
+          "total": 473
+        },
+        {
+          "name": "Oven Mitts - 15 Inch",
+          "quantity": 92,
+          "total": 350
+        },
+        {
+          "name": "Sword Pick Asst",
+          "quantity": 22,
+          "total": 344
+        },
+        {
+          "name": "Pasta - Detalini, White, Fresh",
+          "quantity": 13,
+          "total": 597
+        },
+        {
+          "name": "Cookie Dough - Oatmeal Rasin",
+          "quantity": 95,
+          "total": 203
+        },
+        {
+          "name": "Scallops - Live In Shell",
+          "quantity": 20,
+          "total": 323
+        },
+        {
+          "name": "Potatoes - Idaho 80 Count",
+          "quantity": 63,
+          "total": 191
+        }
+      ]
+    ],
+    "topExpenses": [],
+    "topSold": [
+      {
+        "name": "Soy Protein",
+        "quanity": 40
+      },
+      {
+        "name": "Beef - Shank",
+        "quanity": 10
+      },
+      {
+        "name": "Dooleys Toffee",
+        "quanity": 79
+      },
+      {
+        "name": "Icecream - Dstk Strw Chseck",
+        "quanity": 68
+      },
+      {
+        "name": "Saskatoon Berries - Frozen",
+        "quanity": 66
+      },
+      {
+        "name": "Wine - Gewurztraminer Pierre",
+        "quanity": 20
+      },
+      {
+        "name": "Veal - Inside, Choice",
+        "quanity": 46
+      },
+      {
+        "name": "Rabbit - Legs",
+        "quanity": 99
+      },
+      {
+        "name": "Anchovy Fillets",
+        "quanity": 37
+      },
+      {
+        "name": "Compound - Passion Fruit",
+        "quanity": 80
+      }
+    ],
+    "expensesChartData": [
+      2,
+      32,
+      5,
+      6,
+      74,
+      7,
+      4,
+      74,
+      7,
+      8,
+      34,
+      7,
+      2,
+      32,
+      34,
+      34,
+      34,
+      5,
+      6,
+      74,
+      7,
+      4,
+      74,
+      7,
+      8,
+      34,
+      7,
+      46,
+      34,
+      64
+    ],
+    "salesChartData": [
+      32,
+      5,
+      6,
+      74,
+      7,
+      4,
+      74,
+      7,
+      8,
+      34,
+      7,
+      2,
+      32,
+      34,
+      34,
+      34,
+      5,
+      6,
+      74,
+      7,
+      4,
+      74,
+      7,
+      8,
+      34,
+      7,
+      46,
+      34,
+      64,
+      44
+    ],
+    "chartLabel": [
+      "1 Apr",
+      "2 Apr",
+      "3 Apr",
+      "4 Apr",
+      "5 Apr",
+      "6 Apr",
+      "7 Apr",
+      "8 Apr",
+      "9 Apr",
+      "10 Apr",
+      "11 Apr",
+      "12 Apr",
+      "13 Apr",
+      "14 Apr",
+      "15 Apr",
+      "16 Apr",
+      "17 Apr",
+      "18 Apr",
+      "19 Apr",
+      "20 Apr",
+      "21 Apr",
+      "22 Apr",
+      "23 Apr",
+      "24 Apr",
+      "25 Apr",
+      "26 Apr",
+      "27 Apr",
+      "28 Apr",
+      "29 Apr",
+      "30 Apr"
+    ]
+  }
+}

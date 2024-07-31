@@ -19,7 +19,7 @@ const getItemParams = (params) =>
         page: params.pagination?.current - 1,
       };
 
-// listPath='/products'
+
 export default function GenericTable({ itemColumns, listPath, children }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [data, setData] = useState();
