@@ -1,5 +1,5 @@
 import {SearchOutlined} from "@ant-design/icons";
-import FilterDropdown from "../components/FilterDropdown.jsx";
+import FilterDropdown from "../../components/FilterDropdown.jsx";
 
 
 

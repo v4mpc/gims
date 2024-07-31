@@ -40,8 +40,10 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react-refresh", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.4.9"],\
           ["json-server", "npm:1.0.0-beta.1"],\
           ["prettier", "npm:3.3.3"],\
+          ["qs", "npm:6.12.3"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:18.3.1"],\
+          ["react-highlight-words", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.20.0"],\
           ["react-router-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:6.25.1"],\
           ["vite", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.3.5"]\
         ],\
@@ -2758,8 +2760,10 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react-refresh", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.4.9"],\
           ["json-server", "npm:1.0.0-beta.1"],\
           ["prettier", "npm:3.3.3"],\
+          ["qs", "npm:6.12.3"],\
           ["react", "npm:18.3.1"],\
           ["react-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:18.3.1"],\
+          ["react-highlight-words", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.20.0"],\
           ["react-router-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:6.25.1"],\
           ["vite", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.3.5"]\
         ],\
@@ -2932,6 +2936,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../.yarn/berry/cache/header-range-parser-npm-1.1.3-114a9e1d37-10c0.zip/node_modules/header-range-parser/",\
         "packageDependencies": [\
           ["header-range-parser", "npm:1.1.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["highlight-words-core", [\
+      ["npm:1.2.2", {\
+        "packageLocation": "../../.yarn/berry/cache/highlight-words-core-npm-1.2.2-b168c62a9a-10c0.zip/node_modules/highlight-words-core/",\
+        "packageDependencies": [\
+          ["highlight-words-core", "npm:1.2.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3608,6 +3621,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["memoize-one", [\
+      ["npm:4.0.3", {\
+        "packageLocation": "../../.yarn/berry/cache/memoize-one-npm-4.0.3-6aef1020af-10c0.zip/node_modules/memoize-one/",\
+        "packageDependencies": [\
+          ["memoize-one", "npm:4.0.3"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["milliparsec", [\
       ["npm:2.3.0", {\
         "packageLocation": "../../.yarn/berry/cache/milliparsec-npm-2.3.0-6aeca08039-10c0.zip/node_modules/milliparsec/",\
@@ -4123,6 +4145,16 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../.yarn/berry/cache/punycode-npm-2.3.1-97543c420d-10c0.zip/node_modules/punycode/",\
         "packageDependencies": [\
           ["punycode", "npm:2.3.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["qs", [\
+      ["npm:6.12.3", {\
+        "packageLocation": "../../.yarn/berry/cache/qs-npm-6.12.3-d296002fbb-10c0.zip/node_modules/qs/",\
+        "packageDependencies": [\
+          ["qs", "npm:6.12.3"],\
+          ["side-channel", "npm:1.0.6"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5209,6 +5241,31 @@ const RAW_RUNTIME_STATE =
           ["loose-envify", "npm:1.4.0"],\
           ["react", "npm:18.3.1"],\
           ["scheduler", "npm:0.23.2"]\
+        ],\
+        "packagePeers": [\
+          "@types/react",\
+          "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["react-highlight-words", [\
+      ["npm:0.20.0", {\
+        "packageLocation": "../../.yarn/berry/cache/react-highlight-words-npm-0.20.0-02e799bf4d-10c0.zip/node_modules/react-highlight-words/",\
+        "packageDependencies": [\
+          ["react-highlight-words", "npm:0.20.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.20.0", {\
+        "packageLocation": "./.yarn/__virtual__/react-highlight-words-virtual-1088199863/3/.yarn/berry/cache/react-highlight-words-npm-0.20.0-02e799bf4d-10c0.zip/node_modules/react-highlight-words/",\
+        "packageDependencies": [\
+          ["react-highlight-words", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.20.0"],\
+          ["@types/react", "npm:18.3.3"],\
+          ["highlight-words-core", "npm:1.2.2"],\
+          ["memoize-one", "npm:4.0.3"],\
+          ["prop-types", "npm:15.8.1"],\
+          ["react", "npm:18.3.1"]\
         ],\
         "packagePeers": [\
           "@types/react",\

@@ -16,44 +16,7 @@ import {API_ROUTES, BASE_URL, DEFAULT_PAGE_SIZE, openNotification} from "../util
 
 const { Header, Content, Footer, Sider } = Layout;
 const items = [
-  {
-    key: "dashboard",
-    icon: <DashboardOutlined />,
-    label: <Link to="/dashboard">Dashboard</Link>,
-  },
 
-  {
-    key: "stock-on-hand",
-    icon: <DropboxOutlined />,
-    // TODO::implement if no pagination in the list page to auto add pagination by default
-    label: (
-      <Link to={`/stock-on-hand?page=1&size=${DEFAULT_PAGE_SIZE}`}>
-        Stock on hand
-      </Link>
-    ),
-  },
-  {
-    key: "buy",
-    icon: <DownloadOutlined style={{ fontSize: "1.1rem" }} />,
-    label: <Link to="/buy">Buy</Link>,
-  },
-  {
-    key: "sell",
-    icon: <UploadOutlined />,
-    label: <Link to="/sell">Sell</Link>,
-  },
-  {
-    key: "expense",
-    icon: <CreditCardOutlined />,
-    label: (
-      <Link to={`/expense?page=1&size=${DEFAULT_PAGE_SIZE}`}>Expense</Link>
-    ),
-  },
-  {
-    key: "reports",
-    icon: <FileTextOutlined />,
-    label: <Link to="/reports">Reports</Link>,
-  },
   {
     key: "settings",
     icon: <SettingOutlined />,

@@ -1,6 +1,6 @@
-import { notification, Form, DatePicker } from "antd";
+import { notification, DatePicker } from "antd";
 import dayjs from "dayjs";
-import ProductSelect from "./components/ProductSelect.jsx";
+
 
 // export const BASE_URL = "http://localhost:3000";
 export const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -70,28 +70,7 @@ export function filterOption(input, option) {
   return (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 }
 
-export function generateFilter(filter) {
-  if (filter.name === "product") {
-    return <ProductSelect key="product-select" />;
-  } else if (filter.name === "dateRange") {
-    return (
-      <Form.Item
-        label="Date range"
-        key="dateRange"
-        name="dateRange"
-        rules={[
-          {
-            required: true,
-            message: "Please date",
-          },
-        ]}
-      >
-        <RangePicker style={{ width: "100%" }} />
-      </Form.Item>
-    );
-  }
-  return null;
-}
+
 
 export function toSalePayload(data, isSale) {
   return data.map((item) => ({
