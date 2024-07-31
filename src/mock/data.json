@@ -29,18 +29,21 @@
       "id": 8
     }
   ],
-  "units": [
-    {
-      "code": "K",
-      "name": "Kilog",
-      "id": 1
-    },
-    {
-      "code": "@",
-      "name": "Each",
-      "id": 2
-    }
-  ],
+  "units": {
+    "content": [
+      {
+        "code": "K",
+        "name": "Kilog",
+        "id": 1
+      },
+      {
+        "code": "@",
+        "name": "Each",
+        "id": 2
+      }
+    ],
+    "totalElements": 2
+  },
   "expenses": [
     {
       "date": "2024-04-23",

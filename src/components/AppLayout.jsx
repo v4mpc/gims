@@ -88,7 +88,7 @@ const AppLayout = () => {
           marginLeft: 200,
         }}
       >
-        <BreadCrumbNav />
+        {/*<BreadCrumbNav />*/}
         <Content
           style={{
             margin: "24px 16px 0",
