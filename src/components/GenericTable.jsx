@@ -2,24 +2,12 @@ import {Button, Table, Input, Space, Flex} from "antd";
 import Highlighter from "react-highlight-words";
 import {useSearchParams} from "react-router-dom";
 import {SearchOutlined} from "@ant-design/icons";
-import {useEffect, useState, useRef} from "react";
-import qs from "qs";
-import {BASE_URL, DEFAULT_PAGE_SIZE, getData} from "../utils.jsx";
+import {useState, useRef} from "react";
+import {DEFAULT_PAGE_SIZE, getData, SEARCH_BOX_WIDTH} from "../utils.jsx";
 import GenericTableModal from "./GenericTableModal.jsx";
 import {useQuery} from "@tanstack/react-query";
 
-const getItemParams = (params) =>
-    params.filters.name
-        ? {
-            size: params.pagination?.pageSize,
-            page: params.pagination?.current - 1,
-            name: params.filters.name[0],
-        }
-        : {
-            size: params.pagination?.pageSize,
-            page: params.pagination?.current - 1,
-        };
-
+const {Search} = Input;
 
 export default function GenericTable({itemColumns, listPath, children}) {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -40,16 +28,6 @@ export default function GenericTable({itemColumns, listPath, children}) {
         queryFn: () => getData(listPath, tableParams)
     })
 
-
-    // useEffect(() => {
-    //     setTableParams({
-    //         ...tableParams,
-    //         pagination: {
-    //             ...tableParams.pagination,
-    //             total: isLoading ? 0 : data.totalElements,
-    //         },
-    //     });
-    // }, []);
 
     itemColumns = itemColumns.map((obj) => {
         if (obj.key === "action") {
@@ -182,27 +160,6 @@ export default function GenericTable({itemColumns, listPath, children}) {
     });
 
 
-    async function fetchData() {
-
-        const resp = await fetch(
-            `${BASE_URL}/${listPath}?${qs.stringify(getItemParams(tableParams))}`,
-        );
-
-        if (!resp.ok) {
-            throw new Error("Network response was not ok");
-        }
-        const respData = await resp.json();
-        setData(respData.content);
-
-        setTableParams({
-            ...tableParams,
-            pagination: {
-                ...tableParams.pagination,
-                total: respData.totalElements,
-            },
-        });
-    }
-
     const handleSetItem = (item) => {
         formModeRef.current = "UPDATE";
         setSelectedItem(item);
@@ -238,24 +195,26 @@ export default function GenericTable({itemColumns, listPath, children}) {
             pagination,
             filters,
         });
-
-        // `dataSource` is useless since `pageSize` changed
-        // if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-        //     setData([]);
-        // }
     };
-
-    // useEffect(() => {
-    //     fetchData();
-    // }, [tableParams.pagination.current, tableParams.filters]);
 
 
     return (
         <Flex gap="middle" vertical>
-            <Flex justify="flex-end">
+
+
+            <Flex justify="space-between">
+
+                <Search
+                    placeholder="Search item ..."
+                    allowClear
+                    style={{width: SEARCH_BOX_WIDTH}}
+                />
+
                 <Button type="primary" onClick={() => handleCreateClicked()}>
                     Add
                 </Button>
+
+
             </Flex>
 
             <Table
@@ -263,7 +222,7 @@ export default function GenericTable({itemColumns, listPath, children}) {
                 columns={itemColumns}
                 dataSource={data?.content}
                 bordered={true}
-                pagination={{pageSize: DEFAULT_PAGE_SIZE, total: data?.totalElements,...tableParams}}
+                pagination={{pageSize: DEFAULT_PAGE_SIZE, total: data?.totalElements, ...tableParams}}
                 loading={isLoading}
                 scroll={{x: 'max-content'}}
                 rowKey="id"
