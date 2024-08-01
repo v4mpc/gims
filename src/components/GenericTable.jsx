@@ -4,7 +4,7 @@ import {useSearchParams} from "react-router-dom";
 import {SearchOutlined} from "@ant-design/icons";
 import {useEffect, useState, useRef} from "react";
 import qs from "qs";
-import {BASE_URL, getData} from "../utils.jsx";
+import {BASE_URL, DEFAULT_PAGE_SIZE, getData} from "../utils.jsx";
 import GenericTableModal from "./GenericTableModal.jsx";
 import {useQuery} from "@tanstack/react-query";
 
@@ -41,15 +41,15 @@ export default function GenericTable({itemColumns, listPath, children}) {
     })
 
 
-    useEffect(() => {
-        setTableParams({
-            ...tableParams,
-            pagination: {
-                ...tableParams.pagination,
-                total: isLoading ? 0 : data.totalElements,
-            },
-        });
-    }, []);
+    // useEffect(() => {
+    //     setTableParams({
+    //         ...tableParams,
+    //         pagination: {
+    //             ...tableParams.pagination,
+    //             total: isLoading ? 0 : data.totalElements,
+    //         },
+    //     });
+    // }, []);
 
     itemColumns = itemColumns.map((obj) => {
         if (obj.key === "action") {
@@ -240,9 +240,9 @@ export default function GenericTable({itemColumns, listPath, children}) {
         });
 
         // `dataSource` is useless since `pageSize` changed
-        if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-            setData([]);
-        }
+        // if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+        //     setData([]);
+        // }
     };
 
     // useEffect(() => {
@@ -263,7 +263,7 @@ export default function GenericTable({itemColumns, listPath, children}) {
                 columns={itemColumns}
                 dataSource={data?.content}
                 bordered={true}
-                pagination={tableParams.pagination}
+                pagination={{pageSize: DEFAULT_PAGE_SIZE, total: data?.totalElements,...tableParams}}
                 loading={isLoading}
                 scroll={{x: 'max-content'}}
                 rowKey="id"

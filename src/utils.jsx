@@ -5,7 +5,7 @@ import qs from "qs";
 export const BASE_URL = "http://localhost:3000";
 // export const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-export const DEFAULT_PAGE_SIZE = 20;
+export const DEFAULT_PAGE_SIZE = 10;
 export const QUERY_STALE_TIME = 60 * 1000;
 
 export const DATE_FORMAT = "YYYY-MM-DD";
