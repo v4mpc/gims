@@ -7,7 +7,7 @@ export const BASE_URL = "http://localhost:3000";
 
 export const DEFAULT_PAGE_SIZE = 10;
 
-export const SEARCH_BOX_WIDTH=300;
+export const SEARCH_BOX_WIDTH = 300;
 export const QUERY_STALE_TIME = 60 * 1000;
 
 export const DATE_FORMAT = "YYYY-MM-DD";
@@ -60,22 +60,18 @@ export function toObject(data) {
 }
 
 
-const getItemParams = (params) =>
-    params.filters.name
-        ? {
-            size: params.pagination?.pageSize,
-            page: params.pagination?.current - 1,
-            name: params.filters.name[0],
-        }
-        : {
-            size: params.pagination?.pageSize,
-            page: params.pagination?.current - 1,
-        };
+const getItemParams = (tableParams, searchQuery) => (
+    {
+        size: tableParams.pagination?.pageSize,
+        page: tableParams.pagination?.current - 1,
+        query: searchQuery.query,
+    }
+);
 
 
-export async function getData(listPath, tableParams) {
+export async function getData(listPath, tableParams, searchQuery) {
     const resp = await fetch(
-        `${BASE_URL}/${listPath}?${qs.stringify(getItemParams(tableParams))}`,
+        `${BASE_URL}/${listPath}?${qs.stringify(getItemParams(tableParams, searchQuery))}`,
     );
 
     if (!resp.ok) {
