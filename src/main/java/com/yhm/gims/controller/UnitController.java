@@ -21,8 +21,8 @@ public class UnitController {
     private final UnitService unitService;
 
     @GetMapping
-    public Page<Unit> getAllUnits(Pageable pageable) {
-        return unitService.findAll(pageable);
+    public Page<Unit> getUnits(@RequestParam(required = false) String q, Pageable pageable) {
+        return unitService.getUnits(q, pageable);
     }
 
 

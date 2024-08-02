@@ -79,6 +79,7 @@ export default function GenericTable({itemColumns, listPath, children}) {
             page: 1,
             size: DEFAULT_PAGE_SIZE
         } : {page: 1, size: DEFAULT_PAGE_SIZE}));
+        console.log(value)
         setSearchQuery(value.trim());
         setTableParams({pagination: {current: 1, pageSize: DEFAULT_PAGE_SIZE}});
     };

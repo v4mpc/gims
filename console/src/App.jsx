@@ -26,8 +26,8 @@ export default function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<AppLayout/>}>
-                        <Route index element={<Navigate to="units"/>}/>
-                        <Route path="units" element={<Unit/>}/>
+                        <Route index element={<Navigate to="settings/units"/>}/>
+                        <Route path="settings/units" element={<Unit/>}/>
                     </Route>
                     <Route path="*" element={<PageNotFound/>}/>
                 </Routes>

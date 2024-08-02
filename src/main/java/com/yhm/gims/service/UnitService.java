@@ -21,6 +21,18 @@ public class UnitService {
         return unitRepository.findAll(pageable);
     }
 
+
+    public Page<Unit> getUnits(String searchTerm, Pageable pageable) {
+
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return unitRepository.findAll(pageable);
+        } else {
+            return unitRepository.search(searchTerm, pageable);
+        }
+
+    }
+
+
     public List<Unit> findAll() {
         return unitRepository.findAll();
     }

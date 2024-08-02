@@ -111,7 +111,7 @@ const AppLayout = () => {
             textAlign: "center",
           }}
         >
-          SMT ©{new Date().getFullYear()} Created by ymahundi
+          Garage MIS ©{new Date().getFullYear()} Created by ymahundi
         </Footer>
       </Layout>
     </Layout>

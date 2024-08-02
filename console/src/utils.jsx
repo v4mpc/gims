@@ -2,7 +2,8 @@ import {notification, DatePicker} from "antd";
 import dayjs from "dayjs";
 import qs from "qs";
 
-export const BASE_URL = "http://localhost:3000";
+// export const BASE_URL = "http://localhost:3000";
+export const BASE_URL = "http://localhost:8080/api";
 // export const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const DEFAULT_PAGE_SIZE = 10;
@@ -57,7 +58,7 @@ const getItemParams = (tableParams, searchQuery) => (
     {
         size: tableParams.pagination?.pageSize,
         page: tableParams.pagination?.current - 1,
-        query: searchQuery.query,
+        q: searchQuery,
     }
 );
 
