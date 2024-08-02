@@ -82,9 +82,10 @@ export default function GenericTable({itemColumns, listPath, children}) {
         setSearchQuery(value.trim());
         setTableParams({pagination: {current: 1, pageSize: DEFAULT_PAGE_SIZE}});
     };
-
+    console.log(tableParams);
 
     return (
+
         <Flex gap="middle" vertical>
             <Flex justify="space-between">
                 <Search
@@ -103,7 +104,7 @@ export default function GenericTable({itemColumns, listPath, children}) {
                 columns={itemColumns}
                 dataSource={data?.content}
                 bordered={true}
-                pagination={{pageSize: DEFAULT_PAGE_SIZE, total: data?.totalElements, ...tableParams}}
+                pagination={{pageSize: DEFAULT_PAGE_SIZE, total: data?.totalElements, ...tableParams.pagination}}
                 loading={isLoading}
                 scroll={{x: 'max-content'}}
                 rowKey="id"
