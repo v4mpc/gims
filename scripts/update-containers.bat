@@ -1,5 +1,5 @@
 
-set COMPOSE_DIR=C:\Users\nancy\repo\smt\docker
+set COMPOSE_DIR=C:\Users\nancy\repo\gims\docker
 
 cd /d %COMPOSE_DIR%
 

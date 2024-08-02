@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+
+  gims-db:
+    image: postgres:13.0-alpine
+    restart:  unless-stopped
+    container_name: gims-database
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=gims
+      - POSTGRES_DB=gims
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+
+volumes:
+  postgres_data:
