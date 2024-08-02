@@ -1,0 +1,33 @@
+spring:
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
+  application:
+    name: gims
+  datasource:
+    url: jdbc:postgresql://${POSTGRESQL_HOST}:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      format_sql: true
+  web:
+    resources:
+      static-locations: classpath:/static/
+
+server:
+  tomcat:
+    max-http-form-post-size: 10MB
+  compression:
+    enabled: true
+    min-response-size: 1024
+  http2:
+    enabled: true
+  servlet:
+    session:
+      cookie:
+        same-site: strict
+      timeout: 600m
+  port: ${SERVER_PORT}

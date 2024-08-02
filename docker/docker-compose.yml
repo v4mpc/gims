@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  gims-app:
+    container_name: gims-application
+    image: vampc/gims:latest
+    restart:  unless-stopped
+    depends_on:
+      gims-db:
+        condition: service_healthy
+    ports:
+      - 8080:8080
+    networks:
+      - nginx-proxy
+
+  gims-db:
+    image: postgres:13.0-alpine
+    restart:  unless-stopped
+    container_name: gims-database
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=gims
+      - POSTGRES_DB=gims
+    networks:
+      - nginx-proxy
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  nginx-proxy:
+    external: true
+
+volumes:
+  postgres_data:
