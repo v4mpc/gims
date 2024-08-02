@@ -8,7 +8,9 @@ export const BASE_URL = "http://localhost:3000";
 export const DEFAULT_PAGE_SIZE = 10;
 
 export const SEARCH_BOX_WIDTH = 300;
-export const QUERY_STALE_TIME = 60 * 1000;
+
+// in minutes
+export const QUERY_STALE_TIME = 1;
 
 export const DATE_FORMAT = "YYYY-MM-DD";
 

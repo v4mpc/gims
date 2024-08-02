@@ -21,9 +21,9 @@ export default function GenericTable({itemColumns, listPath, children}) {
             pageSize: searchParams.get("size"),
         }
     });
-    const [searchQuery, setSearchQuery] = useState();
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const {isLoading, data, error} = useQuery({
+    const {isLoading, data} = useQuery({
         queryKey: ["units", tableParams, searchQuery],
         queryFn: () => getData(listPath, tableParams, searchQuery)
     })
