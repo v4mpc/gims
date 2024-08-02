@@ -82,7 +82,6 @@ export default function GenericTable({itemColumns, listPath, children}) {
         setSearchQuery(value.trim());
         setTableParams({pagination: {current: 1, pageSize: DEFAULT_PAGE_SIZE}});
     };
-    console.log(tableParams);
 
     return (
 
@@ -120,7 +119,7 @@ export default function GenericTable({itemColumns, listPath, children}) {
                     listPath={listPath}
                     open={open}
                     handleModalClose={handelModalClose}
-                    refetchData={fetchData}
+
                 >
                     {children}
                 </GenericTableModal>

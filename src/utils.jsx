@@ -83,6 +83,43 @@ export async function getData(listPath, tableParams, searchQuery) {
 }
 
 
+export async function putItem(data) {
+
+    let initData = {
+        method: data.method,
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+    let modifiedData = data.values;
+    if (Object.hasOwn(modifiedData, "createdAt")) {
+        Date.prototype.toISOString = function () {
+            return dayjs(this).format(DATE_FORMAT);
+        };
+        modifiedData = {
+            ...modifiedData,
+            createdAt: data.values.createdAt.format(DATE_FORMAT),
+        };
+    }
+
+    if (Object.hasOwn(modifiedData, "unitOfMeasure")) {
+        modifiedData = {
+            ...modifiedData,
+            unitOfMeasure: {id: modifiedData.unitOfMeasure},
+        };
+    }
+    initData.body = JSON.stringify(modifiedData);
+
+
+    const resp = await fetch(`${BASE_URL}/${data.urlPath}`, initData);
+    if (!resp.ok) {
+        throw new Error("Network response was not ok");
+    }
+    return resp.json();
+}
+
+
 export function generateColumns(stringColumns) {
     let objectColumns = toObject(stringColumns);
     return objectColumns.map((column) => ({
