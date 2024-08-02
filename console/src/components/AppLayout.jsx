@@ -35,7 +35,7 @@ const items = [
         key: "products",
         label: (
           <Link to={`/settings/products?page=1&size=${DEFAULT_PAGE_SIZE}`}>
-            ❁ Products
+            ❁ Items
           </Link>
         ),
       },
