@@ -52,15 +52,6 @@ export function openNotification(key, type, title, description) {
     });
 }
 
-export function fetchWithCredentials(url, options = {}) {
-    options.credentials = "include";
-    return fetch(url, options);
-}
-
-export function toObject(data) {
-    return JSON.parse(data);
-}
-
 
 const getItemParams = (tableParams, searchQuery) => (
     {
@@ -120,98 +111,4 @@ export async function putItem(data) {
 }
 
 
-export function generateColumns(stringColumns) {
-    let objectColumns = toObject(stringColumns);
-    return objectColumns.map((column) => ({
-        title: column.displayName,
-        dataIndex: column.name,
-        key: column.name,
-        width: column.width,
-    }));
-}
 
-export function filterOption(input, option) {
-    return (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
-}
-
-
-export function toSalePayload(data, isSale) {
-    return data.map((item) => ({
-        productId: item.id,
-        isSale: isSale,
-        saleAdjustment: 0,
-        adjustmentQuantity: item.saleQuantity,
-        adjustmentDate: dayjs(item.saleDate, DATE_FORMAT),
-    }));
-}
-
-export async function fetchData(
-    data,
-    path,
-    setIsLoading,
-    setError,
-    method = "GET",
-    setData = null,
-    form = null,
-    successCallback,
-) {
-    let initData = {
-        method: method,
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    };
-
-    if (method === "POST" || method === "PUT") {
-        let modifiedData = data;
-        if (Object.hasOwn(modifiedData, "createdAt")) {
-            Date.prototype.toISOString = function () {
-                return dayjs(this).format(DATE_FORMAT);
-            };
-            modifiedData = {
-                ...modifiedData,
-                createdAt: data.createdAt.format(DATE_FORMAT),
-            };
-        }
-
-        if (Object.hasOwn(modifiedData, "unitOfMeasure")) {
-            modifiedData = {
-                ...modifiedData,
-                unitOfMeasure: {id: modifiedData.unitOfMeasure},
-            };
-        }
-        initData.body = JSON.stringify(modifiedData);
-    }
-
-    try {
-        setIsLoading(true);
-        setError("");
-        const resp = await fetch(`${BASE_URL}/${path}`, initData);
-        if (!resp.ok) {
-            throw new Error("Network response was not ok");
-        }
-        const respData = await resp.json();
-        if (method === "GET") {
-            setData(respData);
-        }
-        if (method === "POST" || method === "PUT") {
-            form?.resetFields();
-            openNotification(
-                "post-success",
-                "success",
-                "Success",
-                "Record save successfully",
-            );
-            if (successCallback) {
-                successCallback();
-            }
-        }
-    } catch (e) {
-        console.error(e);
-        openNotification(e.message, "error", "Error", e.message);
-        setError(e.message);
-    } finally {
-        setIsLoading(false);
-    }
-}
