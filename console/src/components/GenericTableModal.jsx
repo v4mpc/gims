@@ -10,6 +10,7 @@ export default function GenericTableModal({
                                               formMode,
                                               open,
                                               handleModalClose,
+    queryKey,
                                               children,
                                           }) {
     const [form] = Form.useForm();
@@ -24,7 +25,7 @@ export default function GenericTableModal({
                 "Success",
                 "Record save successfully",
             );
-            queryClient.invalidateQueries({queryKey: ["units"]})
+            queryClient.invalidateQueries({queryKey: [queryKey]})
             handleModalClose();
         },
         onError: (error) => {
@@ -43,7 +44,7 @@ export default function GenericTableModal({
                 "Success",
                 "Record updated successfully",
             );
-            queryClient.invalidateQueries({queryKey: ["units"]})
+            queryClient.invalidateQueries({queryKey: [queryKey]})
             handleModalClose();
         },
         onError: (error) => {

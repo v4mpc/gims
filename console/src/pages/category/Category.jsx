@@ -2,27 +2,14 @@ import GenericTable from "../../components/GenericTable.jsx";
 import { API_ROUTES } from "../../utils.jsx";
 
 import { Form ,Input} from "antd";
-import unitColumns from "./Columns.jsx";
+import categoryColumns from "./Columns.jsx";
 
 
 
-export default function Unit() {
+export default function Category() {
   return (
-    <GenericTable itemColumns={unitColumns} listPath={API_ROUTES.units} queryKey="units">
+    <GenericTable itemColumns={categoryColumns} listPath={API_ROUTES.categories} queryKey="categories">
       <>
-        <Form.Item
-          label="Code"
-          name="code"
-          rules={[
-            {
-              required: true,
-              message: "Please input!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
         <Form.Item
           label="Name"
           name="name"

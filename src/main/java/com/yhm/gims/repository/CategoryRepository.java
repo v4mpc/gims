@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    @Query("SELECT u FROM Unit u WHERE " +
+    @Query("SELECT u FROM Category u WHERE " +
             "LOWER(u.name) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Category> search(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

@@ -9,7 +9,7 @@ import {useQuery} from "@tanstack/react-query";
 
 const {Search} = Input;
 
-export default function GenericTable({itemColumns, listPath, children}) {
+export default function GenericTable({itemColumns, listPath,queryKey, children}) {
     const [searchParams, setSearchParams] = useSearchParams();
     const formModeRef = useRef("CREATE");
     const [open, setOpen] = useState(false);
@@ -24,7 +24,7 @@ export default function GenericTable({itemColumns, listPath, children}) {
     const [searchQuery, setSearchQuery] = useState("");
 
     const {isLoading, data} = useQuery({
-        queryKey: ["units", tableParams, searchQuery],
+        queryKey: [queryKey, tableParams, searchQuery],
         queryFn: () => getData(listPath, tableParams, searchQuery)
     })
 
@@ -120,6 +120,7 @@ export default function GenericTable({itemColumns, listPath, children}) {
                     listPath={listPath}
                     open={open}
                     handleModalClose={handelModalClose}
+                    queryKey={queryKey}
 
                 >
                     {children}

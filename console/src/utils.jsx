@@ -34,6 +34,7 @@ export const API_ROUTES = {
     adjust: "stock-on-hand/adjust",
     stockOnhandAll: "stock-on-hand/all",
     units: "units",
+    categories: "categories",
     unitsAll: "units/all",
     bulkSale: "sales/bulk",
     customReport: "custom-report",
