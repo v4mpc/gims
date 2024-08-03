@@ -1,3 +1,8 @@
+import {Tag} from "antd";
+
+
+
+
 const customerColumns = [
     {
         title: "#",
@@ -17,6 +22,22 @@ const customerColumns = [
         title: "Phone",
         key: "phone",
         dataIndex: "phone",
+    },
+
+    {
+        title: "Cars",
+        key: "cars",
+        dataIndex: "cars",
+        render: (_, record) => (
+            <>
+                {record.cars.map((car)=>{
+                    return (
+                        <Tag key={car}>
+                            {`${car.make} ${car.model} ${car.plateNumber}`}
+                        </Tag>)
+                })}
+            </>
+        ),
     },
 
     {
