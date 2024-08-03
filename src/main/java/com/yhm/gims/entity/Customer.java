@@ -1,6 +1,7 @@
 package com.yhm.gims.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -31,6 +32,8 @@ public class Customer extends BaseEntity {
 
     @NotNull
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+
     private List<CustomerCar> cars = new ArrayList<>();
 
 

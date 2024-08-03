@@ -14,6 +14,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     //    TODO :: search by make model and plate number
     @Query("SELECT u FROM Customer u WHERE " +
             "LOWER(u.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(u.phone) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
             "LOWER(u.address) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Customer> search(@Param("searchTerm") String searchTerm, Pageable pageable);
 }
