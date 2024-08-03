@@ -1,5 +1,6 @@
 package com.yhm.gims.service;
 
+import com.yhm.gims.entity.Category;
 import com.yhm.gims.entity.Expense;
 import com.yhm.gims.exception.ResourceNotFoundException;
 import com.yhm.gims.repository.ExpenseRepository;
@@ -22,6 +23,18 @@ public class ExpenseService {
 
     public void save(Expense expense) {
         expenseRepository.save(expense);
+    }
+
+
+
+    public Page<Expense> getExpenses(String searchTerm, Pageable pageable) {
+
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return expenseRepository.findAll(pageable);
+        } else {
+            return expenseRepository.search(searchTerm, pageable);
+        }
+
     }
 
 

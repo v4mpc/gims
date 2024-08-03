@@ -1,6 +1,7 @@
 package com.yhm.gims.controller;
 
 
+import com.yhm.gims.entity.Category;
 import com.yhm.gims.entity.Expense;
 import com.yhm.gims.service.ExpenseService;
 import jakarta.validation.Valid;
@@ -19,8 +20,8 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @GetMapping
-    public Page<Expense> getAllExpenses(Pageable pageable) {
-        return expenseService.findAll(pageable);
+    public Page<Expense> getExpenses(@RequestParam(required = false) String q, Pageable pageable) {
+        return expenseService.getExpenses(q, pageable);
     }
 
     @PostMapping

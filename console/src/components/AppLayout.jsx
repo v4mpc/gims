@@ -17,6 +17,16 @@ import {API_ROUTES, BASE_URL, DEFAULT_PAGE_SIZE, openNotification} from "../util
 const {Header, Content, Footer, Sider} = Layout;
 const items = [
 
+
+
+    {
+        key: "expense",
+        icon: <CreditCardOutlined />,
+        label: (
+            <Link to={`/expense?page=1&size=${DEFAULT_PAGE_SIZE}`}>Expenses</Link>
+        ),
+    },
+
     {
         key: "settings",
         icon: <SettingOutlined/>,
@@ -57,17 +67,17 @@ const items = [
                     </Link>
                 ),
             },
-            {
-                key: "designer",
-                label: <Link to="/settings/report-designer">❁ Designer</Link>,
-            },
+            // {
+            //     key: "designer",
+            //     label: <Link to="/settings/report-designer">❁ Designer</Link>,
+            // },
         ],
     },
-    {
-        key: "logout",
-        icon: <LogoutOutlined/>,
-        label: "Logout"
-    },
+    // {
+    //     key: "logout",
+    //     icon: <LogoutOutlined/>,
+    //     label: "Logout"
+    // },
 ];
 
 const AppLayout = () => {

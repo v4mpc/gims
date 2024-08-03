@@ -9,6 +9,7 @@ import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import Category from "./pages/category/Category.jsx";
 import Product from "./pages/product/Product.jsx";
 import ServiceCatalog from "./pages/serviceCatalog/serviceCatalog.jsx";
+import Expense from "./pages/expense/Expense.jsx";
 
 
 const queryClient = new QueryClient(
@@ -30,6 +31,7 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<AppLayout/>}>
                         <Route index element={<Navigate to="settings/units"/>}/>
+                        <Route path="expense" element={<Expense />} />
                         <Route path="settings/units" element={<Unit/>}/>
                         <Route path="settings/categories" element={<Category/>}/>
                         <Route path="settings/products" element={<Product/>}/>
