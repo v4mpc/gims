@@ -1,7 +1,7 @@
 import GenericTable from "../../components/GenericTable.jsx";
 import {API_ROUTES} from "../../utils.jsx";
 
-import {Button, Form, Input, InputNumber, Space} from "antd";
+import {Button, Form, Input, Divider, Space} from "antd";
 import customerColumns from "./Columns.jsx";
 import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 
@@ -41,6 +41,12 @@ export default function Customer() {
                 >
                     <Input/>
                 </Form.Item>
+
+
+
+                <Divider orientation="left" plain>
+                    Cars
+                </Divider>
 
 
                 <Form.List name="cars" rules={[
