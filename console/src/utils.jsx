@@ -34,6 +34,8 @@ export const API_ROUTES = {
     adjust: "stock-on-hand/adjust",
     stockOnhandAll: "stock-on-hand/all",
     units: "units",
+    serviceCatalogs: "serviceCatalogs",
+    serviceCatalogsAll: "serviceCatalogs/all",
     categories: "categories",
     categoriesAll: "categories/all",
     unitsAll: "units/all",
@@ -115,7 +117,6 @@ export async function putItem(data) {
             unitOfMeasure: {id: modifiedData.unitOfMeasure},
         };
     }
-
 
 
     if (Object.hasOwn(modifiedData, "category")) {
