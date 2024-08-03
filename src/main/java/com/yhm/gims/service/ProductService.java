@@ -66,9 +66,11 @@ public class ProductService {
     public Product update(Product product, int id) {
         Product updateProduct = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not exist with id " + id));
         updateProduct.setName(product.getName());
+        updateProduct.setCode(product.getCode());
         updateProduct.setBuyPrice(product.getBuyPrice());
         updateProduct.setSalePrice(product.getSalePrice());
         updateProduct.setUnitOfMeasure(product.getUnitOfMeasure());
+        updateProduct.setCategory(product.getCategory());
         updateProduct.setActive(product.getActive());
         updateProduct.setDescription(product.getDescription());
         productRepository.save(updateProduct);

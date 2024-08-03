@@ -10,44 +10,30 @@ export default function GenericTableModal({
                                               formMode,
                                               open,
                                               handleModalClose,
-    queryKey,
+                                              queryKey,
                                               children,
                                           }) {
     const [form] = Form.useForm();
     const queryClient = useQueryClient()
     const {mutate: createItem, isLoading: isCreating} = useMutation({
-        mutationFn: putItem,
-        onSuccess: () => {
+        mutationFn: putItem, onSuccess: () => {
             form?.resetFields();
-            openNotification(
-                "post-success",
-                "success",
-                "Success",
-                "Record save successfully",
-            );
+            openNotification("post-success", "success", "Success", "Record save successfully",);
             queryClient.invalidateQueries({queryKey: [queryKey]})
             handleModalClose();
-        },
-        onError: (error) => {
+        }, onError: (error) => {
             console.log("there was an error " + error);
         }
     });
 
 
     const {mutate: updateItem, isLoading: isEditing} = useMutation({
-        mutationFn: putItem,
-        onSuccess: () => {
+        mutationFn: putItem, onSuccess: () => {
             form?.resetFields();
-            openNotification(
-                "post-success",
-                "success",
-                "Success",
-                "Record updated successfully",
-            );
+            openNotification("post-success", "success", "Success", "Record updated successfully",);
             queryClient.invalidateQueries({queryKey: [queryKey]})
             handleModalClose();
-        },
-        onError: (error) => {
+        }, onError: (error) => {
             console.log("there was an error " + error);
         }
     });
@@ -76,7 +62,6 @@ export default function GenericTableModal({
 
     };
     const handleCancel = () => {
-        console.log("Clicked cancel button");
         handleModalClose();
         form?.resetFields();
     };
@@ -90,25 +75,20 @@ export default function GenericTableModal({
     if ("UPDATE" === formMode) {
         if (Object.hasOwn(selectedItem, "createdAt")) {
             modifiedInitialValues = {
-                ...modifiedInitialValues,
-                createdAt: dayjs(selectedItem.createdAt, DATE_FORMAT),
+                ...modifiedInitialValues, createdAt: dayjs(selectedItem.createdAt, DATE_FORMAT),
             };
         }
 
         if (Object.hasOwn(selectedItem, "unitOfMeasure")) {
             modifiedInitialValues = {
-                ...modifiedInitialValues,
-                unitOfMeasure: selectedItem.unitOfMeasure.id,
+                ...modifiedInitialValues, unitOfMeasure: selectedItem.unitOfMeasure.id,
             };
         }
 
 
-
-
         if (Object.hasOwn(selectedItem, "category")) {
             modifiedInitialValues = {
-                ...modifiedInitialValues,
-                category: selectedItem.category.id,
+                ...modifiedInitialValues, category: selectedItem.category.id,
             };
         }
     }
@@ -119,8 +99,7 @@ export default function GenericTableModal({
 
     const initialValues = modifiedInitialValues;
 
-    return (
-        <Modal
+    return (<Modal
             title={title}
             open={open}
             onOk={handleOk}
@@ -140,6 +119,5 @@ export default function GenericTableModal({
             >
                 {children}
             </Form>
-        </Modal>
-    );
+        </Modal>);
 }

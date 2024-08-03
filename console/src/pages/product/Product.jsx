@@ -11,13 +11,14 @@ export default function Product() {
 
     const results = useQueries({
         queries: [
-            {queryKey: ['unitsAll'], initialData: [], queryFn: () => getLookupData(API_ROUTES.unitsAll)},
-            {queryKey: ['categoriesAll'], initialData: [], queryFn: () => getLookupData(API_ROUTES.categoriesAll)},
+            {queryKey: ['unitsAll'], placeholderData: [], queryFn: () => getLookupData(API_ROUTES.unitsAll)},
+            {queryKey: ['categoriesAll'], placeholderData: [], queryFn: () => getLookupData(API_ROUTES.categoriesAll)},
 
         ]
     });
     const [unitsQuery, categoriesQuery] = results;
 
+    console.log(unitsQuery);
 
     return (
         <GenericTable itemColumns={productColumns} listPath={API_ROUTES.products} queryKey="products">
