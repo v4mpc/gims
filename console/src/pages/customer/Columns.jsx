@@ -34,8 +34,6 @@ const customerColumns = [
                         <Tag key={car.id}>
                             {`${car.make} ${car.model} ${car.plateNumber}`}
                         </Tag>
-
-
                     )
                 })}
             </Flex>

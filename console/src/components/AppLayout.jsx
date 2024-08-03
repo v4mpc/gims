@@ -63,7 +63,17 @@ const items = [
                 key: "serviceCatalogs",
                 label: (
                     <Link to={`/settings/service-catalogs?page=1&size=${DEFAULT_PAGE_SIZE}`}>
-                        ❁ Service catalogs
+                        ❁ Service catalog
+                    </Link>
+                ),
+            },
+
+
+            {
+                key: "paymentCatalogs",
+                label: (
+                    <Link to={`/settings/payment-catalog?page=1&size=${DEFAULT_PAGE_SIZE}`}>
+                        ❁ Payment catalog
                     </Link>
                 ),
             },

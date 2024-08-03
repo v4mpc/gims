@@ -36,6 +36,8 @@ export const API_ROUTES = {
     units: "units",
     serviceCatalogs: "serviceCatalogs",
     serviceCatalogsAll: "serviceCatalogs/all",
+    paymentCatalog: "paymentCatalog",
+    paymentCatalogAll: "paymentCatalog/all",
     customers: "customers",
     customersAll: "customersAll",
     categories: "categories",
