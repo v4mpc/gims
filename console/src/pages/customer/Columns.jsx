@@ -1,6 +1,4 @@
-import {Tag} from "antd";
-
-
+import {Tag, Flex} from "antd";
 
 
 const customerColumns = [
@@ -27,16 +25,20 @@ const customerColumns = [
     {
         title: "Cars",
         key: "cars",
+        width: "30%",
         dataIndex: "cars",
         render: (_, record) => (
-            <>
-                {record.cars.map((car)=>{
+            <Flex gap="4px 0" wrap>
+                {record.cars.map((car) => {
                     return (
-                        <Tag key={car}>
+                        <Tag key={car.id}>
                             {`${car.make} ${car.model} ${car.plateNumber}`}
-                        </Tag>)
+                        </Tag>
+
+
+                    )
                 })}
-            </>
+            </Flex>
         ),
     },
 
