@@ -14,8 +14,14 @@ import lombok.*;
 @Table(name = "products")
 public class Product extends BaseEntity {
 
+
+    @NotNull
+    private String code;
+
     @NotNull
     private String name;
+
+
 
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
@@ -25,6 +31,13 @@ public class Product extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "unit_of_measure_id")
     private Unit unitOfMeasure;
+
+
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @NotNull
     @Column(name = "buy_price")

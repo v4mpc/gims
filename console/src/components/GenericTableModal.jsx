@@ -101,6 +101,16 @@ export default function GenericTableModal({
                 unitOfMeasure: selectedItem.unitOfMeasure.id,
             };
         }
+
+
+
+
+        if (Object.hasOwn(selectedItem, "category")) {
+            modifiedInitialValues = {
+                ...modifiedInitialValues,
+                category: selectedItem.category.id,
+            };
+        }
     }
 
     if ("CREATE" === formMode) {

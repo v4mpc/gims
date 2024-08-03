@@ -1,6 +1,7 @@
 package com.yhm.gims.controller;
 
 
+import com.yhm.gims.entity.Category;
 import com.yhm.gims.entity.Product;
 import com.yhm.gims.service.ProductService;
 import jakarta.validation.Valid;
@@ -21,9 +22,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public Page<Product> getAllProducts(@RequestParam(value = "name", defaultValue = "%") String name, Pageable pageable) {
-
-        return productService.findByName(name, pageable);
+    public Page<Product> getProducts(@RequestParam(required = false) String q, Pageable pageable) {
+        return productService.getProducts(q, pageable);
     }
 
     @PostMapping

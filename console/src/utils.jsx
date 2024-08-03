@@ -35,6 +35,7 @@ export const API_ROUTES = {
     stockOnhandAll: "stock-on-hand/all",
     units: "units",
     categories: "categories",
+    categoriesAll: "categories/all",
     unitsAll: "units/all",
     bulkSale: "sales/bulk",
     customReport: "custom-report",
@@ -76,6 +77,18 @@ export async function getData(listPath, tableParams, searchQuery) {
 }
 
 
+export async function getLookupData(listPath) {
+    const resp = await fetch(
+        `${BASE_URL}/${listPath}`,
+    );
+
+    if (!resp.ok) {
+        throw new Error("Network response was not ok");
+    }
+    return resp.json();
+}
+
+
 export async function putItem(data) {
 
     let initData = {
@@ -102,6 +115,16 @@ export async function putItem(data) {
             unitOfMeasure: {id: modifiedData.unitOfMeasure},
         };
     }
+
+
+
+    if (Object.hasOwn(modifiedData, "category")) {
+        modifiedData = {
+            ...modifiedData,
+            category: {id: modifiedData.category},
+        };
+    }
+
     initData.body = JSON.stringify(modifiedData);
 
 

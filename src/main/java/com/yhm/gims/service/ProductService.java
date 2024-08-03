@@ -2,6 +2,7 @@ package com.yhm.gims.service;
 
 
 import com.yhm.gims.entity.Product;
+import com.yhm.gims.entity.Unit;
 import com.yhm.gims.exception.ResourceNotFoundException;
 import com.yhm.gims.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,17 @@ public class ProductService {
             return productRepository.findAll(newPageable);
         }
         return productRepository.findByNameContainingIgnoreCaseOrderByNameAsc(name, pageable);
+    }
+
+
+    public Page<Product> getProducts(String searchTerm, Pageable pageable) {
+
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            return productRepository.findAll(pageable);
+        } else {
+            return productRepository.search(searchTerm, pageable);
+        }
+
     }
 
 

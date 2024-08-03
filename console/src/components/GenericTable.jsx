@@ -13,7 +13,6 @@ export default function GenericTable({itemColumns, listPath,queryKey, children})
     const [searchParams, setSearchParams] = useSearchParams();
     const formModeRef = useRef("CREATE");
     const [open, setOpen] = useState(false);
-
     const [selectedItem, setSelectedItem] = useState("");
     const [tableParams, setTableParams] = useState({
         pagination: {
