@@ -7,8 +7,8 @@ const paymentCatalogColumns = [
     },
     {
         title: "Account name",
-        key: "name",
-        dataIndex: "name",
+        key: "accountName",
+        dataIndex: "accountName",
     },
 
     {
@@ -21,6 +21,7 @@ const paymentCatalogColumns = [
         title: "Payable through Insurance",
         key: "insurance",
         dataIndex: "insurance",
+        render: (_, record) => record.insurance ? 'Yes' : 'No'
     },
     {
         title: "Action",

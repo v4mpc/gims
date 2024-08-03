@@ -32,7 +32,7 @@ export default function PaymentCatalog() {
           >
               <Input />
           </Form.Item>
-          <Form.Item name="insurance">
+          <Form.Item name="insurance" valuePropName="checked">
               <Checkbox>Payable through insurance</Checkbox>
           </Form.Item>
       </>
