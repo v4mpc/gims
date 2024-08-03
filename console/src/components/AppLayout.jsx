@@ -67,6 +67,17 @@ const items = [
                     </Link>
                 ),
             },
+
+            {
+                key: "customers",
+                label: (
+                    <Link to={`/settings/customers?page=1&size=${DEFAULT_PAGE_SIZE}`}>
+                        ❁ Customers
+                    </Link>
+                ),
+            },
+
+
             // {
             //     key: "designer",
             //     label: <Link to="/settings/report-designer">❁ Designer</Link>,

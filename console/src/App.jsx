@@ -10,6 +10,7 @@ import Category from "./pages/category/Category.jsx";
 import Product from "./pages/product/Product.jsx";
 import ServiceCatalog from "./pages/serviceCatalog/serviceCatalog.jsx";
 import Expense from "./pages/expense/Expense.jsx";
+import Customer from "./pages/customer/Customer.jsx";
 
 
 const queryClient = new QueryClient(
@@ -34,6 +35,7 @@ export default function App() {
                         <Route path="expense" element={<Expense />} />
                         <Route path="settings/units" element={<Unit/>}/>
                         <Route path="settings/categories" element={<Category/>}/>
+                        <Route path="settings/customers" element={<Customer/>}/>
                         <Route path="settings/products" element={<Product/>}/>
                         <Route path="settings/service-catalogs" element={<ServiceCatalog/>}/>
                     </Route>

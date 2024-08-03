@@ -39,7 +39,7 @@ export default function Expense() {
             rules={[
               {
                 required: true,
-                message: "Please amount",
+                message: "Please input amount",
               },
             ]}
             label="Amount" name="amount">

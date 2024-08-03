@@ -19,7 +19,7 @@ public class Customer extends BaseEntity {
     private String name;
 
     @NotNull
-    private Integer phone;
+    private String phone;
 
     private String address;
 
