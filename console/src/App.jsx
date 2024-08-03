@@ -8,6 +8,7 @@ import {QUERY_STALE_TIME} from "./utils.jsx";
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import Category from "./pages/category/Category.jsx";
 import Product from "./pages/product/Product.jsx";
+import ServiceCatalog from "./pages/serviceCatalog/serviceCatalog.jsx";
 
 
 const queryClient = new QueryClient(
@@ -32,6 +33,7 @@ export default function App() {
                         <Route path="settings/units" element={<Unit/>}/>
                         <Route path="settings/categories" element={<Category/>}/>
                         <Route path="settings/products" element={<Product/>}/>
+                        <Route path="settings/service-catalogs" element={<ServiceCatalog/>}/>
                     </Route>
                     <Route path="*" element={<PageNotFound/>}/>
                 </Routes>

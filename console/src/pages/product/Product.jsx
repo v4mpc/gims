@@ -95,7 +95,7 @@ export default function Product() {
                 </Form.Item>
 
 
-                <Form.Item label="Category"
+                <Form.Item label="ServiceCatalog"
                            rules={[
                                {
                                    required: true,

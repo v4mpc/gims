@@ -32,7 +32,7 @@ const productColumns = [
     },
 
     {
-        title: "Category",
+        title: "ServiceCatalog",
         key: "category",
         dataIndex: "name",
         render: (_, record) => (<span>{record.category.name}</span>)

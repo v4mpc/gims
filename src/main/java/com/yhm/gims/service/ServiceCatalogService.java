@@ -30,15 +30,6 @@ public class ServiceCatalogService {
         return serviceCatalogRepository.findAll();
     }
 
-    public Page<ServiceCatalog> findByName(String name, Pageable pageable) {
-        if (Objects.equals(name, "%")) {
-            Sort sort = Sort.by(Sort.Direction.ASC, "name");
-            PageRequest newPageable=PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort);
-            return serviceCatalogRepository.findAll(newPageable);
-        }
-        return serviceCatalogRepository.findByNameContainingIgnoreCaseOrderByNameAsc(name, pageable);
-    }
-
 
     public Page<ServiceCatalog> getServiceCatalogs(String searchTerm, Pageable pageable) {
 

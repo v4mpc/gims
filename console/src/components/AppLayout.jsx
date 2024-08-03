@@ -48,6 +48,15 @@ const items = [
                     </Link>
                 ),
             },
+
+            {
+                key: "serviceCatalogs",
+                label: (
+                    <Link to={`/settings/service-catalogs?page=1&size=${DEFAULT_PAGE_SIZE}`}>
+                        ❁ Service catalogs
+                    </Link>
+                ),
+            },
             {
                 key: "designer",
                 label: <Link to="/settings/report-designer">❁ Designer</Link>,
