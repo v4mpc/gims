@@ -1,9 +1,15 @@
 package com.yhm.gims.entity;
 
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -22,5 +28,16 @@ public class Customer extends BaseEntity {
     private String phone;
 
     private String address;
+
+    @NotNull
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CustomerCar> cars = new ArrayList<>();
+
+
+
+    public void addCar(CustomerCar car) {
+        cars.add(car);
+        car.setCustomer(this);
+    }
 
 }

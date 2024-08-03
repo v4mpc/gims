@@ -32,7 +32,7 @@ const items = [
         icon: <SettingOutlined/>,
         label: "Settings",
         children: [
-            {key: "general", label: (<Link to={"/settings/general"}>❁ General</Link>),},
+            // {key: "general", label: (<Link to={"/settings/general"}>❁ General</Link>),},
             {
                 key: "units",
                 label: (
