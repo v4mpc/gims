@@ -1,4 +1,4 @@
-const carColumns = [
+const vehicleColumns = [
     {
         title: "#",
         dataIndex: "id",
@@ -23,4 +23,4 @@ const carColumns = [
     },
 ];
 
-export default carColumns;
+export default vehicleColumns;

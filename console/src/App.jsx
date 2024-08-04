@@ -12,6 +12,7 @@ import ServiceCatalog from "./pages/serviceCatalog/serviceCatalog.jsx";
 import Expense from "./pages/expense/Expense.jsx";
 import Customer from "./pages/customer/Customer.jsx";
 import PaymentCatalog from "./pages/paymentCatalog/PaymentCatalog.jsx";
+import Vehicle from "./pages/vehicle/Vehicle.jsx";
 
 
 const queryClient = new QueryClient(
@@ -40,6 +41,7 @@ export default function App() {
                         <Route path="settings/products" element={<Product/>}/>
                         <Route path="settings/payment-catalog" element={<PaymentCatalog/>}/>
                         <Route path="settings/service-catalogs" element={<ServiceCatalog/>}/>
+                        <Route path="settings/vehicles" element={<Vehicle/>}/>
                     </Route>
                     <Route path="*" element={<PageNotFound/>}/>
                 </Routes>

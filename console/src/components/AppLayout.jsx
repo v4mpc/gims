@@ -87,6 +87,15 @@ const items = [
                 ),
             },
 
+            {
+                key: "vehicles",
+                label: (
+                    <Link to={`/settings/vehicles?page=1&size=${DEFAULT_PAGE_SIZE}`}>
+                        ❁ Vehicles
+                    </Link>
+                ),
+            },
+
 
             // {
             //     key: "designer",
