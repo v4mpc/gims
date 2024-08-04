@@ -32,6 +32,15 @@ public class Vehicle extends BaseEntity {
     private Set<Vehicle> models = new HashSet<>();
 
 
+
+
+
+    public Vehicle(String name, Vehicle parent) {
+        this.name = name;
+        this.make = parent;
+    }
+
+
     public void addModel(String modelName) {
         Vehicle model = new Vehicle();
         model.setName(modelName);

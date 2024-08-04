@@ -1,6 +1,7 @@
 package com.yhm.gims.controller;
 
 
+import com.yhm.gims.dto.VehicleDto;
 import com.yhm.gims.entity.Vehicle;
 import com.yhm.gims.service.VehicleService;
 import jakarta.validation.Valid;
@@ -21,21 +22,21 @@ public class VehicleController {
     private final VehicleService vehicleService;
 
     @GetMapping
-    public Page<Vehicle> getVehicles(@RequestParam(required = false) String q, Pageable pageable) {
-        return vehicleService.getVehicles(q, pageable);
+    public Page<Vehicle> getVehicles(@RequestParam(required = false) String q, @RequestParam(defaultValue = "true") Boolean make, Pageable pageable) {
+        return vehicleService.getVehicles(q, make, pageable);
     }
 
 
     @GetMapping("/all")
-    public List<Vehicle> getAllVehicles() {
-        return vehicleService.findAll();
+    public List<Vehicle> getAllVehicles(@RequestParam(defaultValue = "true") Boolean make) {
+        return vehicleService.findAll(make);
     }
 
     @PostMapping
-    public ResponseEntity<Vehicle> save(@Valid @RequestBody Vehicle vehicle) {
+    public ResponseEntity<VehicleDto> save(@Valid @RequestBody VehicleDto vehicleDto) {
 
-        vehicleService.save(vehicle);
-        return ResponseEntity.ok(vehicle);
+        vehicleService.save(vehicleDto);
+        return ResponseEntity.ok(vehicleDto);
     }
 
     @PutMapping("{id}")

@@ -15,7 +15,7 @@ export default function Vehicle() {
     {queryKey: ['vehiclesAll'], placeholderData: [], queryFn: () => getLookupData(API_ROUTES.vehiclesAll)},
     )
 
-    const [makeOnly, setMakeOnly] = useState(true);
+    const [makeOnly, setMakeOnly] = useState(false);
 
 
     const onChange = (e) => {
@@ -35,7 +35,7 @@ export default function Vehicle() {
 
     return (
         <GenericTable itemColumns={vehicleColumns} listPath={API_ROUTES.vehicles} queryKey="vehicles">
-            <Checkbox onChange={onChange}>Make only</Checkbox>
+            <Checkbox onChange={onChange} checked={makeOnly}>Make only</Checkbox>
             {makeOnly ? <MakeOnlyForm/> : <MakeModelForm makeQuery={makeQuery}/>}
         </GenericTable>
     );
