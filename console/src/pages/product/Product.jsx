@@ -18,7 +18,6 @@ export default function Product() {
     });
     const [unitsQuery, categoriesQuery] = results;
 
-    console.log(unitsQuery);
 
     return (
         <GenericTable itemColumns={productColumns} listPath={API_ROUTES.products} queryKey="products">

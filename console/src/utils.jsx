@@ -35,6 +35,7 @@ export const API_ROUTES = {
     stockOnhandAll: "stock-on-hand/all",
     units: "units",
     vehicles: "vehicles",
+    vehiclesAll: "vehicles/all",
     serviceCatalogs: "serviceCatalogs",
     serviceCatalogsAll: "serviceCatalogs/all",
     paymentCatalog: "paymentCatalog",

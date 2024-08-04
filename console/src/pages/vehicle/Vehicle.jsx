@@ -1,15 +1,21 @@
 import GenericTable from "../../components/GenericTable.jsx";
-import {API_ROUTES} from "../../utils.jsx";
+import {API_ROUTES, getData, getLookupData} from "../../utils.jsx";
 
 import {Checkbox} from "antd";
 import vehicleColumns from "./Columns.jsx";
 import {useState} from "react";
 import {MakeModelForm, MakeOnlyForm} from "./Forms.jsx";
+import {useQuery} from "@tanstack/react-query";
 
 
 export default function Vehicle() {
 
-    const [makeOnly, setMakeOnly] = useState(false);
+
+    const makeQuery = useQuery(
+    {queryKey: ['vehiclesAll'], placeholderData: [], queryFn: () => getLookupData(API_ROUTES.vehiclesAll)},
+    )
+
+    const [makeOnly, setMakeOnly] = useState(true);
 
 
     const onChange = (e) => {
@@ -30,7 +36,7 @@ export default function Vehicle() {
     return (
         <GenericTable itemColumns={vehicleColumns} listPath={API_ROUTES.vehicles} queryKey="vehicles">
             <Checkbox onChange={onChange}>Make only</Checkbox>
-            {makeOnly ? <MakeOnlyForm/> : <MakeModelForm makes={makes}/>}
+            {makeOnly ? <MakeOnlyForm/> : <MakeModelForm makeQuery={makeQuery}/>}
         </GenericTable>
     );
 }
