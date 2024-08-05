@@ -83,16 +83,18 @@ public class ProductService {
     }
 
 
-    public Product update(Product product, int id) {
+    public Product update(ProductDto productDto, int id) {
         Product updateProduct = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not exist with id " + id));
-        updateProduct.setName(product.getName());
-        updateProduct.setCode(product.getCode());
-        updateProduct.setBuyPrice(product.getBuyPrice());
-        updateProduct.setSalePrice(product.getSalePrice());
-        updateProduct.setUnitOfMeasure(product.getUnitOfMeasure());
-        updateProduct.setCategory(product.getCategory());
-        updateProduct.setActive(product.getActive());
-        updateProduct.setDescription(product.getDescription());
+        updateProduct.setName(productDto.getName());
+        updateProduct.setCode(productDto.getCode());
+        updateProduct.setBuyPrice(productDto.getBuyPrice());
+        updateProduct.setSalePrice(productDto.getSalePrice());
+        updateProduct.setUnitOfMeasure(productDto.getUnitOfMeasure());
+        updateProduct.setCategory(productDto.getCategory());
+        updateProduct.setActive(productDto.getActive());
+        updateProduct.setDescription(productDto.getDescription());
+        updateProduct.setVehicles(new HashSet<>(vehicleRepository.findAllById(productDto.getVehicles())));
+
         productRepository.save(updateProduct);
         return updateProduct;
     }
