@@ -14,7 +14,7 @@ export default function GenericTableModal({
                                               children,
                                           }) {
     const [form] = Form.useForm();
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
     const {mutate: createItem, isLoading: isCreating} = useMutation({
         mutationFn: putItem, onSuccess: () => {
             form?.resetFields();

@@ -26,6 +26,12 @@ const items = [
     },
 
     {
+        key: "buy",
+        icon: <DownloadOutlined style={{ fontSize: "1.1rem" }} />,
+        label: <Link to="/buy">Buy</Link>,
+    },
+
+    {
         key: "expense",
         icon: <CreditCardOutlined />,
         label: (

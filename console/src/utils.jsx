@@ -95,6 +95,16 @@ export async function getLookupData(listPath) {
   return resp.json();
 }
 
+export function toSalePayload(data, isSale) {
+  return data.map((item) => ({
+    productId: item.id,
+    isSale: isSale,
+    saleAdjustment: 0,
+    adjustmentQuantity: item.saleQuantity,
+    adjustmentDate: dayjs(item.saleDate, DATE_FORMAT),
+  }));
+}
+
 export async function putItem(data) {
   let initData = {
     method: data.method,
@@ -141,5 +151,25 @@ export async function putItem(data) {
   if (!resp.ok) {
     throw new Error("Network response was not ok");
   }
+  return resp.json();
+}
+
+export async function bulkTx(data) {
+  Date.prototype.toISOString = function () {
+    return dayjs(this).format(DATE_FORMAT);
+  };
+
+  const resp = await fetch(`${BASE_URL}/${API_ROUTES.bulkSale}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(toSalePayload(data.postData, data.isSale)),
+  });
+
+  if (!resp.ok) {
+    throw new Error("Network response was not ok");
+  }
+
   return resp.json();
 }

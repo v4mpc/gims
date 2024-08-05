@@ -2,6 +2,7 @@ package com.yhm.gims.controller;
 
 
 import com.yhm.gims.dto.SaleDto;
+import com.yhm.gims.dto.StockOnhandDto;
 import com.yhm.gims.entity.Sale;
 import com.yhm.gims.service.SaleService;
 import com.yhm.gims.service.StockOnhandService;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +37,9 @@ public class SaleController {
 
 
     @PostMapping("/bulk")
-    public void save(@Valid @RequestBody List<SaleDto> sales) {
+    public ResponseEntity<List<SaleDto>> save(@Valid @RequestBody List<SaleDto> sales) {
         saleService.save(sales);
+        return ResponseEntity.ok(sales);
     }
 
 
