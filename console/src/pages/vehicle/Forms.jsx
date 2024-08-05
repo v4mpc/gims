@@ -74,7 +74,7 @@ export function MakeModelForm({ makeQuery }) {
                 block
                 icon={<PlusOutlined />}
               >
-                Add Car
+                Add Model
               </Button>
               <Form.ErrorList errors={errors} />
             </Form.Item>

@@ -1,8 +1,14 @@
 package com.yhm.gims.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter
@@ -39,6 +45,18 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+
+
+
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE },fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "product_vehicle",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "vehicle_id")
+    )
+    private Set<Vehicle> vehicles = new HashSet<>();
+
+
     @NotNull
     @Column(name = "buy_price")
     private Float buyPrice;
@@ -47,8 +65,7 @@ public class Product extends BaseEntity {
     @Column(name = "sale_price")
     private Float salePrice;
 
-    @NotNull
     @Column(name = "active")
-    private Boolean active;
+    private Boolean active=true;
 
 }

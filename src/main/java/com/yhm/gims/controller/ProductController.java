@@ -1,6 +1,7 @@
 package com.yhm.gims.controller;
 
 
+import com.yhm.gims.dto.ProductDto;
 import com.yhm.gims.entity.Category;
 import com.yhm.gims.entity.Product;
 import com.yhm.gims.service.ProductService;
@@ -27,9 +28,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> save(@Valid @RequestBody Product product) {
-        productService.save(product);
-        return ResponseEntity.ok(product);
+    public ResponseEntity<ProductDto> save(@Valid @RequestBody ProductDto productDto) {
+        productService.save(productDto);
+        return ResponseEntity.ok(productDto);
     }
 
     @PutMapping("{id}")

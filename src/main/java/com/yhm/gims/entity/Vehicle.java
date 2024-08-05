@@ -1,6 +1,7 @@
 package com.yhm.gims.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ public class Vehicle extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
     private Vehicle make;
 
@@ -32,6 +33,9 @@ public class Vehicle extends BaseEntity {
     private Set<Vehicle> models = new HashSet<>();
 
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "vehicles", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    private Set<Product> products = new HashSet<>();
 
 
 
@@ -40,19 +44,5 @@ public class Vehicle extends BaseEntity {
         this.make = parent;
     }
 
-
-    public void addModel(String modelName) {
-        Vehicle model = new Vehicle();
-        model.setName(modelName);
-        this.models.add(model);
-        model.setMake(this);
-    }
-
-
-    public void moveMake(Vehicle newMake) {
-        this.getMake().getModels().remove(this);
-        this.setMake(newMake);
-        newMake.getModels().add(this);
-    }
 
 }

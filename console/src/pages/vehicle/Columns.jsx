@@ -10,13 +10,14 @@ const vehicleColumns = [
     {
         title: "Make",
         key: "name",
+        width: "30%",
         dataIndex: "name",
     },
 
     {
         title: "Models",
         key: "models",
-        width: "30%",
+
         dataIndex: "models",
         render: (_, record) => (
             <Flex gap="4px 0" wrap>
@@ -29,11 +30,6 @@ const vehicleColumns = [
                 })}
             </Flex>
         ),
-    },
-
-    {
-        title: "Action",
-        key: "action",
     },
 ];
 
