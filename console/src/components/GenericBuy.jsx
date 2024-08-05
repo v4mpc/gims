@@ -9,23 +9,37 @@ import {
   DatePicker,
   Tag,
   Input,
+  Select,
+  Space,
 } from "antd";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import AsyncModal from "../components/AsyncModal.jsx";
 import ThousandSeparator from "../components/ThousandSeparator.jsx";
-import { useQuery } from "@tanstack/react-query";
-import { getLookupData } from "../utils.jsx";
+import { useQueries } from "@tanstack/react-query";
+import { API_ROUTES, getLookupData } from "../utils.jsx";
 import dayjs from "dayjs";
 
 const { Text } = Typography;
 
 export default function GenericBuy({ urlPath, isSale, queryKey }) {
-  const { isLoading, data: stockOnhandData } = useQuery({
-    queryKey: [queryKey],
-    placeholderData: [],
-    queryFn: () => getLookupData(urlPath),
+  const [searchCategory, setSearchCategory] = useState("ALL");
+
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: [queryKey],
+        placeholderData: [],
+        queryFn: () => getLookupData(urlPath),
+      },
+      {
+        queryKey: ["categoriesAll"],
+        placeholderData: [],
+        queryFn: () => getLookupData(API_ROUTES.categoriesAll),
+      },
+    ],
   });
+  const [resultsQuery, categoriesQuery] = results;
 
   const [stockOnhand, setStockOnhand] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -41,6 +55,7 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
 
       render: (_, record) => (
         <Flex vertical gap="middle">
+          <Text>{record.productCode}</Text>
           <Text strong>{record.productName}</Text>
           <Flex gap="middle" vertical={false}>
             <Tag>{record.categoryName}</Tag>
@@ -56,7 +71,6 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
         </Flex>
       ),
     },
-
     {
       title: "Stock on hand",
       dataIndex: "stockOnhand",
@@ -108,7 +122,6 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
         />
       ),
     },
-
     {
       title: "Action",
       key: "action",
@@ -126,7 +139,7 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
 
   useEffect(() => {
     setStockOnhand(
-      stockOnhandData.map((p) => ({
+      resultsQuery.data.map((p) => ({
         id: p.product.id,
         productName: p.product.name,
         buyPrice: p.product.buyPrice,
@@ -135,12 +148,21 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
         unit: p.product.unitOfMeasure.code,
         saleQuantity: 0,
         categoryName: p.product.category.name,
+        categoryId: p.product.category.id,
+        productCode: p.product.code,
         saleDate: dayjs(),
       })),
     );
-  }, [stockOnhandData]);
+  }, [resultsQuery.data]);
 
-  const filteredDataSource = stockOnhand.filter((item) =>
+  const filteredCategoryDataSource = stockOnhand.filter((item) => {
+    if (searchCategory === "ALL") {
+      return true;
+    }
+    return item.categoryId === searchCategory;
+  });
+
+  const filteredDataSource = filteredCategoryDataSource.filter((item) =>
     searchText === ""
       ? item
       : item.productName.toLowerCase().includes(searchText.toLowerCase()),
@@ -171,6 +193,10 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
     );
   }
 
+  const filterChanged = (value) => {
+    setSearchCategory(value);
+  };
+
   function handleInputQuantityChanged(product, e) {
     const inputValue = Number(e.target.value);
     if (inputValue == null) return;
@@ -194,20 +220,45 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
     setSearchText(typedValue);
   }
 
+  const categories = [{ id: "ALL", name: "ALL" }, ...categoriesQuery.data];
+
   return (
     <>
       <Row gutter={16}>
         <Col span={9}>
           <Flex gap="middle" vertical>
-            <Input
-              placeholder="Search Product..."
-              onChange={(e) => handleFilterProducts(e.target.value)}
-            />
+            <Flex justify="space-between">
+              <Space>
+                <Select
+                  showSearch
+                  placeholder="Filter by category"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  onChange={filterChanged}
+                  loading={categoriesQuery.isLoading}
+                  defaultValue="ALL"
+                  options={categories.map((category) => ({
+                    value: category.id,
+                    label: category.name,
+                  }))}
+                />
+
+                <Input
+                  placeholder="Search Product..."
+                  allowClear
+                  onChange={(e) => handleFilterProducts(e.target.value)}
+                />
+              </Space>
+            </Flex>
+
             <Table
               columns={productColumns}
               dataSource={notSales}
               bordered={true}
-              loading={isLoading}
+              loading={resultsQuery.isLoading}
               rowKey="id"
               scroll={{ x: "max-content" }}
             />
