@@ -1,10 +1,20 @@
 import GenericTable from "../../components/GenericTable.jsx";
 import { API_ROUTES, getLookupData } from "../../utils.jsx";
 
-import {Form, Input, Select, InputNumber, Checkbox, Flex, Divider, Space, Button} from "antd";
+import {
+  Form,
+  Input,
+  Select,
+  InputNumber,
+  Checkbox,
+  Flex,
+  Divider,
+  Space,
+  Button,
+} from "antd";
 import productColumns from "./Columns.jsx";
 import { useQueries } from "@tanstack/react-query";
-import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
 export default function Product() {
   const results = useQueries({
@@ -20,14 +30,14 @@ export default function Product() {
         queryFn: () => getLookupData(API_ROUTES.categoriesAll),
       },
 
-        {
-            queryKey: ["vehiclesAll"],
-            placeholderData: [],
-            queryFn: () => getLookupData(API_ROUTES.vehiclesAll+"?make=false"),
-        },
+      {
+        queryKey: ["vehiclesAll"],
+        placeholderData: [],
+        queryFn: () => getLookupData(API_ROUTES.vehiclesAll + "?make=false"),
+      },
     ],
   });
-  const [unitsQuery, categoriesQuery,vehiclesQuery] = results;
+  const [unitsQuery, categoriesQuery, vehiclesQuery] = results;
 
   return (
     <GenericTable
@@ -140,30 +150,20 @@ export default function Product() {
           </Form.Item>
         </Flex>
 
-
-
-
-
-
-                           <Form.Item
-                                label="Models"
-                               name="vehicles"
-                           >
-                               <Select
-                                   mode="multiple"
-                                   allowClear
-                                   style={{
-                                       width: '100%',
-                                   }}
-                                   placeholder="Please select"
-
-                                   options={vehiclesQuery.data.map((make) => ({
-                                       value: make.id,
-                                       label: make.name,
-                                   }))}
-                               />
-                           </Form.Item>
-
+        <Form.Item label="Models" name="vehicles">
+          <Select
+            mode="multiple"
+            allowClear
+            style={{
+              width: "100%",
+            }}
+            placeholder="Please select"
+            options={vehiclesQuery.data.map((make) => ({
+              value: make.id,
+              label: make.name,
+            }))}
+          />
+        </Form.Item>
 
         <Form.Item name="active" valuePropName="checked">
           <Checkbox>Active</Checkbox>

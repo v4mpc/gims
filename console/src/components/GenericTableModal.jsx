@@ -91,6 +91,13 @@ export default function GenericTableModal({
                 ...modifiedInitialValues, category: selectedItem.category.id,
             };
         }
+
+
+        if (Object.hasOwn(selectedItem, "vehicles")) {
+            modifiedInitialValues = {
+                ...modifiedInitialValues, vehicles: selectedItem.vehicles.map(v=>v.id),
+            };
+        }
     }
 
     if ("CREATE" === formMode) {
