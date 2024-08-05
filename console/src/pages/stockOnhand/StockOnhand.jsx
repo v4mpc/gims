@@ -38,9 +38,9 @@ export default function StockOnhand() {
   return (
     <GenericTable
       itemColumns={stockOnhandColumns}
-      listPath={API_ROUTES.products}
+      listPath={API_ROUTES.stockOnhand}
       showCategoryFilter={true}
-      queryKey="products"
+      queryKey="stockOnhand"
     >
       <>
         <Form.Item
