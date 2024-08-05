@@ -4,11 +4,12 @@ import { useSearchParams } from "react-router-dom";
 
 import { useState, useRef } from "react";
 import {
-    API_ROUTES, DATE_FORMAT,
-    DEFAULT_PAGE_SIZE,
-    getData,
-    getLookupData,
-    SEARCH_BOX_WIDTH,
+  API_ROUTES,
+  DATE_FORMAT,
+  DEFAULT_PAGE_SIZE,
+  getData,
+  getLookupData,
+  SEARCH_BOX_WIDTH,
 } from "../utils.jsx";
 import GenericTableModal from "./GenericTableModal.jsx";
 import { useQueries, useQuery } from "@tanstack/react-query";
@@ -21,12 +22,13 @@ export default function GenericTable({
   listPath,
   queryKey,
   showCategoryFilter = false,
+  sohSelectedItem = "",
   children,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const formModeRef = useRef("CREATE");
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState("");
+  const [selectedItem, setSelectedItem] = useState(sohSelectedItem);
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: searchParams.get("page"),
@@ -63,15 +65,25 @@ export default function GenericTable({
           </Button>
         ),
       };
-    }else if (obj.key === "adjust"){
-        return {
-            ...obj,
-            render: (_, record) => (
-                <Button type="primary" onClick={() => handleSetItem({...record,productId:record.product.id,adjustmentDate:dayjs().format(DATE_FORMAT),name:record.product.name})}>
-                    Adjust
-                </Button>
-            ),
-        };
+    } else if (obj.key === "adjust") {
+      return {
+        ...obj,
+        render: (_, record) => (
+          <Button
+            type="primary"
+            onClick={() =>
+              handleSetItem({
+                ...record,
+                productId: record.product.id,
+                adjustmentDate: dayjs().format(DATE_FORMAT),
+                name: record.product.name,
+              })
+            }
+          >
+            Adjust
+          </Button>
+        ),
+      };
     }
     return obj;
   });

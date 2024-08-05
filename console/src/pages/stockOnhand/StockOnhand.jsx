@@ -1,21 +1,16 @@
 import GenericTable from "../../components/GenericTable.jsx";
-import { API_ROUTES, getLookupData } from "../../utils.jsx";
+import {API_ROUTES, DATE_FORMAT, getLookupData} from "../../utils.jsx";
 
-import {
-  Form,
-  Input,
-  Select,
-  InputNumber,
-  Checkbox,
-  Flex
-} from "antd";
+import { Form, Input, Select, InputNumber, Checkbox, Flex } from "antd";
 import stockOnhandColumns from "./Columns.jsx";
 import { useQueries } from "@tanstack/react-query";
-import {InfoCircleOutlined} from "@ant-design/icons";
-import {useState} from "react";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import dayjs from "dayjs";
+
 
 export default function StockOnhand() {
-    const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState("");
   const results = useQueries({
     queries: [
       {
@@ -40,21 +35,6 @@ export default function StockOnhand() {
 
 
 
-
-    const validateAmount = (rule, value, callback) => {
-        if (value === 0) {
-            callback("Adjustment quantity can not be zero");
-        } else if (value < 0 && value * -1 > selectedProduct.stockOnhand) {
-            callback("Negative adjustment should not exceed stock on hand");
-        } else {
-            callback();
-        }
-    };
-
-
-
-
-
   return (
     <GenericTable
       itemColumns={stockOnhandColumns}
@@ -63,73 +43,85 @@ export default function StockOnhand() {
       queryKey="stockOnhand"
     >
       <>
-          <Form.Item label="ProductId" name="productId" hidden={true}>
-              <Input disabled={true} />
-          </Form.Item>
+        <Form.Item label="ProductId" name="productId" hidden={true}>
+          <Input disabled={true} />
+        </Form.Item>
+
+        <Form.Item label="adjustmentDate" name="adjustmentDate" hidden={true}>
+          <Input disabled={true} />
+        </Form.Item>
+
+        <Form.Item label="Product" name="name">
+          <Input disabled={true} />
+        </Form.Item>
+
+        <Form.Item
+          label="Stock on hand(@)"
+          tooltip={{
+            title: `"Stock on hand as of now (${dayjs().format(DATE_FORMAT)})"`,
+            icon: <InfoCircleOutlined />,
+          }}
+          name="stockOnhand"
+        >
+          <InputNumber
+
+            style={{
+              width: "100%",
+            }}
+            disabled={true}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Quantity to adjust(@)"
+          name="adjustmentQuantity"
+          tooltip={{
+            title:
+              "Negative(-) value decreases stock e.g -80, Positive value increases stock e.g 80.",
+            icon: <InfoCircleOutlined />,
+          }}
+          rules={[
+            {
+              required: true,
+              message: "Please input a number",
+            },
 
 
-          <Form.Item label="adjustmentDate" name="adjustmentDate" hidden={true}>
-              <Input disabled={true} />
-          </Form.Item>
+            //   TODO : add negative adjustment should not subseed soh validation
 
-          <Form.Item label="Product" name="name">
-              <Input disabled={true} />
-          </Form.Item>
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                console.log(selectedProduct.stockOnhand);
+                if (value === 0) {
+                  return Promise.reject(
+                    new Error("Adjustment quantity can not be zero"),
+                  );
+                } else {
+                  return Promise.resolve();
+                }
+              },
+            }),
+          ]}
+        >
+          <InputNumber
+            style={{
+              width: "100%",
+            }}
+          />
+        </Form.Item>
 
-          <Form.Item
-              label="Stock on hand(@)"
-              tooltip={{
-                  title: "Stock on hand as of now (2024-04-29,00:00)",
-                  icon: <InfoCircleOutlined />,
-              }}
-              name="stockOnhand"
-          >
-              <InputNumber
-                  style={{
-                      width: "100%",
-                  }}
-                  disabled={true}
-              />
-          </Form.Item>
-
-          <Form.Item
-              label="Quantity to adjust(@)"
-              name="adjustmentQuantity"
-              tooltip={{
-                  title:
-                      "Negative(-) value decreases stock e.g -80, Positive value increases stock e.g 80.",
-                  icon: <InfoCircleOutlined />,
-              }}
-              rules={[
-                  {
-                      required: true,
-                      message: "Please input a number",
-                  },
-
-                  {
-                      validator: validateAmount,
-                  },
-              ]}
-          >
-              <InputNumber
-                  style={{
-                      width: "100%",
-                  }}
-              />
-          </Form.Item>
-
-          <Form.Item
-              rules={[
-                  {
-                      required: true,
-                      message: "Provide reason!",
-                  },
-              ]}
-              label="Adjustment Reason"
-              name="reason"
-          >
-              <Input.TextArea />
-          </Form.Item>
+        <Form.Item
+          rules={[
+            {
+              required: true,
+              message: "Provide reason!",
+            },
+          ]}
+          label="Adjustment Reason"
+          name="reason"
+        >
+          <Input.TextArea />
+        </Form.Item>
       </>
     </GenericTable>
   );
