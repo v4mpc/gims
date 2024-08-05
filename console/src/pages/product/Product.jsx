@@ -85,9 +85,7 @@ export default function Product() {
             name="buyPrice"
           >
             <InputNumber
-              style={{
-                width: "100%",
-              }}
+                style={{ width: '200px' }}
             />
           </Form.Item>
 
@@ -102,9 +100,7 @@ export default function Product() {
             name="salePrice"
           >
             <InputNumber
-              style={{
-                width: "100%",
-              }}
+                style={{ width: '200px' }}
             />
           </Form.Item>
         </Flex>
@@ -121,6 +117,7 @@ export default function Product() {
             name="unitOfMeasure"
           >
             <Select
+                style={{ width: '200px' }}
               placeholder="Select unit"
               loading={unitsQuery.isLoading}
               options={unitsQuery.data.map((unit) => ({
@@ -142,6 +139,7 @@ export default function Product() {
           >
             <Select
               placeholder="Select category"
+              style={{ width: '200px' }}
               loading={categoriesQuery.isLoading}
               options={categoriesQuery.data.map((category) => ({
                 value: category.id,
