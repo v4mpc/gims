@@ -43,6 +43,7 @@ export default function Product() {
     <GenericTable
       itemColumns={productColumns}
       listPath={API_ROUTES.products}
+      showCategoryFilter={true}
       queryKey="products"
     >
       <>
@@ -150,7 +151,7 @@ export default function Product() {
           </Form.Item>
         </Flex>
 
-        <Form.Item label="Models" name="vehicles">
+        <Form.Item label="Vehicle" name="vehicles">
           <Select
             mode="multiple"
             allowClear

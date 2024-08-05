@@ -23,8 +23,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public Page<Product> getProducts(@RequestParam(required = false) String q, Pageable pageable) {
-        return productService.getProducts(q, pageable);
+    public Page<Product> getProducts(@RequestParam(required = false) String q, @RequestParam(defaultValue = "ALL") String c, Pageable pageable) {
+        return productService.getProducts(q, c, pageable);
     }
 
     @PostMapping

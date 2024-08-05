@@ -21,6 +21,14 @@ const productColumns = [
 
 
     {
+        title: "Category",
+        key: "category",
+        dataIndex: "name",
+        render: (_, record) => (<span>{record.category.name}</span>)
+    },
+
+
+    {
         title: "Buying price",
         key: "buy",
         dataIndex: "buyPrice",
@@ -30,14 +38,6 @@ const productColumns = [
         key: "sell",
         dataIndex: "salePrice",
     },
-
-    {
-        title: "ServiceCatalog",
-        key: "category",
-        dataIndex: "name",
-        render: (_, record) => (<span>{record.category.name}</span>)
-    },
-
     {
         title: "Action",
         key: "action",

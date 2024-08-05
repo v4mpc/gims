@@ -63,15 +63,21 @@ export function openNotification(key, type, title, description) {
   });
 }
 
-const getItemParams = (tableParams, searchQuery) => ({
+const getItemParams = (tableParams, searchQuery, searchCategory) => ({
   size: tableParams.pagination?.pageSize,
   page: tableParams.pagination?.current - 1,
   q: searchQuery,
+  c: searchCategory,
 });
 
-export async function getData(listPath, tableParams, searchQuery) {
+export async function getData(
+  listPath,
+  tableParams,
+  searchQuery,
+  searchCategory,
+) {
   const resp = await fetch(
-    `${BASE_URL}/${listPath}?${qs.stringify(getItemParams(tableParams, searchQuery))}`,
+    `${BASE_URL}/${listPath}?${qs.stringify(getItemParams(tableParams, searchQuery, searchCategory))}`,
   );
 
   if (!resp.ok) {

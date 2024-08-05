@@ -1,6 +1,7 @@
 package com.yhm.gims.service;
 
 
+import com.yhm.gims.domain.ProductSpecs;
 import com.yhm.gims.dto.ProductDto;
 import com.yhm.gims.entity.Product;
 import com.yhm.gims.entity.Unit;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -36,23 +38,10 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Page<Product> findByName(String name, Pageable pageable) {
-        if (Objects.equals(name, "%")) {
-            Sort sort = Sort.by(Sort.Direction.ASC, "name");
-            PageRequest newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-            return productRepository.findAll(newPageable);
-        }
-        return productRepository.findByNameContainingIgnoreCaseOrderByNameAsc(name, pageable);
-    }
 
+    public Page<Product> getProducts(String searchTerm, String categoryId, Pageable pageable) {
 
-    public Page<Product> getProducts(String searchTerm, Pageable pageable) {
-
-        if (searchTerm == null || searchTerm.isEmpty()) {
-            return productRepository.findAll(pageable);
-        } else {
-            return productRepository.search(searchTerm, pageable);
-        }
+            return productRepository.findAll(Specification.anyOf(ProductSpecs.searchByName(searchTerm), ProductSpecs.searchByCode(searchTerm)).and(categoryId.equals("ALL") ? null : ProductSpecs.searchByCategory(Integer.parseInt(categoryId))), pageable);
 
     }
 
