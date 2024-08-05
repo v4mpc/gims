@@ -41,7 +41,8 @@ export const API_ROUTES = {
   paymentCatalog: "paymentCatalog",
   paymentCatalogAll: "paymentCatalog/all",
   customers: "customers",
-  customersAll: "customersAll",
+  customersAll: "customers/all",
+  customerCars: "customers/cars",
   categories: "categories",
   categoriesAll: "categories/all",
   unitsAll: "units/all",
@@ -61,6 +62,23 @@ export function openNotification(key, type, title, description) {
     message: title,
     description: description,
   });
+}
+
+export function toCustomerCars(customers) {
+  const listOfListOfcars=customers.map((customer) => {
+    return customer.cars.map((car) => ({
+      id: car.id,
+      name: `${car.plateNumber}-${car.make}-${car.model}-${customer.name}`,
+    }));
+  });
+
+
+    return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
+
+
+
+
+
 }
 
 const getItemParams = (tableParams, searchQuery, searchCategory) => ({

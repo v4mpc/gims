@@ -26,6 +26,9 @@ public class CustomerService {
     public Page<Customer> findAll(Pageable pageable) {
         return customerRepository.findAll(pageable);
     }
+    public List<CustomerCar> findAllCars() {
+        return customerCarRepository.findAll();
+    }
 
 
     public Page<Customer> getCustomers(String searchTerm, Pageable pageable) {

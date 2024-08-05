@@ -33,7 +33,6 @@ public class Customer extends BaseEntity {
     @NotNull
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-
     private List<CustomerCar> cars = new ArrayList<>();
 
 

@@ -7,7 +7,7 @@ import {
     DropboxOutlined,
     FileTextOutlined,
     LogoutOutlined,
-    SettingOutlined,
+    SettingOutlined, ToolOutlined,
     UploadOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
@@ -49,6 +49,16 @@ const items = [
         }
     ],
   },
+
+
+
+    {
+        key: "service",
+        icon: <ToolOutlined />,
+        label: (
+            <Link to="/service">Services</Link>
+        ),
+    },
 
 
 

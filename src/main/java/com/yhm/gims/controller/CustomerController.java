@@ -2,6 +2,7 @@ package com.yhm.gims.controller;
 
 
 import com.yhm.gims.entity.Customer;
+import com.yhm.gims.entity.CustomerCar;
 import com.yhm.gims.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,12 @@ public class CustomerController {
     @GetMapping("/all")
     public List<Customer> getAllCustomers() {
         return customerService.findAll();
+    }
+
+
+    @GetMapping("/cars")
+    public List<CustomerCar> getAllCustomerCars() {
+        return customerService.findAllCars();
     }
 
     @PostMapping
