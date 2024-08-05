@@ -32,6 +32,12 @@ const items = [
     },
 
     {
+        key: "sell",
+        icon: <UploadOutlined />,
+        label: <Link to="/sell">Sell</Link>,
+    },
+
+    {
         key: "expense",
         icon: <CreditCardOutlined />,
         label: (

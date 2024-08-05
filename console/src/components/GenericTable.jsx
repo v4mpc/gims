@@ -145,6 +145,7 @@ export default function GenericTable({
           {showCategoryFilter && (
             <Select
               showSearch
+              style={{ width: '200px' }}
               placeholder="Filter by category"
               filterOption={(input, option) =>
                 (option?.label ?? "")

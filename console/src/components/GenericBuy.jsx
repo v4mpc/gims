@@ -237,6 +237,7 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
                       .toLowerCase()
                       .includes(input.toLowerCase())
                   }
+                  style={{ width: '200px' }}
                   onChange={filterChanged}
                   loading={categoriesQuery.isLoading}
                   defaultValue="ALL"
