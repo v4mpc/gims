@@ -29,7 +29,7 @@ const stockOnhandColumns = [
         key: "unit",
         dataIndex: "unit",
         width: "10%",
-        render:(_,record)=>record.product.unitOfMeasure.name
+        render:(_,record)=>record.product.unitOfMeasure.code
 
     },
 
@@ -65,7 +65,7 @@ const stockOnhandColumns = [
 
     {
         title: "Action",
-        key: "action",
+        key: "adjust",
     },
 ];
 

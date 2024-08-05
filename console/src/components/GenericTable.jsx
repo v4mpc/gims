@@ -4,14 +4,15 @@ import { useSearchParams } from "react-router-dom";
 
 import { useState, useRef } from "react";
 import {
-  API_ROUTES,
-  DEFAULT_PAGE_SIZE,
-  getData,
-  getLookupData,
-  SEARCH_BOX_WIDTH,
+    API_ROUTES, DATE_FORMAT,
+    DEFAULT_PAGE_SIZE,
+    getData,
+    getLookupData,
+    SEARCH_BOX_WIDTH,
 } from "../utils.jsx";
 import GenericTableModal from "./GenericTableModal.jsx";
 import { useQueries, useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 
 const { Search } = Input;
 
@@ -62,6 +63,15 @@ export default function GenericTable({
           </Button>
         ),
       };
+    }else if (obj.key === "adjust"){
+        return {
+            ...obj,
+            render: (_, record) => (
+                <Button type="primary" onClick={() => handleSetItem({...record,productId:record.product.id,adjustmentDate:dayjs().format(DATE_FORMAT),name:record.product.name})}>
+                    Adjust
+                </Button>
+            ),
+        };
     }
     return obj;
   });
