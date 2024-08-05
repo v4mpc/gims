@@ -22,13 +22,13 @@ export default function GenericTable({
   listPath,
   queryKey,
   showCategoryFilter = false,
-  sohSelectedItem = "",
+  showAddButton = true,
   children,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const formModeRef = useRef("CREATE");
   const [open, setOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(sohSelectedItem);
+  const [selectedItem, setSelectedItem] = useState("");
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: searchParams.get("page"),
@@ -168,9 +168,11 @@ export default function GenericTable({
           />
         </Space>
 
-        <Button type="primary" onClick={() => handleCreateClicked()}>
-          Add
-        </Button>
+        {showAddButton && (
+          <Button type="primary" onClick={() => handleCreateClicked()}>
+            Add
+          </Button>
+        )}
       </Flex>
       <Table
         onChange={handleTableChange}

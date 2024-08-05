@@ -41,6 +41,7 @@ export default function StockOnhand() {
       listPath={API_ROUTES.stockOnhand}
       showCategoryFilter={true}
       queryKey="stockOnhand"
+      showAddButton={false}
     >
       <>
         <Form.Item label="ProductId" name="productId" hidden={true}>
