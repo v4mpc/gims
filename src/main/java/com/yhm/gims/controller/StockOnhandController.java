@@ -22,8 +22,8 @@ public class StockOnhandController {
 
 
     @GetMapping
-    public Page<StockOnhandDto> getAll(Pageable pageable) {
-        return stockOnhandService.findAll(pageable);
+    public Page<StockOnhandDto> getAll(@RequestParam(required = false) String q, @RequestParam(defaultValue = "ALL") String c, Pageable pageable) {
+        return stockOnhandService.findAll(q, c, pageable);
     }
 
 

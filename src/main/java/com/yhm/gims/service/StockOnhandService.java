@@ -79,12 +79,24 @@ public class StockOnhandService {
     }
 
 
-    public Page<StockOnhandDto> findAll(Pageable pageable) {
+    public boolean hasCategory(StockOnhandDto sohDto, String categoryId) {
+        if (categoryId.equals("ALL")) {
+            return true;
+        }
+        return sohDto.getProduct().getCategory().getId() == Integer.parseInt(categoryId);
+    }
+
+    public boolean hasNameOrCode(StockOnhandDto sohDto, String searchTerm) {
+        return sohDto.getProduct().getName().toLowerCase().contains(searchTerm.toLowerCase()) || sohDto.getProduct().getCode().toLowerCase().contains(searchTerm.toLowerCase());
+    }
+
+
+    public Page<StockOnhandDto> findAll(String searchTerm, String categoryId, Pageable pageable) {
         Page<Product> productsPage = productService.findAll(pageable);
         List<Product> products = productsPage.getContent();
         Pageable productsPageable = productsPage.getPageable();
         long productsTotal = productsPage.getTotalElements();
-        List<StockOnhandDto> soh = products.stream().map(p -> toStockOnhandDto(p, LocalDate.now())).toList();
+        List<StockOnhandDto> soh = products.stream().map(p -> toStockOnhandDto(p, LocalDate.now())).filter(s -> hasCategory(s, categoryId)).filter(s -> hasNameOrCode(s, searchTerm)).toList();
         return new PageImpl<>(soh, productsPageable, productsTotal);
     }
 
