@@ -17,7 +17,13 @@ import {API_ROUTES, BASE_URL, DEFAULT_PAGE_SIZE, openNotification} from "../util
 const {Header, Content, Footer, Sider} = Layout;
 const items = [
 
-
+    {
+        key: "stockOnhand",
+        icon: <DropboxOutlined />,
+        label: (
+            <Link to={`/stock-on-hand?page=1&size=${DEFAULT_PAGE_SIZE}`}>Stock on hand</Link>
+        ),
+    },
 
     {
         key: "expense",
@@ -26,6 +32,8 @@ const items = [
             <Link to={`/expense?page=1&size=${DEFAULT_PAGE_SIZE}`}>Expenses</Link>
         ),
     },
+
+
 
     {
         key: "settings",
