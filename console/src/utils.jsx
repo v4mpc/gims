@@ -65,20 +65,18 @@ export function openNotification(key, type, title, description) {
 }
 
 export function toCustomerCars(customers) {
-  const listOfListOfcars=customers.map((customer) => {
+  const listOfListOfcars = customers.map((customer) => {
     return customer.cars.map((car) => ({
       id: car.id,
+      customerName: customer.name,
+      plateNumber: car.plateNumber,
+      make: car.make,
+      model: car.model,
       name: `${car.plateNumber}-${car.make}-${car.model}-${customer.name}`,
     }));
   });
 
-
-    return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
-
-
-
-
-
+  return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
 }
 
 const getItemParams = (tableParams, searchQuery, searchCategory) => ({
