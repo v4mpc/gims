@@ -56,9 +56,9 @@ const CreatePaint = () => {
   };
 
   const onSelectChange = (value) => {
-    const filteredCustomer = customers.filter(
+    const [filteredCustomer] = customers.filter(
       (c) => Number(c.id) === Number(value),
-    )[0];
+    );
     form.setFieldsValue({
       customerName: filteredCustomer.customerName,
       plateNumber: filteredCustomer.plateNumber,
@@ -85,14 +85,14 @@ const CreatePaint = () => {
   };
 
   const onQuantityChange = (e, key) => {
-    const paints = form.getFieldValue("paints");
-    if (paints[key].price) {
+    const _paints = form.getFieldValue("paints");
+    if (_paints[key].price) {
       form.setFieldsValue({
-        paints: paints.map((s, index) =>
+        paints: _paints.map((s, index) =>
           index === key
             ? {
                 ...s,
-                total: e * paints[key].price,
+                total: e * _paints[key].price,
               }
             : s,
         ),
@@ -101,9 +101,9 @@ const CreatePaint = () => {
   };
 
   const onPaymentChanged = (paymentId) => {
-    const selectedPayment = paymentCatalogQuery.data.filter(
+    const [selectedPayment] = paymentCatalogQuery.data.filter(
       (pc) => pc.id === paymentId,
-    )[0];
+    );
     setSelectedPayment(selectedPayment);
 
     if (selectedPayment.accountNumber !== null) {
@@ -121,7 +121,10 @@ const CreatePaint = () => {
     if (Object.hasOwn(changedValues, "paints")) {
       const totalQuantity = allValues.paints.reduce(
         (accumulator, currentValue) => {
-          return accumulator + currentValue?.quantity * currentValue?.price;
+          return (
+            accumulator +
+            (currentValue.quantity ?? 0) * (currentValue.price ?? 0)
+          );
         },
         0,
       );
@@ -131,7 +134,7 @@ const CreatePaint = () => {
     }
 
     if (
-       != null &&
+      allValues.initialPayment != null &&
       allValues.initialPaymentDate != null
     ) {
       setFinalPaymentEnabled(true);
@@ -153,6 +156,13 @@ const CreatePaint = () => {
               <InputNumber
                 formatter={thousanSeparatorformatter}
                 parser={thousanSeparatorparser}
+                min={1}
+                rules={[
+                  {
+                    required: true,
+                    message: "Missing estimate amount",
+                  },
+                ]}
                 style={{
                   width: "200px",
                 }}
@@ -183,6 +193,11 @@ const CreatePaint = () => {
       variant="outlined"
       form={form}
       layout="vertical"
+      initialValues={{
+        initialPayment: 0,
+        finalPayment: 0,
+        grandTotal: 0,
+      }}
       autoComplete="off"
       onValuesChange={onValuesChanged}
     >
@@ -190,6 +205,7 @@ const CreatePaint = () => {
         <Tag color="success">Paid</Tag>
         <Tag color="error">Discarded</Tag>
         <Tag color="warning">Unpaid</Tag>
+        <Tag color="warning">Partial Paid</Tag>
       </Flex>
       <Divider orientation="left" plain>
         Customer car
@@ -296,6 +312,7 @@ const CreatePaint = () => {
                     style={{ width: "150px" }}
                     formatter={thousanSeparatorformatter}
                     parser={thousanSeparatorparser}
+                    min={1}
                     onChange={(value) => onPriceChange(value, key)}
                     placeholder="Price"
                   />
@@ -377,7 +394,7 @@ const CreatePaint = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Date" name="iniitalPaymentDate">
+          <Form.Item label="Date" name="initialPaymentDate">
             <DatePicker
               style={{
                 width: "200px",
@@ -464,7 +481,7 @@ const CreatePaint = () => {
         </Form.Item>
       </Flex>
 
-      {payViaInsurance && (
+      {payViaInsurance && selectedPayment?.insurance && (
         <>
           <Divider orientation="left" plain>
             Insurance details
