@@ -1,22 +1,23 @@
 import {
-    Button,
-    Checkbox,
-    Collapse,
-    DatePicker,
-    Divider,
-    Flex,
-    Form,
-    Input,
-    InputNumber,
-    Select,
-    Space, Tag,
+  Button,
+  Checkbox,
+  Collapse,
+  DatePicker,
+  Divider,
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Space,
+  Tag,
 } from "antd";
 import {
-    API_ROUTES,
-    getLookupData,
-    thousanSeparatorformatter,
-    thousanSeparatorparser,
-    toCustomerCars
+  API_ROUTES,
+  getLookupData,
+  thousanSeparatorformatter,
+  thousanSeparatorparser,
+  toCustomerCars,
 } from "../../utils.jsx";
 import { useQueries } from "@tanstack/react-query";
 import {
@@ -30,6 +31,7 @@ const CreatePaint = () => {
   const [form] = Form.useForm();
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [payViaInsurance, setPayViaInsurance] = useState(false);
+  const [finalPaymentEnabled, setFinalPaymentEnabled] = useState(false);
 
   const results = useQueries({
     queries: [
@@ -123,13 +125,21 @@ const CreatePaint = () => {
         },
         0,
       );
-
       form.setFieldsValue({
         grandTotal: isNaN(totalQuantity) ? 0 : totalQuantity,
       });
-
-      console.log(totalQuantity);
     }
+
+    if (
+       != null &&
+      allValues.initialPaymentDate != null
+    ) {
+      setFinalPaymentEnabled(true);
+    } else {
+      setFinalPaymentEnabled(false);
+    }
+
+    console.log(allValues);
   };
 
   const collapseItems = [
@@ -140,7 +150,9 @@ const CreatePaint = () => {
         <>
           <Space wrap>
             <Form.Item name="estimateAmount" label="Estimate amount">
-              <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
+              <InputNumber
+                formatter={thousanSeparatorformatter}
+                parser={thousanSeparatorparser}
                 style={{
                   width: "200px",
                 }}
@@ -148,7 +160,12 @@ const CreatePaint = () => {
             </Form.Item>
 
             <Form.Item name="grandTotal" label="Actual amount">
-              <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser} style={{ width: "300px" }} disabled={true} />
+              <InputNumber
+                formatter={thousanSeparatorformatter}
+                parser={thousanSeparatorparser}
+                style={{ width: "300px" }}
+                disabled={true}
+              />
             </Form.Item>
 
             <Form.Item name="netProfit" label="Net Profit">
@@ -169,12 +186,11 @@ const CreatePaint = () => {
       autoComplete="off"
       onValuesChange={onValuesChanged}
     >
-
-        <Flex justify="flex-end">
-            <Tag color="success">Paid</Tag>
-            <Tag color="error">Discarded</Tag>
-            <Tag color="warning">Unpaid</Tag>
-        </Flex>
+      <Flex justify="flex-end">
+        <Tag color="success">Paid</Tag>
+        <Tag color="error">Discarded</Tag>
+        <Tag color="warning">Unpaid</Tag>
+      </Flex>
       <Divider orientation="left" plain>
         Customer car
       </Divider>
@@ -278,7 +294,8 @@ const CreatePaint = () => {
                 >
                   <InputNumber
                     style={{ width: "150px" }}
-                    formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
+                    formatter={thousanSeparatorformatter}
+                    parser={thousanSeparatorparser}
                     onChange={(value) => onPriceChange(value, key)}
                     placeholder="Price"
                   />
@@ -295,7 +312,9 @@ const CreatePaint = () => {
                     },
                   ]}
                 >
-                  <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
+                  <InputNumber
+                    formatter={thousanSeparatorformatter}
+                    parser={thousanSeparatorparser}
                     placeholder="Quantity"
                     min={1}
                     onChange={(value) => onQuantityChange(value, key)}
@@ -310,7 +329,8 @@ const CreatePaint = () => {
                     name={[name, "total"]}
                   >
                     <InputNumber
-                        formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
+                      formatter={thousanSeparatorformatter}
+                      parser={thousanSeparatorparser}
                       disabled
                       style={{ width: "200px" }}
                       placeholder="Total"
@@ -343,55 +363,55 @@ const CreatePaint = () => {
         defaultActiveKey={["1"]}
       />
 
+      <Divider orientation="left" plain>
+        Payments
+      </Divider>
 
-
-        <Divider orientation="left" plain>
-            Payments
-        </Divider>
-
-
-
-<div>
-    <Space>
-        <Form.Item name="initialPayment" label="Initial Payment">
-            <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}  style={{ width: "300px" }} />
-        </Form.Item>
-
-
-        <Form.Item label="Date" name="iniitalPaymentDate">
-            <DatePicker
-                style={{
-                    width: "200px",
-                }}
+      <div>
+        <Space>
+          <Form.Item name="initialPayment" label="Initial Payment">
+            <InputNumber
+              formatter={thousanSeparatorformatter}
+              parser={thousanSeparatorparser}
+              style={{ width: "300px" }}
             />
-        </Form.Item>
-    </Space>
-</div>
+          </Form.Item>
 
-
-<div>
-
-    <Space>
-        <Form.Item name="finalPayment" label="Final Payment">
-            <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}  style={{ width: "300px" }} />
-        </Form.Item>
-
-
-        <Form.Item label="Date" name="FinalPaymentDate">
+          <Form.Item label="Date" name="iniitalPaymentDate">
             <DatePicker
-                style={{
-                    width: "200px",
-                }}
+              style={{
+                width: "200px",
+              }}
             />
-        </Form.Item>
-    </Space>
-</div>
+          </Form.Item>
+        </Space>
+      </div>
 
+      <div>
+        <Space>
+          <Form.Item name="finalPayment" label="Final Payment">
+            <InputNumber
+              disabled={!finalPaymentEnabled}
+              formatter={thousanSeparatorformatter}
+              parser={thousanSeparatorparser}
+              style={{ width: "300px" }}
+            />
+          </Form.Item>
 
+          <Form.Item label="Date" name="finalPaymentDate">
+            <DatePicker
+              disabled={!finalPaymentEnabled}
+              style={{
+                width: "200px",
+              }}
+            />
+          </Form.Item>
+        </Space>
+      </div>
 
-        <Divider orientation="left" plain>
-            Payment method
-        </Divider>
+      <Divider orientation="left" plain>
+        Payment method
+      </Divider>
 
       <Flex justify="space-between" wrap>
         <Form.Item
@@ -464,29 +484,20 @@ const CreatePaint = () => {
               <Input style={{ width: "400px" }} />
             </Form.Item>
           </Space>
-
-
-
         </>
-
-
-
-
       )}
 
-        {/*<Space>*/}
-        {/*    <Button type="primary" htmlType="submit">*/}
-        {/*        Submit*/}
-        {/*    </Button>*/}
-        {/*    <Button htmlType="button" >*/}
-        {/*        Reset*/}
-        {/*    </Button>*/}
-        {/*    <Button type="link" htmlType="button">*/}
-        {/*        Fill form*/}
-        {/*    </Button>*/}
-        {/*</Space>*/}
-
-
+      {/*<Space>*/}
+      {/*    <Button type="primary" htmlType="submit">*/}
+      {/*        Submit*/}
+      {/*    </Button>*/}
+      {/*    <Button htmlType="button" >*/}
+      {/*        Reset*/}
+      {/*    </Button>*/}
+      {/*    <Button type="link" htmlType="button">*/}
+      {/*        Fill form*/}
+      {/*    </Button>*/}
+      {/*</Space>*/}
     </Form>
   );
 };
