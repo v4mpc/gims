@@ -18,6 +18,7 @@ import Buy from "./pages/Buy.jsx";
 import BuySuccess from "./pages/BuySuccess.jsx";
 import Sell from "./pages/Sell.jsx";
 import CreateService from "./pages/service/CreateService.jsx";
+import CreatePaint from "./pages/paint/CreatePaint.jsx";
 
 
 const queryClient = new QueryClient(
@@ -45,6 +46,7 @@ export default function App() {
                         <Route path="buy" element={<Buy />} />
                         <Route path="sell" element={<Sell />} />
                         <Route path="service" element={<CreateService />} />
+                        <Route path="paint" element={<CreatePaint />} />
                         <Route path="settings/units" element={<Unit/>}/>
                         <Route path="settings/categories" element={<Category/>}/>
                         <Route path="settings/customers" element={<Customer/>}/>

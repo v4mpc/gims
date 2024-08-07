@@ -5,7 +5,7 @@ import {
     DashboardOutlined,
     DownloadOutlined,
     DropboxOutlined,
-    FileTextOutlined,
+    FileTextOutlined, FormatPainterOutlined,
     LogoutOutlined,
     SettingOutlined, ToolOutlined,
     UploadOutlined,
@@ -57,6 +57,16 @@ const items = [
         icon: <ToolOutlined />,
         label: (
             <Link to="/service">Services</Link>
+        ),
+    },
+
+
+
+    {
+        key: "paint",
+        icon: <FormatPainterOutlined />,
+        label: (
+            <Link to="/paint">Paint</Link>
         ),
     },
 
