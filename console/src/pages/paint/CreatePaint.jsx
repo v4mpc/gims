@@ -414,8 +414,29 @@ const CreatePaint = () => {
               <Input style={{ width: "400px" }} />
             </Form.Item>
           </Space>
+
+
+
         </>
+
+
+
+
       )}
+
+        <Space>
+            <Button type="primary" htmlType="submit">
+                Submit
+            </Button>
+            <Button htmlType="button" >
+                Reset
+            </Button>
+            <Button type="link" htmlType="button">
+                Fill form
+            </Button>
+        </Space>
+
+
     </Form>
   );
 };
