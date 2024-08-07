@@ -1,12 +1,15 @@
 import {
-    Button, Checkbox, DatePicker,
+    Button,
+    Checkbox,
+    Collapse,
+    DatePicker,
     Divider,
     Flex,
     Form,
     Input,
     InputNumber,
     Select,
-    Space,
+    Space, Tag,
 } from "antd";
 import { API_ROUTES, getLookupData, toCustomerCars } from "../../utils.jsx";
 import { useQueries } from "@tanstack/react-query";
@@ -58,6 +61,7 @@ const CreatePaint = () => {
 
   const onPriceChange = (e, key) => {
     const _paints = form.getFieldValue("paints");
+
     if (_paints[key].quantity) {
       form.setFieldsValue({
         paints: _paints.map((s, index) =>
@@ -93,16 +97,62 @@ const CreatePaint = () => {
       (pc) => pc.id === paymentId,
     )[0];
     setSelectedPayment(selectedPayment);
+
+    if (selectedPayment.accountNumber !== null) {
+      form.setFieldsValue({
+        accountNumber: selectedPayment.accountNumber,
+      });
+    }
   };
 
+  const onPayViaInsuranceChanged = (e) => {
+    setPayViaInsurance(e.target.checked);
+  };
 
+  const onValuesChanged = (changedValues, allValues) => {
+    if (Object.hasOwn(changedValues, "paints")) {
+      const totalQuantity = allValues.paints.reduce(
+        (accumulator, currentValue) => {
+          return accumulator + currentValue?.quantity * currentValue?.price;
+        },
+        0,
+      );
 
+      form.setFieldsValue({
+        grandTotal: isNaN(totalQuantity) ? 0 : totalQuantity,
+      });
 
-  const onPayViaInsuranceChanged=(e)=>{
-      setPayViaInsurance(e.target.checked);
+      console.log(totalQuantity);
+    }
+  };
 
-  }
+  const collapseItems = [
+    {
+      key: "1",
+      label: "Amount Details",
+      children: (
+        <>
+          <Space wrap>
+            <Form.Item name="estimateAmount" label="Estimate amount">
+              <InputNumber
+                style={{
+                  width: "200px",
+                }}
+              />
+            </Form.Item>
 
+            <Form.Item name="grandTotal" label="Actual amount">
+              <InputNumber style={{ width: "300px" }} disabled={true} />
+            </Form.Item>
+
+            <Form.Item name="netProfit" label="Net Profit">
+              <InputNumber style={{ width: "300px" }} disabled={true} />
+            </Form.Item>
+          </Space>
+        </>
+      ),
+    },
+  ];
 
   return (
     <Form
@@ -111,7 +161,14 @@ const CreatePaint = () => {
       form={form}
       layout="vertical"
       autoComplete="off"
+      onValuesChange={onValuesChanged}
     >
+
+        <Flex justify="flex-end">
+            <Tag color="success">Paid</Tag>
+            <Tag color="error">Discarded</Tag>
+            <Tag color="warning">Unpaid</Tag>
+        </Flex>
       <Divider orientation="left" plain>
         Customer car
       </Divider>
@@ -270,9 +327,13 @@ const CreatePaint = () => {
         )}
       </Form.List>
 
-      <Divider orientation="left" plain>
-        Payment details
-      </Divider>
+      <Collapse
+        style={{
+          marginBottom: "20px",
+        }}
+        items={collapseItems}
+        defaultActiveKey={["1"]}
+      />
 
       <Flex justify="space-between" wrap>
         <Form.Item
@@ -288,7 +349,7 @@ const CreatePaint = () => {
           <Select
             placeholder="Select Payment"
             loading={paymentCatalogQuery.isLoading}
-            style={{ width: "400px" }}
+            style={{ width: "350px" }}
             showSearch
             onChange={onPaymentChanged}
             filterOption={customFilter}
@@ -303,18 +364,33 @@ const CreatePaint = () => {
           hidden={selectedPayment?.accountNumber === null}
           label="Account number"
         >
-          <Input disabled={true} />
+          <Input
+            style={{
+              width: "200px",
+            }}
+            disabled={true}
+          />
         </Form.Item>
 
         <Form.Item
-            name="active" valuePropName="checked"
+          name="active"
+          valuePropName="checked"
           hidden={!selectedPayment?.insurance}
           label="Pay via insurance"
         >
-            <Checkbox onChange={onPayViaInsuranceChanged}/>
+          <Checkbox onChange={onPayViaInsuranceChanged} />
         </Form.Item>
+
+        <Form.Item label="Date of payment" name="paymentDate">
+          <DatePicker
+            style={{
+              width: "200px",
+            }}
+          />
+        </Form.Item>
+
         <Form.Item name="grandTotal" label="Grand Total">
-          <Input style={{ width: "400px" }} disabled={true} />
+          <Input style={{ width: "300px" }} disabled={true} />
         </Form.Item>
       </Flex>
 
@@ -324,38 +400,19 @@ const CreatePaint = () => {
             Insurance details
           </Divider>
 
-          <Space  wrap>
+          <Space wrap>
             <Form.Item
-
-                rules={[
-                    {
-                        required: true,
-                        message: "Please enter insurance",
-                    },
-                ]}
-                name="insuranceName" label="Insurance name">
-              <Input
-                  style={{ width: "400px" }}
-              />
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter insurance",
+                },
+              ]}
+              name="insuranceName"
+              label="Insurance name"
+            >
+              <Input style={{ width: "400px" }} />
             </Form.Item>
-
-              <Form.Item
-                  label="Date of payment"
-                  name="insurancePaymentDate"
-                  rules={[
-                      {
-                          required: true,
-                          message: "Please date",
-                      },
-                  ]}
-              >
-                  <DatePicker
-                      style={{
-                          width: "200px",
-                      }}
-                  />
-              </Form.Item>
-
           </Space>
         </>
       )}
