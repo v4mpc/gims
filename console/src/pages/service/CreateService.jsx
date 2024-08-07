@@ -12,7 +12,7 @@ import {
 import {
     API_ROUTES,
     DATE_FORMAT,
-    getLookupData,
+    getLookupData, thousanSeparatorformatter, thousanSeparatorparser,
     toCustomerCars,
 } from "../../utils.jsx";
 import {useQueries} from "@tanstack/react-query";
@@ -258,7 +258,7 @@ const CreateService = () => {
                                         },
                                     ]}
                                 >
-                                    <InputNumber
+                                    <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
                                         style={{width: "150px"}}
                                         onChange={(value) => onPriceChange(value, key)}
                                         placeholder="Price"
@@ -276,7 +276,7 @@ const CreateService = () => {
                                         },
                                     ]}
                                 >
-                                    <InputNumber
+                                    <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
                                         placeholder="Quantity"
                                         min={1}
                                         onChange={(value) => onQuantityChange(value, key)}
@@ -290,7 +290,7 @@ const CreateService = () => {
                                         {...restField}
                                         name={[name, "total"]}
                                     >
-                                        <InputNumber
+                                        <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
                                             disabled
                                             style={{width: "200px"}}
                                             placeholder="Total"

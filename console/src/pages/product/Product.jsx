@@ -1,5 +1,5 @@
 import GenericTable from "../../components/GenericTable.jsx";
-import { API_ROUTES, getLookupData } from "../../utils.jsx";
+import {API_ROUTES, getLookupData, thousanSeparatorformatter, thousanSeparatorparser} from "../../utils.jsx";
 
 import {
   Form,
@@ -84,7 +84,7 @@ export default function Product() {
             ]}
             name="buyPrice"
           >
-            <InputNumber
+            <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
                 style={{ width: '200px' }}
             />
           </Form.Item>
@@ -99,7 +99,7 @@ export default function Product() {
             ]}
             name="salePrice"
           >
-            <InputNumber
+            <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
                 style={{ width: '200px' }}
             />
           </Form.Item>

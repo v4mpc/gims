@@ -17,7 +17,7 @@ import { useState, useEffect } from "react";
 import AsyncModal from "../components/AsyncModal.jsx";
 import ThousandSeparator from "../components/ThousandSeparator.jsx";
 import { useQueries } from "@tanstack/react-query";
-import { API_ROUTES, getLookupData } from "../utils.jsx";
+import {API_ROUTES, getLookupData, thousanSeparatorformatter, thousanSeparatorparser} from "../utils.jsx";
 import dayjs from "dayjs";
 
 const { Text } = Typography;
@@ -97,7 +97,7 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
       key: "quantity",
       render: (_, record) =>
         isSale ? (
-          <InputNumber
+          <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
             min={0}
             onBlur={(e) => handleInputQuantityChanged(record, e)}
             max={record.stockOnHand}
@@ -105,6 +105,7 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
           />
         ) : (
           <InputNumber
+              formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
             min={0}
             onBlur={(e) => handleInputQuantityChanged(record, e)}
             defaultValue={record.saleQuantity}

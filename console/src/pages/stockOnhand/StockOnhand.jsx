@@ -1,5 +1,11 @@
 import GenericTable from "../../components/GenericTable.jsx";
-import {API_ROUTES, DATE_FORMAT, getLookupData} from "../../utils.jsx";
+import {
+    API_ROUTES,
+    DATE_FORMAT,
+    getLookupData,
+    thousanSeparatorformatter,
+    thousanSeparatorparser
+} from "../../utils.jsx";
 
 import { Form, Input, Select, InputNumber, Checkbox, Flex } from "antd";
 import stockOnhandColumns from "./Columns.jsx";
@@ -65,7 +71,7 @@ export default function StockOnhand() {
           name="stockOnhand"
         >
           <InputNumber
-
+              formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
             style={{
               width: "100%",
             }}
@@ -104,7 +110,7 @@ export default function StockOnhand() {
             }),
           ]}
         >
-          <InputNumber
+          <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
             style={{
               width: "100%",
             }}

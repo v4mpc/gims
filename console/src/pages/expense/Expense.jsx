@@ -1,6 +1,6 @@
 import GenericTable from "../../components/GenericTable.jsx";
 import { InputNumber, Form, Input, DatePicker } from "antd";
-import { API_ROUTES } from "../../utils.jsx";
+import {API_ROUTES, thousanSeparatorformatter, thousanSeparatorparser} from "../../utils.jsx";
 import expenseColumns from "./Columns.jsx";
 
 
@@ -43,7 +43,7 @@ export default function Expense() {
               },
             ]}
             label="Amount" name="amount">
-          <InputNumber
+          <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
             style={{
               width: "100%",
             }}

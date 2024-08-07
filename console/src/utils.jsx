@@ -86,6 +86,14 @@ const getItemParams = (tableParams, searchQuery, searchCategory) => ({
   c: searchCategory,
 });
 
+export function thousanSeparatorformatter(value) {
+  return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+export function thousanSeparatorparser(value) {
+  return value.replace(/\$\s?|(,*)/g, "");
+}
+
 export async function getData(
   listPath,
   tableParams,
