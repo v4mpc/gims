@@ -118,12 +118,19 @@ const CreatePaint = () => {
   };
 
   const onValuesChanged = (changedValues, allValues) => {
+    console.log(allValues);
+    if (allValues.estimateAmount != null) {
+      form.setFieldsValue({
+        netProfit: allValues.estimateAmount - allValues.grandTotal,
+      });
+    }
+
     if (Object.hasOwn(changedValues, "paints")) {
       const totalQuantity = allValues.paints.reduce(
         (accumulator, currentValue) => {
           return (
             accumulator +
-            (currentValue.quantity ?? 0) * (currentValue.price ?? 0)
+            (currentValue?.quantity ?? 0) * (currentValue?.price ?? 0)
           );
         },
         0,
@@ -152,17 +159,20 @@ const CreatePaint = () => {
       children: (
         <>
           <Space wrap>
-            <Form.Item name="estimateAmount" label="Estimate amount">
+            <Form.Item
+              name="estimateAmount"
+              rules={[
+                {
+                  required: true,
+                  message: "Missing estimate amount",
+                },
+              ]}
+              label="Estimate amount"
+            >
               <InputNumber
                 formatter={thousanSeparatorformatter}
                 parser={thousanSeparatorparser}
                 min={1}
-                rules={[
-                  {
-                    required: true,
-                    message: "Missing estimate amount",
-                  },
-                ]}
                 style={{
                   width: "200px",
                 }}
@@ -179,7 +189,12 @@ const CreatePaint = () => {
             </Form.Item>
 
             <Form.Item name="netProfit" label="Net Profit">
-              <InputNumber style={{ width: "300px" }} disabled={true} />
+              <InputNumber
+                formatter={thousanSeparatorformatter}
+                parser={thousanSeparatorparser}
+                style={{ width: "300px" }}
+                disabled={true}
+              />
             </Form.Item>
           </Space>
         </>
@@ -197,6 +212,7 @@ const CreatePaint = () => {
         initialPayment: 0,
         finalPayment: 0,
         grandTotal: 0,
+        netProfit: 0,
       }}
       autoComplete="off"
       onValuesChange={onValuesChanged}
@@ -264,6 +280,8 @@ const CreatePaint = () => {
           {
             validator: async (_, names) => {
               if (!names || names.length < 1) {
+                //   TODO : this should trigger when finalize/print invoice is clicked
+                //  TODO Infact add dynamic validation on required field on finalize/print clicked
                 return Promise.reject(new Error("At least 1 Item required"));
               }
             },
@@ -391,6 +409,7 @@ const CreatePaint = () => {
               formatter={thousanSeparatorformatter}
               parser={thousanSeparatorparser}
               style={{ width: "300px" }}
+              min={0}
             />
           </Form.Item>
 
@@ -411,6 +430,7 @@ const CreatePaint = () => {
               disabled={!finalPaymentEnabled}
               formatter={thousanSeparatorformatter}
               parser={thousanSeparatorparser}
+              min={0}
               style={{ width: "300px" }}
             />
           </Form.Item>
@@ -477,7 +497,12 @@ const CreatePaint = () => {
         </Form.Item>
 
         <Form.Item name="grandTotal" label="Grand Total">
-          <Input style={{ width: "300px" }} disabled={true} />
+          <InputNumber
+            formatter={thousanSeparatorformatter}
+            parser={thousanSeparatorparser}
+            style={{ width: "300px" }}
+            disabled={true}
+          />
         </Form.Item>
       </Flex>
 
@@ -504,17 +529,28 @@ const CreatePaint = () => {
         </>
       )}
 
-      {/*<Space>*/}
-      {/*    <Button type="primary" htmlType="submit">*/}
-      {/*        Submit*/}
-      {/*    </Button>*/}
-      {/*    <Button htmlType="button" >*/}
-      {/*        Reset*/}
-      {/*    </Button>*/}
-      {/*    <Button type="link" htmlType="button">*/}
-      {/*        Fill form*/}
-      {/*    </Button>*/}
-      {/*</Space>*/}
+      <Flex justify="space-between">
+        <Space>
+          <Button htmlType="button">Cancel</Button>
+
+          <Button htmlType="button" onClick={form.resetFields}>
+            Reset
+          </Button>
+        </Space>
+        <Space>
+          <Button type="dashed" htmlType="button">
+            Print invoice
+          </Button>
+
+          <Button type="primary" htmlType="button">
+            Save for later
+          </Button>
+
+          <Button type="primary" htmlType="button">
+            Finalize
+          </Button>
+        </Space>
+      </Flex>
     </Form>
   );
 };
