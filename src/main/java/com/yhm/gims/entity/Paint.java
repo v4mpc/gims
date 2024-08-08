@@ -66,7 +66,7 @@ public class Paint extends BaseEntity {
 
 
     @Column(name = "pay_via_insurance")
-    private Boolean pay_via_insurance=false;
+    private Boolean payViaInsurance=false;
 
 
 

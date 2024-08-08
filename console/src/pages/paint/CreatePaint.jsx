@@ -87,7 +87,7 @@ const CreatePaint = () => {
                 (pc) => pc.id ===paintQuery.data.paint?.paymentMethod.id,
             );
             setSelectedPayment(selectedPayment);
-            setPayViaInsurance(paintQuery.data.paint?.pay_via_insurance);
+            setPayViaInsurance(paintQuery.data.paint?.payViaInsurance);
             form.setFieldsValue({
                 customerName: paintQuery.data.customerName,
                 customerCar:paintQuery.data.paint?.customerCar.id,
@@ -106,13 +106,12 @@ const CreatePaint = () => {
                         : null,
                 finalPayment: paintQuery.data.paint?.finalPayment,
                 estimateAmount: paintQuery.data.paint?.estimateAmount,
-                // active: paintQuery.data.paint.active,
                 paymentMethod: paintQuery.data.paint?.paymentMethod.id,
                 status: paintQuery.data.paint?.status,
                 grandTotal: grandTotal,
                 netProfit:paintQuery.data.paint?.estimateAmount-grandTotal,
                 insuranceName:paintQuery.data.paint?.insuranceName,
-                active:paintQuery.data.paint?.pay_via_insurance,
+                payViaInsurance:paintQuery.data.paint?.payViaInsurance,
                 accountNumber:paintQuery.data.paint?.paymentMethod.accountNumber,
                 accountName:paintQuery.data.paint?.paymentMethod.accountName,
 
@@ -127,7 +126,7 @@ const CreatePaint = () => {
     mutationFn: putItem,
     onSuccess: () => {
       form?.resetFields();
-      navigate(`paint?page=1&size=${DEFAULT_PAGE_SIZE}`);
+      navigate(`/paint?page=1&size=${DEFAULT_PAGE_SIZE}`);
       openNotification(
         "post-success",
         "success",
@@ -719,7 +718,7 @@ const CreatePaint = () => {
         </Form.Item>
 
         <Form.Item
-          name="active"
+          name="payViaInsurance"
           valuePropName="checked"
           hidden={!selectedPayment?.insurance}
           label="Pay via insurance"
