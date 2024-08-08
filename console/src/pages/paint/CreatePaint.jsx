@@ -32,6 +32,7 @@ const CreatePaint = () => {
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [payViaInsurance, setPayViaInsurance] = useState(false);
   const [finalPaymentEnabled, setFinalPaymentEnabled] = useState(false);
+  const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
 
   const results = useQueries({
     queries: [
@@ -118,7 +119,6 @@ const CreatePaint = () => {
   };
 
   const onValuesChanged = (changedValues, allValues) => {
-    console.log(allValues);
     if (allValues.estimateAmount != null) {
       form.setFieldsValue({
         netProfit: allValues.estimateAmount - allValues.grandTotal,
@@ -139,17 +139,79 @@ const CreatePaint = () => {
         grandTotal: isNaN(totalQuantity) ? 0 : totalQuantity,
       });
     }
+  };
 
-    if (
-      allValues.initialPayment != null &&
-      allValues.initialPaymentDate != null
-    ) {
-      setFinalPaymentEnabled(true);
-    } else {
-      setFinalPaymentEnabled(false);
-    }
+  const saveForLater = () => {
+    setSaveOnlyValidation(true);
 
-    console.log(allValues);
+    form.setFields([
+      {
+        name: "paints",
+        errors: [], // Clear any existing errors
+      },
+      {
+        name: "initialPayment",
+        errors: [],
+      },
+
+
+        {
+            name: "initialPaymentDate",
+            errors: [],
+        },
+
+
+        {
+            name: "finalPaymentDate",
+            errors: [],
+        },
+    ]);
+
+    const fields = form.getFieldValue("paints") || [];
+    // TODO understand flatmap
+    form.setFields(
+      fields.flatMap((_, index) => [
+        { name: ["paints", index, "item"], errors: [] },
+        { name: ["paints", index, "price"], errors: [] },
+        { name: ["paints", index, "quantity"], errors: [] },
+      ]),
+    );
+
+    setTimeout(() => {
+      form
+        .validateFields()
+        .then((values) => {
+          console.log("Form values:", values);
+        })
+        .catch((errorInfo) => {
+          console.error("Validation failed:", errorInfo);
+        });
+    }, 0);
+
+    //
+    //
+    // try {
+    //
+    //
+    //     const values = await form.validateFields();
+    //     console.log('Success:', values);
+    // } catch (errorInfo) {
+    //     console.log('Failed:', errorInfo);
+    // }
+  };
+
+  const finalize = async () => {
+    setSaveOnlyValidation(false);
+    setTimeout(() => {
+      form
+        .validateFields()
+        .then((values) => {
+          console.log("Form values:", values);
+        })
+        .catch((errorInfo) => {
+          console.error("Validation failed:", errorInfo);
+        });
+    }, 0);
   };
 
   const collapseItems = [
@@ -277,15 +339,31 @@ const CreatePaint = () => {
       <Form.List
         name="paints"
         rules={[
-          {
-            validator: async (_, names) => {
-              if (!names || names.length < 1) {
-                //   TODO : this should trigger when finalize/print invoice is clicked
-                //  TODO Infact add dynamic validation on required field on finalize/print clicked
-                return Promise.reject(new Error("At least 1 Item required"));
-              }
-            },
-          },
+          // {
+          //   validator: async (_, names) => {
+          //     if (!names || names.length < 1) {
+          //       //   TODO : this should trigger when finalize/print invoice is clicked
+          //       //  TODO  Infact add dynamic validation on required field on finalize/print clicked
+          //       return Promise.reject(new Error("At least 1 Item required"));
+          //     }
+          //   },
+          // },
+
+          ...(saveOnlyValidations
+            ? []
+            : [
+                {
+                  validator: async (_, names) => {
+                    if (!names || names.length < 1) {
+                      //   TODO : this should trigger when finalize/print invoice is clicked
+                      //  TODO  Infact add dynamic validation on required field on finalize/print clicked
+                      return Promise.reject(
+                        new Error("At least 1 Item required"),
+                      );
+                    }
+                  },
+                },
+              ]),
         ]}
       >
         {(fields, { add, remove }, { errors }) => (
@@ -306,10 +384,9 @@ const CreatePaint = () => {
                   label={key === 0 ? "Item" : ""}
                   min={1}
                   rules={[
-                    {
-                      required: true,
-                      message: "Missing price",
-                    },
+                    ...(saveOnlyValidations
+                      ? []
+                      : [{ required: true, message: "Missing item" }]),
                   ]}
                 >
                   <Input style={{ width: "250px" }} placeholder="Item" />
@@ -320,10 +397,9 @@ const CreatePaint = () => {
                   label={key === 0 ? "Price" : ""}
                   min={1}
                   rules={[
-                    {
-                      required: true,
-                      message: "Missing price",
-                    },
+                    ...(saveOnlyValidations
+                      ? []
+                      : [{ required: true, message: "Missing Price" }]),
                   ]}
                 >
                   <InputNumber
@@ -341,10 +417,9 @@ const CreatePaint = () => {
                   name={[name, "quantity"]}
                   label={key === 0 ? "Quantity" : ""}
                   rules={[
-                    {
-                      required: true,
-                      message: "Missing quantity",
-                    },
+                    ...(saveOnlyValidations
+                      ? []
+                      : [{ required: true, message: "Missing quantity" }]),
                   ]}
                 >
                   <InputNumber
@@ -404,7 +479,36 @@ const CreatePaint = () => {
 
       <div>
         <Space>
-          <Form.Item name="initialPayment" label="Initial Payment">
+          <Form.Item
+            rules={[
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (saveOnlyValidations) {
+                    return Promise.resolve();
+                  }
+
+
+                  if (
+                    value &&
+                    getFieldValue("initialPayment") +
+                      getFieldValue("finalPayment") >=
+                      getFieldValue("estimateAmount")
+                  ) {
+                    return Promise.resolve();
+                  }
+                    console.log('am here');
+                  return Promise.reject(
+
+                    new Error(
+                      "Payments should be greater on equal to Estimate amount to finalize.",
+                    ),
+                  );
+                },
+              }),
+            ]}
+            name="initialPayment"
+            label="Initial Payment"
+          >
             <InputNumber
               formatter={thousanSeparatorformatter}
               parser={thousanSeparatorparser}
@@ -413,7 +517,15 @@ const CreatePaint = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Date" name="initialPaymentDate">
+          <Form.Item
+              rules={[
+                  ...(saveOnlyValidations
+                      ? []
+                      : [{ required: true, message: "Please select date" }]),
+              ]}
+
+
+              label="Date" name="initialPaymentDate">
             <DatePicker
               style={{
                 width: "200px",
@@ -425,9 +537,28 @@ const CreatePaint = () => {
 
       <div>
         <Space>
-          <Form.Item name="finalPayment" label="Final Payment">
+          <Form.Item
+            dependencies={["initialPayment", "initialPaymentDate"]}
+            rules={[
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (
+                    !value ||
+                    (getFieldValue("initialPayment") &&
+                      getFieldValue("initialPaymentDate"))
+                  ) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Please fill initial Payment and date first"),
+                  );
+                },
+              }),
+            ]}
+            name="finalPayment"
+            label="Final Payment"
+          >
             <InputNumber
-              disabled={!finalPaymentEnabled}
               formatter={thousanSeparatorformatter}
               parser={thousanSeparatorparser}
               min={0}
@@ -435,9 +566,36 @@ const CreatePaint = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Date" name="finalPaymentDate">
+          <Form.Item
+              rules={[
+                  ({ getFieldValue }) => ({
+                      validator(_, value) {
+                          if (saveOnlyValidations) {
+                              return Promise.resolve();
+                          }
+
+                          if (
+
+                              !value && getFieldValue("finalPayment")
+
+                          ) {
+                              return Promise.reject(
+
+                                  new Error(
+                                      "Please select date",
+                                  ),
+                              );
+
+                          }
+
+                          return Promise.resolve();
+                      },
+                  }),
+              ]}
+
+
+              label="Date" name="finalPaymentDate">
             <DatePicker
-              disabled={!finalPaymentEnabled}
               style={{
                 width: "200px",
               }}
@@ -542,11 +700,11 @@ const CreatePaint = () => {
             Print invoice
           </Button>
 
-          <Button type="primary" htmlType="button">
+          <Button type="primary" onClick={saveForLater} htmlType="button">
             Save for later
           </Button>
 
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="button" onClick={finalize}>
             Finalize
           </Button>
         </Space>
