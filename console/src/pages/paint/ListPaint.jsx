@@ -7,6 +7,6 @@ import listPaintColumns from "./listPaintColumns.jsx";
 
 export default function ListPaint() {
     return (
-        <GenericTable itemColumns={listPaintColumns} showAddButton={false} listPath={API_ROUTES.paints} queryKey="paints"/>)
+        <GenericTable itemColumns={listPaintColumns} showAddButton={false} listPath={API_ROUTES.paints} createLink="create" queryKey="paints"/>)
 
 }

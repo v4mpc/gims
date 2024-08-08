@@ -12,7 +12,9 @@ import {
   SEARCH_BOX_WIDTH,
 } from "../utils.jsx";
 import GenericTableModal from "./GenericTableModal.jsx";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+
 import dayjs from "dayjs";
 
 const { Search } = Input;
@@ -23,6 +25,7 @@ export default function GenericTable({
   queryKey,
   showCategoryFilter = false,
   showAddButton = true,
+  createLink = null,
   children,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,6 +40,7 @@ export default function GenericTable({
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCategory, setSearchCategory] = useState("ALL");
+  const navigate = useNavigate();
 
   const results = useQueries({
     queries: [
@@ -87,6 +91,10 @@ export default function GenericTable({
     }
     return obj;
   });
+
+  const navigateToLink = () => {
+    navigate(createLink);
+  };
 
   const handleSetItem = (item) => {
     formModeRef.current = "UPDATE";
@@ -145,7 +153,7 @@ export default function GenericTable({
           {showCategoryFilter && (
             <Select
               showSearch
-              style={{ width: '200px' }}
+              style={{ width: "200px" }}
               placeholder="Filter by category"
               filterOption={(input, option) =>
                 (option?.label ?? "")
@@ -171,6 +179,12 @@ export default function GenericTable({
 
         {showAddButton && (
           <Button type="primary" onClick={() => handleCreateClicked()}>
+            Add
+          </Button>
+        )}
+
+        {createLink != null && (
+          <Button type="primary" onClick={navigateToLink}>
             Add
           </Button>
         )}
