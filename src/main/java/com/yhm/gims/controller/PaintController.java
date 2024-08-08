@@ -22,7 +22,7 @@ public class PaintController {
     private final PaintService paintService;
 
     @GetMapping
-    public Page<Paint> getPaints(@RequestParam(required = false) String q, Pageable pageable) {
+    public Page<PaintDto> getPaints(@RequestParam(required = false) String q, Pageable pageable) {
         return paintService.getPaints(q, pageable);
     }
 

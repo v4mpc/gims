@@ -63,10 +63,18 @@ const items = [
 
 
     {
+        key: "paint-create",
+        icon: <FormatPainterOutlined />,
+        label: (
+            <Link to="/paint/create">Paint create</Link>
+        ),
+    },
+
+    {
         key: "paint",
         icon: <FormatPainterOutlined />,
         label: (
-            <Link to="/paint">Paint</Link>
+            <Link to={`/paint?page=1&size=${DEFAULT_PAGE_SIZE}`}>Paint List</Link>
         ),
     },
 

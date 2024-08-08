@@ -13,11 +13,13 @@ import com.yhm.gims.repository.PaintRepository;
 import com.yhm.gims.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 
@@ -39,8 +41,25 @@ public class PaintService {
     }
 
 
-    public Page<Paint> getPaints(String searchTerm, Pageable pageable) {
-        return paintRepository.findAll(Specification.anyOf(PaintSpecs.searchByCustomerName(searchTerm), PaintSpecs.searchByCustomerPhone(searchTerm), PaintSpecs.searchByCustomerMake(searchTerm), PaintSpecs.searchByCustomerModel(searchTerm), PaintSpecs.searchByCustomerPlateNumber(searchTerm)), pageable);
+
+    public PaintDto toPaintDto(Paint paint, String customerName) {
+        return PaintDto.builder()
+                .paint(paint)
+                .customerName(customerName)
+                .build();
+    }
+
+
+    public Page<PaintDto> getPaints(String searchTerm, Pageable pageable) {
+        Page<Paint> paintsPage= paintRepository.findAll(Specification.anyOf(PaintSpecs.searchByCustomerName(searchTerm), PaintSpecs.searchByCustomerPhone(searchTerm), PaintSpecs.searchByCustomerMake(searchTerm), PaintSpecs.searchByCustomerModel(searchTerm), PaintSpecs.searchByCustomerPlateNumber(searchTerm)), pageable);
+        List<Paint> paints = paintsPage.getContent();
+        Pageable paintsPageable=paintsPage.getPageable();
+        long paintsTotal = paintsPage.getTotalElements();
+
+        List<PaintDto> paintsDto = paints.stream().map(p -> toPaintDto(p, p.getCustomerCar().getCustomer().getName())).toList();
+
+        return new PageImpl<>(paintsDto, paintsPageable, paintsTotal);
+
     }
 
 
