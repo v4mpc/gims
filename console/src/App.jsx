@@ -48,6 +48,7 @@ export default function App() {
                         <Route path="sell" element={<Sell />} />
                         <Route path="service" element={<CreateService />} />
                         <Route path="paint" element={<ListPaint />} />
+                        <Route path="paint/:id" element={<CreatePaint />} />
                         <Route path="paint/create" element={<CreatePaint />} />
                         <Route path="settings/units" element={<Unit/>}/>
                         <Route path="settings/categories" element={<Category/>}/>

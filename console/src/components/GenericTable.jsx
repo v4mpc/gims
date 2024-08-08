@@ -88,12 +88,24 @@ export default function GenericTable({
           </Button>
         ),
       };
+    } else if (obj.key === "paint") {
+        return {
+            ...obj,
+            render: (_, record) => (
+                <Button
+                    type="primary"
+                    onClick={() =>navigateToLink(`${record.paint.id}`)}
+                >
+                    Edit
+                </Button>
+            ),
+        };
     }
     return obj;
   });
 
-  const navigateToLink = () => {
-    navigate(createLink);
+  const navigateToLink = (link) => {
+    navigate(link);
   };
 
   const handleSetItem = (item) => {
@@ -184,7 +196,7 @@ export default function GenericTable({
         )}
 
         {createLink != null && (
-          <Button type="primary" onClick={navigateToLink}>
+          <Button type="primary" onClick={()=>navigate(createLink)}>
             Add
           </Button>
         )}

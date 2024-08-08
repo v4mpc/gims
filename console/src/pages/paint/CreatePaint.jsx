@@ -1,19 +1,21 @@
 import {
-  Button,
-  Checkbox,
-  Collapse,
-  DatePicker,
-  Divider,
-  Flex,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Space,
-  Tag,
+    Button,
+    Checkbox,
+    Collapse,
+    DatePicker,
+    Divider,
+    Flex,
+    Form,
+    Input,
+    InputNumber,
+    Select,
+    Space, Spin,
+    Tag,
 } from "antd";
 import {
   API_ROUTES,
+  DATE_FORMAT,
+  DEFAULT_PAGE_SIZE,
   getLookupData,
   openNotification,
   putItem,
@@ -27,13 +29,19 @@ import {
   MinusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import {useEffect, useState} from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 const CreatePaint = () => {
   const [form] = Form.useForm();
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [payViaInsurance, setPayViaInsurance] = useState(false);
   const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { id } = useParams();
+  const editMode = id !== undefined;
 
   const results = useQueries({
     queries: [
@@ -48,16 +56,79 @@ const CreatePaint = () => {
         placeholderData: [],
         queryFn: () => getLookupData(API_ROUTES.paymentCatalogAll),
       },
+
+      {
+        queryKey: ["singlePaint"],
+        placeholderData: [],
+        queryFn: () => getLookupData(`${API_ROUTES.paints}/${id}`),
+      },
     ],
   });
-  const [customerQuery, paymentCatalogQuery] = results;
+  const [customerQuery, paymentCatalogQuery, paintQuery] = results;
   const customers = toCustomerCars(customerQuery.data);
 
-  const queryClient = useQueryClient();
+  let editValues = {
+    initialPayment: 0,
+    finalPayment: 0,
+    grandTotal: 0,
+    netProfit: 0,
+    status: "DRAFT",
+  };
+
+  console.log(paintQuery.data.paint?.customerCar)
+
+
+    useEffect(() => {
+        if (editMode && !paintQuery.isLoading) {
+            const grandTotal=paintQuery.data.paint?.paints.reduce(
+                (acc, cr) => acc + cr.quantity * cr.price,
+                0,
+            )
+            const [selectedPayment] = paymentCatalogQuery.data.filter(
+                (pc) => pc.id ===paintQuery.data.paint?.paymentMethod.id,
+            );
+            setSelectedPayment(selectedPayment);
+            setPayViaInsurance(paintQuery.data.paint?.pay_via_insurance);
+            form.setFieldsValue({
+                customerName: paintQuery.data.customerName,
+                customerCar:paintQuery.data.paint?.customerCar.id,
+                plateNumber: paintQuery.data.paint?.customerCar.plateNumber,
+                model: paintQuery.data.paint?.customerCar.model,
+                make: paintQuery.data.paint?.customerCar.make,
+                initialPayment: paintQuery.data.paint?.initialPayment,
+                paints: paintQuery.data.paint?.paints.map(p=>({...p,total:p.quantity*p.price})),
+                initialPaymentDate:
+                    paintQuery.data.paint?.initialPaymentDate !== null
+                        ? dayjs(paintQuery.data.paint?.initialPaymentDate, DATE_FORMAT)
+                        : null,
+                finalPaymentDate:
+                    paintQuery.data.paint?.finalPaymentDate !== null
+                        ? dayjs(paintQuery.data.paint?.finalPaymentDate, DATE_FORMAT)
+                        : null,
+                finalPayment: paintQuery.data.paint?.finalPayment,
+                estimateAmount: paintQuery.data.paint?.estimateAmount,
+                // active: paintQuery.data.paint.active,
+                paymentMethod: paintQuery.data.paint?.paymentMethod.id,
+                status: paintQuery.data.paint?.status,
+                grandTotal: grandTotal,
+                netProfit:paintQuery.data.paint?.estimateAmount-grandTotal,
+                insuranceName:paintQuery.data.paint?.insuranceName,
+                active:paintQuery.data.paint?.pay_via_insurance,
+                accountNumber:paintQuery.data.paint?.paymentMethod.accountNumber,
+                accountName:paintQuery.data.paint?.paymentMethod.accountName,
+
+
+
+            });
+        }
+    }, [paintQuery, form, editMode, paymentCatalogQuery.data]);
+
+
   const { mutate: createItem, isLoading: isCreating } = useMutation({
     mutationFn: putItem,
     onSuccess: () => {
       form?.resetFields();
+      navigate(`paint?page=1&size=${DEFAULT_PAGE_SIZE}`);
       openNotification(
         "post-success",
         "success",
@@ -272,19 +343,21 @@ const CreatePaint = () => {
     },
   ];
 
+
+    console.log(paintQuery.isLoading)
+    if (editMode && paintQuery.isLoading) {
+        return <Spin size="large" />;
+    }
+
+
+
   return (
     <Form
       key="serviceForm"
       variant="outlined"
       form={form}
       layout="vertical"
-      initialValues={{
-        initialPayment: 0,
-        finalPayment: 0,
-        grandTotal: 0,
-        netProfit: 0,
-        status: "DRAFT",
-      }}
+      initialValues={editValues}
       autoComplete="off"
       onValuesChange={onValuesChanged}
     >

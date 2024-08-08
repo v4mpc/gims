@@ -49,7 +49,7 @@ const listPaintColumns = [
 
     {
         title: "Action",
-        key: "action",
+        key: "paint",
     },
 ];
 

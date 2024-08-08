@@ -64,10 +64,19 @@ public class PaintService {
 
 
 
+
+
+    public PaintDto get(Integer paintId) {
+        Paint paint=paintRepository.findById(paintId).orElseThrow(() -> new ResourceNotFoundException("Product not exist with id " + paintId));
+        return toPaintDto(paint, paint.getCustomerCar().getCustomer().getName());
+
+
+    }
+
+
+
     @Transactional
     public void save(Paint paint) {
-
-
         for (PaintLineItem paintLineItem : paint.getPaints()) {
             paintLineItem.setPaint(paint);
         }
