@@ -75,7 +75,6 @@ const CreatePaint = () => {
     status: "DRAFT",
   };
 
-  console.log(paintQuery.data.paint?.customerCar)
 
 
     useEffect(() => {
@@ -211,6 +210,7 @@ const CreatePaint = () => {
   const onValuesChanged = (changedValues, allValues) => {
     if (allValues.estimateAmount != null) {
       form.setFieldsValue({
+        //   TODO; there some errors in calculating netprofit
         netProfit: allValues.estimateAmount - allValues.grandTotal,
       });
     }
@@ -270,7 +270,6 @@ const CreatePaint = () => {
         .validateFields()
         .then((values) => {
           const data = { values, urlPath: API_ROUTES.paints, method: "POST" };
-          console.log("Form values:", values);
           createItem(data);
         })
         .catch((errorInfo) => {
@@ -344,7 +343,7 @@ const CreatePaint = () => {
   ];
 
 
-    console.log(paintQuery.isLoading)
+
     if (editMode && paintQuery.isLoading) {
         return <Spin size="large" />;
     }
@@ -581,7 +580,7 @@ const CreatePaint = () => {
                   ) {
                     return Promise.resolve();
                   }
-                  console.log("am here");
+
                   return Promise.reject(
                     new Error(
                       "Payments should be greater on equal to Estimate amount to finalize.",
@@ -765,7 +764,7 @@ const CreatePaint = () => {
 
       <Flex justify="space-between">
         <Space>
-          <Button htmlType="button">Cancel</Button>
+          <Button htmlType="button" onClick={()=>navigate(`/paint?page=1&size=${DEFAULT_PAGE_SIZE}`)}>Cancel</Button>
 
           <Button htmlType="button" onClick={form.resetFields}>
             Reset
