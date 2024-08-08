@@ -546,7 +546,7 @@ const CreatePaint = () => {
             Save for later
           </Button>
 
-          <Button type="primary" htmlType="button">
+          <Button type="primary" htmlType="submit">
             Finalize
           </Button>
         </Space>
