@@ -187,17 +187,6 @@ const CreatePaint = () => {
           console.error("Validation failed:", errorInfo);
         });
     }, 0);
-
-    //
-    //
-    // try {
-    //
-    //
-    //     const values = await form.validateFields();
-    //     console.log('Success:', values);
-    // } catch (errorInfo) {
-    //     console.log('Failed:', errorInfo);
-    // }
   };
 
   const finalize = async () => {
@@ -213,6 +202,8 @@ const CreatePaint = () => {
         });
     }, 0);
   };
+
+  
 
   const collapseItems = [
     {
@@ -687,6 +678,9 @@ const CreatePaint = () => {
         </>
       )}
 
+
+        <Divider orientation="left" plain/>
+
       <Flex justify="space-between">
         <Space>
           <Button htmlType="button">Cancel</Button>
@@ -696,7 +690,7 @@ const CreatePaint = () => {
           </Button>
         </Space>
         <Space>
-          <Button type="dashed" htmlType="button">
+          <Button type="dashed" onClick={finalize} htmlType="button">
             Print invoice
           </Button>
 
