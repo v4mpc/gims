@@ -2,6 +2,7 @@ package com.yhm.gims.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.yhm.gims.domain.enumaration.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -69,6 +70,11 @@ public class Paint extends BaseEntity {
 
 
     private String insuranceName;
+
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
 
 

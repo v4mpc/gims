@@ -203,7 +203,7 @@ const CreatePaint = () => {
     }, 0);
   };
 
-  
+
 
   const collapseItems = [
     {
