@@ -180,6 +180,24 @@ export async function putItem(data) {
     };
   }
 
+
+
+    if (Object.hasOwn(modifiedData, "customerCar")) {
+        modifiedData = {
+            ...modifiedData,
+            customerCar: { id: modifiedData.customerCar },
+        };
+    }
+
+
+
+    if (Object.hasOwn(modifiedData, "paymentMethod")) {
+        modifiedData = {
+            ...modifiedData,
+            paymentMethod: { id: modifiedData.paymentMethod },
+        };
+    }
+
   if (Object.hasOwn(modifiedData, "category")) {
     modifiedData = {
       ...modifiedData,

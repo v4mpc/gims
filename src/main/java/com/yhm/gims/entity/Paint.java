@@ -22,7 +22,7 @@ import java.util.List;
 public class Paint extends BaseEntity {
 
     @NotNull
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private CustomerCar customerCar;
 
     @NotNull
@@ -53,13 +53,14 @@ public class Paint extends BaseEntity {
 
 
     @OneToMany(mappedBy = "paint", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+
     private List<PaintLineItem> paints = new ArrayList<>();
 
 
 
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     private PaymentCatalog paymentMethod;
 
 

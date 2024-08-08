@@ -1,6 +1,7 @@
 package com.yhm.gims.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -12,13 +13,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "customer_cars")
+@Table(name = "paint_line_items")
 public class PaintLineItem extends BaseEntity {
 
 
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "paint_id")
+    @JsonIgnore
     private Paint paint;
 
     @NotNull
