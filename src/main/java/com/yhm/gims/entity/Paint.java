@@ -36,7 +36,7 @@ public class Paint extends BaseEntity {
 
 
     @Column(name = "initial_payment_amount")
-    private Float initialPaymentAmount;
+    private Float initialPayment;
 
 
 
@@ -47,7 +47,7 @@ public class Paint extends BaseEntity {
 
 
     @Column(name = "final_payment_amount")
-    private Float finalPaymentAmount;
+    private Float finalPayment;
 
 
 

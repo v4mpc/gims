@@ -15,11 +15,13 @@ import {
 import {
   API_ROUTES,
   getLookupData,
+  openNotification,
+  putItem,
   thousanSeparatorformatter,
   thousanSeparatorparser,
   toCustomerCars,
 } from "../../utils.jsx";
-import { useQueries } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import {
   InfoCircleOutlined,
   MinusCircleOutlined,
@@ -31,7 +33,6 @@ const CreatePaint = () => {
   const [form] = Form.useForm();
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [payViaInsurance, setPayViaInsurance] = useState(false);
-  const [finalPaymentEnabled, setFinalPaymentEnabled] = useState(false);
   const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
 
   const results = useQueries({
@@ -51,6 +52,24 @@ const CreatePaint = () => {
   });
   const [customerQuery, paymentCatalogQuery] = results;
   const customers = toCustomerCars(customerQuery.data);
+
+  const queryClient = useQueryClient();
+  const { mutate: createItem, isLoading: isCreating } = useMutation({
+    mutationFn: putItem,
+    onSuccess: () => {
+      form?.resetFields();
+      openNotification(
+        "post-success",
+        "success",
+        "Success",
+        "Record save successfully",
+      );
+      queryClient.invalidateQueries({ queryKey: ["createPaint"] });
+    },
+    onError: (error) => {
+      console.log("there was an error " + error);
+    },
+  });
 
   const customFilter = (input, option) => {
     return option.label.toLowerCase().includes(input.toLowerCase());
@@ -154,17 +173,15 @@ const CreatePaint = () => {
         errors: [],
       },
 
+      {
+        name: "initialPaymentDate",
+        errors: [],
+      },
 
-        {
-            name: "initialPaymentDate",
-            errors: [],
-        },
-
-
-        {
-            name: "finalPaymentDate",
-            errors: [],
-        },
+      {
+        name: "finalPaymentDate",
+        errors: [],
+      },
     ]);
 
     const fields = form.getFieldValue("paints") || [];
@@ -181,7 +198,9 @@ const CreatePaint = () => {
       form
         .validateFields()
         .then((values) => {
+          const data = { values, urlPath: API_ROUTES.paints, method: "POST" };
           console.log("Form values:", values);
+          createItem(data);
         })
         .catch((errorInfo) => {
           console.error("Validation failed:", errorInfo);
@@ -202,8 +221,6 @@ const CreatePaint = () => {
         });
     }, 0);
   };
-
-
 
   const collapseItems = [
     {
@@ -266,6 +283,7 @@ const CreatePaint = () => {
         finalPayment: 0,
         grandTotal: 0,
         netProfit: 0,
+        status: "DRAFT",
       }}
       autoComplete="off"
       onValuesChange={onValuesChanged}
@@ -293,7 +311,7 @@ const CreatePaint = () => {
               message: "Please input!",
             },
           ]}
-          name="carId"
+          name="customerCar"
         >
           <Select
             placeholder="Select customer vehicle"
@@ -316,6 +334,10 @@ const CreatePaint = () => {
           <Input disabled={true} />
         </Form.Item>
         <Form.Item name="make" label="Vehicle make">
+          <Input disabled={true} />
+        </Form.Item>
+
+        <Form.Item name="status" hidden={true} label="Vehicle make">
           <Input disabled={true} />
         </Form.Item>
         <Form.Item name="model" label="Vehicle model">
@@ -478,7 +500,6 @@ const CreatePaint = () => {
                     return Promise.resolve();
                   }
 
-
                   if (
                     value &&
                     getFieldValue("initialPayment") +
@@ -487,9 +508,8 @@ const CreatePaint = () => {
                   ) {
                     return Promise.resolve();
                   }
-                    console.log('am here');
+                  console.log("am here");
                   return Promise.reject(
-
                     new Error(
                       "Payments should be greater on equal to Estimate amount to finalize.",
                     ),
@@ -509,14 +529,14 @@ const CreatePaint = () => {
           </Form.Item>
 
           <Form.Item
-              rules={[
-                  ...(saveOnlyValidations
-                      ? []
-                      : [{ required: true, message: "Please select date" }]),
-              ]}
-
-
-              label="Date" name="initialPaymentDate">
+            rules={[
+              ...(saveOnlyValidations
+                ? []
+                : [{ required: true, message: "Please select date" }]),
+            ]}
+            label="Date"
+            name="initialPaymentDate"
+          >
             <DatePicker
               style={{
                 width: "200px",
@@ -558,34 +578,24 @@ const CreatePaint = () => {
           </Form.Item>
 
           <Form.Item
-              rules={[
-                  ({ getFieldValue }) => ({
-                      validator(_, value) {
-                          if (saveOnlyValidations) {
-                              return Promise.resolve();
-                          }
+            rules={[
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (saveOnlyValidations) {
+                    return Promise.resolve();
+                  }
 
-                          if (
+                  if (!value && getFieldValue("finalPayment")) {
+                    return Promise.reject(new Error("Please select date"));
+                  }
 
-                              !value && getFieldValue("finalPayment")
-
-                          ) {
-                              return Promise.reject(
-
-                                  new Error(
-                                      "Please select date",
-                                  ),
-                              );
-
-                          }
-
-                          return Promise.resolve();
-                      },
-                  }),
-              ]}
-
-
-              label="Date" name="finalPaymentDate">
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+            label="Date"
+            name="finalPaymentDate"
+          >
             <DatePicker
               style={{
                 width: "200px",
@@ -608,7 +618,7 @@ const CreatePaint = () => {
               message: "Please input!",
             },
           ]}
-          name="payment"
+          name="paymentMethod"
         >
           <Select
             placeholder="Select Payment"
@@ -678,8 +688,7 @@ const CreatePaint = () => {
         </>
       )}
 
-
-        <Divider orientation="left" plain/>
+      <Divider orientation="left" plain />
 
       <Flex justify="space-between">
         <Space>

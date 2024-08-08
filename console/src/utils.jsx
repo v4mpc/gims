@@ -30,6 +30,7 @@ export const API_ROUTES = {
   expenses: "expenses",
   dashboard: "dashboard",
   sales: "sales",
+  paints: "paints",
   stockOnhand: "stock-on-hand",
   adjust: "stock-on-hand/adjust",
   stockOnhandAll: "stock-on-hand/all",
@@ -138,6 +139,7 @@ export async function putItem(data) {
     },
   };
   let modifiedData = data.values;
+
   if (Object.hasOwn(modifiedData, "createdAt")) {
     Date.prototype.toISOString = function () {
       return dayjs(this).format(DATE_FORMAT);
@@ -148,19 +150,35 @@ export async function putItem(data) {
     };
   }
 
+  if (Object.hasOwn(modifiedData, "initialPaymentDate") &&  data.values.initialPaymentDate != null) {
+    Date.prototype.toISOString = function () {
+      return dayjs(this).format(DATE_FORMAT);
+    };
+    modifiedData = {
+      ...modifiedData,
+      initialPaymentDate: data.values.initialPaymentDate.format(DATE_FORMAT),
+    };
+  }
+
+  if (
+    Object.hasOwn(modifiedData, "finalPaymentDate") &&
+    data.values.finalPaymentDate != null
+  ) {
+    Date.prototype.toISOString = function () {
+      return dayjs(this).format(DATE_FORMAT);
+    };
+    modifiedData = {
+      ...modifiedData,
+      finalPaymentDate: data.values.finalPaymentDate.format(DATE_FORMAT),
+    };
+  }
+
   if (Object.hasOwn(modifiedData, "unitOfMeasure")) {
     modifiedData = {
       ...modifiedData,
       unitOfMeasure: { id: modifiedData.unitOfMeasure },
     };
   }
-
-  // if (Object.hasOwn(modifiedData, "vehicles")) {
-  //   modifiedData = {
-  //     ...modifiedData,
-  //     vehicles: modifiedData.vehicles.map((v) => ({ id: v })),
-  //   };
-  // }
 
   if (Object.hasOwn(modifiedData, "category")) {
     modifiedData = {
