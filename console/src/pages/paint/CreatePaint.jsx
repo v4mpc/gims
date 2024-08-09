@@ -1,6 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import { Button, Divider, Flex, Form, Space } from "antd";
 import { API_ROUTES, DEFAULT_PAGE_SIZE } from "../../utils.jsx";
-import { useNavigate } from "react-router-dom";
 
 import { StatusTag } from "../../components/StatusTag.jsx";
 import CustomerSection from "../../components/CustomerSection.jsx";
