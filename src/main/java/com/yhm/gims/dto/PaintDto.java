@@ -29,6 +29,11 @@ public class PaintDto {
 
 
 
+    @NotNull
+    private String customerPhone;
+
+
+
 
 
 }

@@ -41,38 +41,30 @@ public class PaintService {
     }
 
 
-
-    public PaintDto toPaintDto(Paint paint, String customerName) {
+    public PaintDto toPaintDto(Paint paint, String customerName, String customerPhone) {
         return PaintDto.builder()
                 .paint(paint)
                 .customerName(customerName)
+                .customerPhone(customerPhone)
                 .build();
     }
 
 
     public Page<PaintDto> getPaints(String searchTerm, Pageable pageable) {
-        Page<Paint> paintsPage= paintRepository.findAll(Specification.anyOf(PaintSpecs.searchByCustomerName(searchTerm), PaintSpecs.searchByCustomerPhone(searchTerm), PaintSpecs.searchByCustomerMake(searchTerm), PaintSpecs.searchByCustomerModel(searchTerm), PaintSpecs.searchByCustomerPlateNumber(searchTerm)), pageable);
+        Page<Paint> paintsPage = paintRepository.findAll(Specification.anyOf(PaintSpecs.searchByCustomerName(searchTerm), PaintSpecs.searchByCustomerPhone(searchTerm), PaintSpecs.searchByCustomerMake(searchTerm), PaintSpecs.searchByCustomerModel(searchTerm), PaintSpecs.searchByCustomerPlateNumber(searchTerm)), pageable);
         List<Paint> paints = paintsPage.getContent();
-        Pageable paintsPageable=paintsPage.getPageable();
+        Pageable paintsPageable = paintsPage.getPageable();
         long paintsTotal = paintsPage.getTotalElements();
-
-        List<PaintDto> paintsDto = paints.stream().map(p -> toPaintDto(p, p.getCustomerCar().getCustomer().getName())).toList();
-
+        List<PaintDto> paintsDto = paints.stream().map(p -> toPaintDto(p, p.getCustomerCar().getCustomer().getName(), p.getCustomerCar().getCustomer().getPhone())).toList();
         return new PageImpl<>(paintsDto, paintsPageable, paintsTotal);
 
     }
 
 
-
-
-
     public PaintDto get(Integer paintId) {
-        Paint paint=paintRepository.findById(paintId).orElseThrow(() -> new ResourceNotFoundException("Paint not exist with id " + paintId));
-        return toPaintDto(paint, paint.getCustomerCar().getCustomer().getName());
-
-
+        Paint paint = paintRepository.findById(paintId).orElseThrow(() -> new ResourceNotFoundException("Paint not exist with id " + paintId));
+        return toPaintDto(paint, paint.getCustomerCar().getCustomer().getName(),paint.getCustomerCar().getCustomer().getPhone());
     }
-
 
 
     @Transactional
@@ -82,7 +74,6 @@ public class PaintService {
         }
         paintRepository.save(paint);
     }
-
 
 
     public Paint update(Paint paint, int id) {
@@ -98,7 +89,7 @@ public class PaintService {
         updatePaint.setInsuranceName(paint.getInsuranceName());
         updatePaint.setStatus(paint.getStatus());
         updatePaint.getPaints().clear();
-        for (PaintLineItem p:paint.getPaints()) {
+        for (PaintLineItem p : paint.getPaints()) {
             updatePaint.addLineItem(p);
         }
         paintRepository.save(updatePaint);
