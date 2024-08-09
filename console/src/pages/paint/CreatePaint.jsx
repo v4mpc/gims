@@ -1,16 +1,9 @@
 import {
   Button,
-  Checkbox,
-  Collapse,
-  DatePicker,
   Divider,
   Flex,
   Form,
-  Input,
-  InputNumber,
-  Select,
   Space,
-  Spin,
 } from "antd";
 import {
   API_ROUTES,
@@ -19,24 +12,19 @@ import {
   getLookupData,
   openNotification,
   putItem,
-  thousanSeparatorformatter,
-  thousanSeparatorparser,
   toCustomerCars,
-    optionLabelFilter
+
 } from "../../utils.jsx";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
-import {
-  InfoCircleOutlined,
-  LoadingOutlined,
-  MinusCircleOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { StatusTag } from "../../components/StatusTag.jsx";
 import CustomerSection from "../../components/CustomerSection.jsx";
 import ListSection from "../../components/ListSection.jsx";
+import PaymentSection from "../../components/PaymentSection.jsx";
+import PaymentMethodSection from "../../components/PaymentMethodSection.jsx";
+import CollapseSection from "../../components/CollapseSection.jsx";
 
 const CreatePaint = () => {
   const [form] = Form.useForm();
@@ -355,56 +343,6 @@ const CreatePaint = () => {
     }, 0);
   };
 
-  const collapseItems = [
-    {
-      key: "1",
-      label: "Amount Details",
-      children: (
-        <>
-          <Space wrap>
-            <Form.Item
-              name="estimateAmount"
-              rules={[
-                {
-                  required: true,
-                  message: "Missing estimate amount",
-                },
-              ]}
-              label="Estimate amount"
-            >
-              <InputNumber
-                formatter={thousanSeparatorformatter}
-                parser={thousanSeparatorparser}
-                min={1}
-                style={{
-                  width: "200px",
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item name="grandTotal" label="Actual amount">
-              <InputNumber
-                formatter={thousanSeparatorformatter}
-                parser={thousanSeparatorparser}
-                style={{ width: "300px" }}
-                disabled={true}
-              />
-            </Form.Item>
-
-            <Form.Item name="netProfit" label="Net Profit">
-              <InputNumber
-                formatter={thousanSeparatorformatter}
-                parser={thousanSeparatorparser}
-                style={{ width: "300px" }}
-                disabled={true}
-              />
-            </Form.Item>
-          </Space>
-        </>
-      ),
-    },
-  ];
-
   return (
     <Form
       key="serviceForm"
@@ -433,218 +371,16 @@ const CreatePaint = () => {
 
      <ListSection saveOnlyValidations={saveOnlyValidations} onPriceChange={onPriceChange} onQuantityChange={onQuantityChange}/>
 
-      <Collapse
-        style={{
-          marginBottom: "20px",
-        }}
-        items={collapseItems}
-        defaultActiveKey={["1"]}
-      />
-
+        <CollapseSection/>
       <Divider orientation="left" plain>
         Payments
       </Divider>
-
-      <div>
-        <Space>
-          <Form.Item
-            rules={[
-              { required: true, message: "Please enter amount" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (saveOnlyValidations) {
-                    return Promise.resolve();
-                  }
-
-                  if (
-                    value &&
-                    getFieldValue("initialPayment") +
-                      getFieldValue("finalPayment") >=
-                      getFieldValue("estimateAmount")
-                  ) {
-                    return Promise.resolve();
-                  }
-
-                  return Promise.reject(
-                    new Error(
-                      "Payments should be greater on equal to Estimate amount to finalize.",
-                    ),
-                  );
-                },
-              }),
-            ]}
-            name="initialPayment"
-            label="Initial Payment"
-          >
-            <InputNumber
-              formatter={thousanSeparatorformatter}
-              parser={thousanSeparatorparser}
-              style={{ width: "300px" }}
-              min={0}
-            />
-          </Form.Item>
-
-          <Form.Item
-            rules={[
-              ...(saveOnlyValidations
-                ? []
-                : [{ required: true, message: "Please select date" }]),
-            ]}
-            label="Date"
-            name="initialPaymentDate"
-          >
-            <DatePicker
-              style={{
-                width: "200px",
-              }}
-            />
-          </Form.Item>
-        </Space>
-      </div>
-
-      <div>
-        <Space>
-          <Form.Item
-            dependencies={["initialPayment", "initialPaymentDate"]}
-            rules={[
-              { required: true, message: "Please enter amount" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (
-                    !value ||
-                    (getFieldValue("initialPayment") &&
-                      getFieldValue("initialPaymentDate"))
-                  ) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error("Please fill initial Payment and date first"),
-                  );
-                },
-              }),
-            ]}
-            name="finalPayment"
-            label="Final Payment"
-          >
-            <InputNumber
-              formatter={thousanSeparatorformatter}
-              parser={thousanSeparatorparser}
-              min={0}
-              style={{ width: "300px" }}
-            />
-          </Form.Item>
-
-          <Form.Item
-            rules={[
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (saveOnlyValidations) {
-                    return Promise.resolve();
-                  }
-
-                  if (!value && getFieldValue("finalPayment") > 0) {
-                    return Promise.reject(new Error("Please select date"));
-                  }
-
-                  return Promise.resolve();
-                },
-              }),
-            ]}
-            label="Date"
-            name="finalPaymentDate"
-          >
-            <DatePicker
-              style={{
-                width: "200px",
-              }}
-            />
-          </Form.Item>
-        </Space>
-      </div>
-
+        <PaymentSection saveOnlyValidations={saveOnlyValidations}/>
       <Divider orientation="left" plain>
         Payment method
       </Divider>
 
-      <Flex justify="space-between" wrap>
-        <Form.Item
-          label="Payment method"
-          rules={[
-            {
-              required: true,
-              message: "Please input!",
-            },
-          ]}
-          name="paymentMethod"
-        >
-          <Select
-            placeholder="Select Payment"
-            loading={paymentCatalogQuery.isLoading}
-            style={{ width: "350px" }}
-            showSearch
-            onChange={onPaymentChanged}
-            filterOption={optionLabelFilter}
-            options={paymentCatalogQuery.data.map((c) => ({
-              value: c.id,
-              label: c.accountName,
-            }))}
-          ></Select>
-        </Form.Item>
-        <Form.Item
-          name="accountNumber"
-          hidden={selectedPayment?.accountNumber === null}
-          label="Account number"
-        >
-          <Input
-            style={{
-              width: "200px",
-            }}
-            disabled={true}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="payViaInsurance"
-          valuePropName="checked"
-          hidden={!selectedPayment?.insurance}
-          label="Pay via insurance"
-        >
-          <Checkbox onChange={onPayViaInsuranceChanged} />
-        </Form.Item>
-
-        <Form.Item name="grandTotal" label="Grand Total">
-          <InputNumber
-            formatter={thousanSeparatorformatter}
-            parser={thousanSeparatorparser}
-            style={{ width: "300px" }}
-            disabled={true}
-          />
-        </Form.Item>
-      </Flex>
-
-      {payViaInsurance && selectedPayment?.insurance && (
-        <>
-          <Divider orientation="left" plain>
-            Insurance details
-          </Divider>
-
-          <Space wrap>
-            <Form.Item
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter insurance",
-                },
-              ]}
-              name="insuranceName"
-              label="Insurance name"
-            >
-              <Input style={{ width: "400px" }} />
-            </Form.Item>
-          </Space>
-        </>
-      )}
-
+      <PaymentMethodSection onPaymentChanged={onPaymentChanged} selectedPayment={selectedPayment} paymentCatalogQuery={paymentCatalogQuery} onPayViaInsuranceChanged={onPayViaInsuranceChanged} payViaInsurance={payViaInsurance}/>
       <Divider orientation="left" plain />
 
       <Flex justify="space-between">
