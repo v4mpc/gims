@@ -58,8 +58,9 @@ const CreatePaint = () => {
       },
 
       {
-        queryKey: ["singlePaint"],
+        queryKey: ["singlePaint",id],
         placeholderData: [],
+          enabled:editMode,
         queryFn: () => getLookupData(`${API_ROUTES.paints}/${id}`),
       },
     ],
@@ -133,12 +134,35 @@ const CreatePaint = () => {
         "Success",
         "Record save successfully",
       );
-      queryClient.invalidateQueries({ queryKey: ["createPaint"] });
+      queryClient.invalidateQueries({ queryKey: ["paints"] });
     },
     onError: (error) => {
       console.log("there was an error " + error);
     },
   });
+
+
+
+    const { mutate: updateItem, isLoading: isEditing } = useMutation({
+        mutationFn: putItem,
+        onSuccess: () => {
+            // todo: for some reason list view is not being updated.
+            queryClient.invalidateQueries({ queryKey: ["singlePaint","paints"] });
+
+            form?.resetFields();
+            navigate(`/paint?page=1&size=${DEFAULT_PAGE_SIZE}`);
+            openNotification(
+                "post-success",
+                "success",
+                "Success",
+                "Record updated successfully",
+            );
+
+        },
+        onError: (error) => {
+            console.log("there was an error " + error);
+        },
+    });
 
   const customFilter = (input, option) => {
     return option.label.toLowerCase().includes(input.toLowerCase());
@@ -263,6 +287,21 @@ const CreatePaint = () => {
         { name: ["paints", index, "quantity"], errors: [] },
       ]),
     );
+
+    if(editMode){
+        setTimeout(() => {
+            form
+                .validateFields()
+                .then((values) => {
+                    const data = { values, urlPath: `${API_ROUTES.paints}/${id}`, method: "PUT" };
+                    updateItem(data);
+                })
+                .catch((errorInfo) => {
+                    console.error("Validation failed:", errorInfo);
+                });
+        }, 0);
+        return;
+    }
 
     setTimeout(() => {
       form

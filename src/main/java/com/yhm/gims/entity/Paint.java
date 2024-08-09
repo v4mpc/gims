@@ -53,7 +53,6 @@ public class Paint extends BaseEntity {
 
 
     @OneToMany(mappedBy = "paint", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
-
     private List<PaintLineItem> paints = new ArrayList<>();
 
 
@@ -78,5 +77,10 @@ public class Paint extends BaseEntity {
     private Status status;
 
 
+
+    public void addLineItem(PaintLineItem pli) {
+        paints.add(pli);
+        pli.setPaint(this);
+    }
 
 }

@@ -3,7 +3,7 @@ package com.yhm.gims.service;
 
 import com.yhm.gims.domain.PaintSpecs;
 import com.yhm.gims.dto.PaintDto;
-import com.yhm.gims.dto.ProductDto;
+import com.yhm.gims.dto.PaintDto;
 import com.yhm.gims.entity.*;
 import com.yhm.gims.entity.Paint;
 import com.yhm.gims.exception.ResourceNotFoundException;
@@ -67,7 +67,7 @@ public class PaintService {
 
 
     public PaintDto get(Integer paintId) {
-        Paint paint=paintRepository.findById(paintId).orElseThrow(() -> new ResourceNotFoundException("Product not exist with id " + paintId));
+        Paint paint=paintRepository.findById(paintId).orElseThrow(() -> new ResourceNotFoundException("Paint not exist with id " + paintId));
         return toPaintDto(paint, paint.getCustomerCar().getCustomer().getName());
 
 
@@ -81,6 +81,28 @@ public class PaintService {
             paintLineItem.setPaint(paint);
         }
         paintRepository.save(paint);
+    }
+
+
+
+    public Paint update(Paint paint, int id) {
+        Paint updatePaint = paintRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Paint not exist with id " + id));
+        updatePaint.setCustomerCar(paint.getCustomerCar());
+        updatePaint.setEstimateAmount(paint.getEstimateAmount());
+        updatePaint.setInitialPaymentDate(paint.getInitialPaymentDate());
+        updatePaint.setInitialPayment(paint.getInitialPayment());
+        updatePaint.setFinalPaymentDate(paint.getFinalPaymentDate());
+        updatePaint.setFinalPayment(paint.getFinalPayment());
+        updatePaint.setPaymentMethod(paint.getPaymentMethod());
+        updatePaint.setPayViaInsurance(paint.getPayViaInsurance());
+        updatePaint.setInsuranceName(paint.getInsuranceName());
+        updatePaint.setStatus(paint.getStatus());
+        updatePaint.getPaints().clear();
+        for (PaintLineItem p:paint.getPaints()) {
+            updatePaint.addLineItem(p);
+        }
+        paintRepository.save(updatePaint);
+        return updatePaint;
     }
 
 

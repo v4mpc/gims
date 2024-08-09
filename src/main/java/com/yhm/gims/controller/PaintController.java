@@ -2,9 +2,9 @@ package com.yhm.gims.controller;
 
 
 import com.yhm.gims.dto.PaintDto;
-import com.yhm.gims.dto.ProductDto;
+import com.yhm.gims.dto.PaintDto;
 import com.yhm.gims.entity.Paint;
-import com.yhm.gims.entity.Product;
+import com.yhm.gims.entity.Paint;
 import com.yhm.gims.service.PaintService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +36,11 @@ public class PaintController {
 
 
 
+    @PutMapping("{id}")
+    public ResponseEntity<Paint> update(@PathVariable int id, @RequestBody Paint paint) {
+        Paint p = paintService.update(paint, id);
+        return ResponseEntity.ok(p);
+    }
 
 
     @GetMapping("{id}")
