@@ -1,11 +1,34 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
-import {Select, Form, Flex, Input} from "antd";
-import {toCustomerCars} from "../utils.jsx";
+import { Select, Form, Flex, Input } from "antd";
+import {API_ROUTES, getLookupData, toCustomerCars} from "../utils.jsx";
 
-import {optionLabelFilter} from "../utils.jsx";
+import { optionLabelFilter } from "../utils.jsx";
+import {useQuery} from "@tanstack/react-query";
 
-const CustomerSection = ({customerQuery,onCustomerVehicleChanged}) => {
-    const customers = toCustomerCars(customerQuery.data);
+const CustomerSection = ({ form }) => {
+
+
+    const customerQuery = useQuery( {
+        queryKey: ["customerAll"],
+        placeholderData: [],
+        queryFn: () => getLookupData(API_ROUTES.customersAll),
+    })
+
+    const onSelectChange = (value) => {
+        const [filteredCustomer] = customers.filter(
+            (c) => Number(c.id) === Number(value),
+        );
+        form.setFieldsValue({
+            customerName: filteredCustomer.customerName,
+            customerPhone: filteredCustomer.customerPhone,
+            plateNumber: filteredCustomer.plateNumber,
+            make: filteredCustomer.make,
+            model: filteredCustomer.model,
+        });
+    };
+
+
+  const customers = toCustomerCars(customerQuery.data);
   return (
     <Flex justify="space-between" wrap>
       <Form.Item
@@ -28,7 +51,7 @@ const CustomerSection = ({customerQuery,onCustomerVehicleChanged}) => {
           loading={customerQuery.isLoading}
           style={{ width: "400px" }}
           showSearch
-          onChange={onCustomerVehicleChanged}
+          onChange={onSelectChange}
           filterOption={optionLabelFilter}
           options={customers.map((c) => ({
             value: c.id,
@@ -60,6 +83,5 @@ const CustomerSection = ({customerQuery,onCustomerVehicleChanged}) => {
     </Flex>
   );
 };
-
 
 export default CustomerSection;

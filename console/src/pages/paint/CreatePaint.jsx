@@ -1,10 +1,4 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Form,
-  Space,
-} from "antd";
+import { Button, Divider, Flex, Form, Space } from "antd";
 import {
   API_ROUTES,
   DATE_FORMAT,
@@ -12,8 +6,6 @@ import {
   getLookupData,
   openNotification,
   putItem,
-  toCustomerCars,
-
 } from "../../utils.jsx";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -39,12 +31,6 @@ const CreatePaint = () => {
   const results = useQueries({
     queries: [
       {
-        queryKey: ["customerAll"],
-        placeholderData: [],
-        queryFn: () => getLookupData(API_ROUTES.customersAll),
-      },
-
-      {
         queryKey: ["paymentCatalogAll"],
         placeholderData: [],
         queryFn: () => getLookupData(API_ROUTES.paymentCatalogAll),
@@ -58,8 +44,7 @@ const CreatePaint = () => {
       },
     ],
   });
-  const [customerQuery, paymentCatalogQuery, paintQuery] = results;
-  const customers = toCustomerCars(customerQuery.data);
+  const [paymentCatalogQuery, paintQuery] = results;
 
   let editValues = {
     initialPayment: 0,
@@ -151,19 +136,6 @@ const CreatePaint = () => {
       console.log("there was an error " + error);
     },
   });
-
-  const onSelectChange = (value) => {
-    const [filteredCustomer] = customers.filter(
-      (c) => Number(c.id) === Number(value),
-    );
-    form.setFieldsValue({
-      customerName: filteredCustomer.customerName,
-      customerPhone: filteredCustomer.customerPhone,
-      plateNumber: filteredCustomer.plateNumber,
-      make: filteredCustomer.make,
-      model: filteredCustomer.model,
-    });
-  };
 
   const onPriceChange = (e, key) => {
     const _paints = form.getFieldValue("paints");
@@ -359,28 +331,33 @@ const CreatePaint = () => {
       <Divider orientation="left" plain>
         Customer car
       </Divider>
-
-      <CustomerSection
-        customerQuery={customerQuery}
-        onCustomerVehicleChanged={onSelectChange}
-      />
-
+      <CustomerSection form={form} />
       <Divider orientation="left" plain>
         Items
       </Divider>
 
-     <ListSection saveOnlyValidations={saveOnlyValidations} onPriceChange={onPriceChange} onQuantityChange={onQuantityChange}/>
+      <ListSection
+        saveOnlyValidations={saveOnlyValidations}
+        onPriceChange={onPriceChange}
+        onQuantityChange={onQuantityChange}
+      />
 
-        <CollapseSection/>
+      <CollapseSection />
       <Divider orientation="left" plain>
         Payments
       </Divider>
-        <PaymentSection saveOnlyValidations={saveOnlyValidations}/>
+      <PaymentSection saveOnlyValidations={saveOnlyValidations} />
       <Divider orientation="left" plain>
         Payment method
       </Divider>
 
-      <PaymentMethodSection onPaymentChanged={onPaymentChanged} selectedPayment={selectedPayment} paymentCatalogQuery={paymentCatalogQuery} onPayViaInsuranceChanged={onPayViaInsuranceChanged} payViaInsurance={payViaInsurance}/>
+      <PaymentMethodSection
+        onPaymentChanged={onPaymentChanged}
+        selectedPayment={selectedPayment}
+        paymentCatalogQuery={paymentCatalogQuery}
+        onPayViaInsuranceChanged={onPayViaInsuranceChanged}
+        payViaInsurance={payViaInsurance}
+      />
       <Divider orientation="left" plain />
 
       <Flex justify="space-between">
