@@ -1,5 +1,6 @@
 import { Flex, Space } from "antd";
 import ThousandSeparator from "../../components/ThousandSeparator.jsx";
+import {StatusTag} from "../../utils.jsx";
 
 const listPaintColumns = [
   {
@@ -57,7 +58,7 @@ const listPaintColumns = [
     title: "Status",
     key: "status",
     dataIndex: "status",
-    render: (_, record) => record.paint.status,
+    render: (_, record) => (<StatusTag status={record.paint.status}/>),
   },
 
   {

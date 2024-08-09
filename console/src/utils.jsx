@@ -1,4 +1,4 @@
-import { notification, DatePicker } from "antd";
+import {notification, DatePicker, Tag} from "antd";
 import dayjs from "dayjs";
 import qs from "qs";
 import {useEffect} from "react";
@@ -71,6 +71,7 @@ export function toCustomerCars(customers) {
     return customer.cars.map((car) => ({
       id: car.id,
       customerName: customer.name,
+      customerPhone: customer.phone,
       plateNumber: car.plateNumber,
       make: car.make,
       model: car.model,
@@ -215,6 +216,30 @@ export async function putItem(data) {
   return resp.json();
 }
 
+
+export function StatusTag ({status}){
+    const renderStatusTag = () => {
+        switch (status) {
+            case "DRAFT":
+                return <Tag color="warning">DRAFT</Tag>;
+            case "PAID":
+                return <Tag color="success">PAID</Tag>;
+
+            case "PARTIALLY_PAID":
+                return <Tag color="warning">PARTIALLY_PAID</Tag>
+            case "UNPAID":
+                return <Tag color="error">UNPAID</Tag>;
+            default:
+                return <Tag color="error">UNKNOWN</Tag>;
+        }
+    }
+    return (
+        <div>
+            {renderStatusTag()}
+        </div>
+    );
+
+}
 
 
 

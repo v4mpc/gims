@@ -14,15 +14,15 @@ import {
   Tag,
 } from "antd";
 import {
-  API_ROUTES,
-  DATE_FORMAT,
-  DEFAULT_PAGE_SIZE,
-  getLookupData,
-  openNotification,
-  putItem,
-  thousanSeparatorformatter,
-  thousanSeparatorparser,
-  toCustomerCars,
+    API_ROUTES,
+    DATE_FORMAT,
+    DEFAULT_PAGE_SIZE,
+    getLookupData,
+    openNotification,
+    putItem, StatusTag,
+    thousanSeparatorformatter,
+    thousanSeparatorparser,
+    toCustomerCars,
 } from "../../utils.jsx";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import {
@@ -91,6 +91,7 @@ const CreatePaint = () => {
       setPayViaInsurance(paintQuery.data.paint?.payViaInsurance);
       form.setFieldsValue({
         customerName: paintQuery.data.customerName,
+        customerPhone: paintQuery.data.customerPhone,
         customerCar: paintQuery.data.paint?.customerCar.id,
         plateNumber: paintQuery.data.paint?.customerCar.plateNumber,
         model: paintQuery.data.paint?.customerCar.model,
@@ -170,6 +171,7 @@ const CreatePaint = () => {
     );
     form.setFieldsValue({
       customerName: filteredCustomer.customerName,
+      customerPhone: filteredCustomer.customerPhone,
       plateNumber: filteredCustomer.plateNumber,
       make: filteredCustomer.make,
       model: filteredCustomer.model,
@@ -408,6 +410,8 @@ const CreatePaint = () => {
     return <Spin indicator={<LoadingOutlined spin />} size="large" />;
   }
 
+
+
   return (
     <Form
       key="serviceForm"
@@ -419,10 +423,7 @@ const CreatePaint = () => {
       onValuesChange={onValuesChanged}
     >
       <Flex justify="flex-end">
-        <Tag color="success">Paid</Tag>
-        <Tag color="error">Discarded</Tag>
-        <Tag color="warning">Unpaid</Tag>
-        <Tag color="warning">Partial Paid</Tag>
+        <StatusTag status={form.getFieldValue("status")}/>
       </Flex>
       <Divider orientation="left" plain>
         Customer car
@@ -457,6 +458,10 @@ const CreatePaint = () => {
           ></Select>
         </Form.Item>
         <Form.Item name="customerName" label="Customer name">
+          <Input disabled={true} />
+        </Form.Item>
+
+        <Form.Item name="customerPhone" label="Customer phone">
           <Input disabled={true} />
         </Form.Item>
 
