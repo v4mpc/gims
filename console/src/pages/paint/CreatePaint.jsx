@@ -27,6 +27,7 @@ import {
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import {
   InfoCircleOutlined,
+  LoadingOutlined,
   MinusCircleOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
@@ -283,31 +284,36 @@ const CreatePaint = () => {
       ]),
     );
 
-    if (editMode) {
-      setTimeout(() => {
-        form
-          .validateFields()
-          .then((values) => {
-            const data = {
-              values,
-              urlPath: `${API_ROUTES.paints}/${id}`,
-              method: "PUT",
-            };
-            updateItem(data);
-          })
-          .catch((errorInfo) => {
-            console.error("Validation failed:", errorInfo);
-          });
-      }, 0);
-      return;
-    }
-
     setTimeout(() => {
       form
         .validateFields()
         .then((values) => {
-          const data = { values, urlPath: API_ROUTES.paints, method: "POST" };
-          createItem(data);
+          let status = "DRAFT";
+          const { estimateAmount, initialPayment, finalPayment } = values;
+          if (initialPayment + finalPayment < estimateAmount) {
+            status = "PARTIALLY_PAID";
+          }
+          if (initialPayment + finalPayment === 0) {
+            status = "UNPAID";
+          }
+
+          if (!editMode) {
+            const updatedValues = { ...values, status: status };
+            const data = {
+              values: updatedValues,
+              urlPath: API_ROUTES.paints,
+              method: "POST",
+            };
+            createItem(data);
+          } else {
+            const updatedValues = { ...values, status: status };
+            const data = {
+              values: updatedValues,
+              urlPath: `${API_ROUTES.paints}/${id}`,
+              method: "PUT",
+            };
+            updateItem(data);
+          }
         })
         .catch((errorInfo) => {
           console.error("Validation failed:", errorInfo);
@@ -317,10 +323,29 @@ const CreatePaint = () => {
 
   const finalize = async () => {
     setSaveOnlyValidation(false);
+
     setTimeout(() => {
       form
         .validateFields()
         .then((values) => {
+          if (!editMode) {
+            const updatedValues = { ...values, status: "PAID" };
+            const data = {
+              values: updatedValues,
+              urlPath: API_ROUTES.paints,
+              method: "POST",
+            };
+            createItem(data);
+          } else {
+            const updatedValues = { ...values, status: "PAID" };
+            const data = {
+              values: updatedValues,
+              urlPath: `${API_ROUTES.paints}/${id}`,
+              method: "PUT",
+            };
+            updateItem(data);
+          }
+
           console.log("Form values:", values);
         })
         .catch((errorInfo) => {
@@ -380,7 +405,7 @@ const CreatePaint = () => {
   ];
 
   if (editMode && paintQuery.isLoading) {
-    return <Spin size="large" />;
+    return <Spin indicator={<LoadingOutlined spin />} size="large" />;
   }
 
   return (
@@ -599,6 +624,7 @@ const CreatePaint = () => {
         <Space>
           <Form.Item
             rules={[
+              { required: true, message: "Please enter amount" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (saveOnlyValidations) {
@@ -656,6 +682,7 @@ const CreatePaint = () => {
           <Form.Item
             dependencies={["initialPayment", "initialPaymentDate"]}
             rules={[
+              { required: true, message: "Please enter amount" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (
@@ -690,7 +717,7 @@ const CreatePaint = () => {
                     return Promise.resolve();
                   }
 
-                  if (!value && getFieldValue("finalPayment")) {
+                  if (!value && getFieldValue("finalPayment") > 0) {
                     return Promise.reject(new Error("Please select date"));
                   }
 
