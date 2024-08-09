@@ -11,18 +11,18 @@ import {
   Select,
   Space,
   Spin,
-  Tag,
 } from "antd";
 import {
-    API_ROUTES,
-    DATE_FORMAT,
-    DEFAULT_PAGE_SIZE,
-    getLookupData,
-    openNotification,
-    putItem, StatusTag,
-    thousanSeparatorformatter,
-    thousanSeparatorparser,
-    toCustomerCars,
+  API_ROUTES,
+  DATE_FORMAT,
+  DEFAULT_PAGE_SIZE,
+  getLookupData,
+  openNotification,
+  putItem,
+  thousanSeparatorformatter,
+  thousanSeparatorparser,
+  toCustomerCars,
+    optionLabelFilter
 } from "../../utils.jsx";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import {
@@ -34,6 +34,8 @@ import {
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { StatusTag } from "../../components/StatusTag.jsx";
+import CustomerSection from "../../components/CustomerSection.jsx";
 
 const CreatePaint = () => {
   const [form] = Form.useForm();
@@ -160,10 +162,6 @@ const CreatePaint = () => {
       console.log("there was an error " + error);
     },
   });
-
-  const customFilter = (input, option) => {
-    return option.label.toLowerCase().includes(input.toLowerCase());
-  };
 
   const onSelectChange = (value) => {
     const [filteredCustomer] = customers.filter(
@@ -406,12 +404,6 @@ const CreatePaint = () => {
     },
   ];
 
-  if (editMode && paintQuery.isLoading) {
-    return <Spin indicator={<LoadingOutlined spin />} size="large" />;
-  }
-
-
-
   return (
     <Form
       key="serviceForm"
@@ -423,62 +415,16 @@ const CreatePaint = () => {
       onValuesChange={onValuesChanged}
     >
       <Flex justify="flex-end">
-        <StatusTag status={form.getFieldValue("status")}/>
+        <StatusTag status={form.getFieldValue("status")} />
       </Flex>
       <Divider orientation="left" plain>
         Customer car
       </Divider>
-      <Flex justify="space-between" wrap>
-        <Form.Item
-          label="Customer vehicle"
-          tooltip={{
-            title:
-              "Vehicle name is in format PlateNumber-Make-Model-CustomerName",
-            icon: <InfoCircleOutlined />,
-          }}
-          rules={[
-            {
-              required: true,
-              message: "Please input!",
-            },
-          ]}
-          name="customerCar"
-        >
-          <Select
-            placeholder="Select customer vehicle"
-            loading={customerQuery.isLoading}
-            style={{ width: "400px" }}
-            showSearch
-            onChange={onSelectChange}
-            filterOption={customFilter}
-            options={customers.map((c) => ({
-              value: c.id,
-              label: c.name,
-            }))}
-          ></Select>
-        </Form.Item>
-        <Form.Item name="customerName" label="Customer name">
-          <Input disabled={true} />
-        </Form.Item>
 
-        <Form.Item name="customerPhone" label="Customer phone">
-          <Input disabled={true} />
-        </Form.Item>
-
-        <Form.Item name="plateNumber" label="Vehicle plate number">
-          <Input disabled={true} />
-        </Form.Item>
-        <Form.Item name="make" label="Vehicle make">
-          <Input disabled={true} />
-        </Form.Item>
-
-        <Form.Item name="status" hidden={true} label="Vehicle make">
-          <Input disabled={true} />
-        </Form.Item>
-        <Form.Item name="model" label="Vehicle model">
-          <Input disabled={true} />
-        </Form.Item>
-      </Flex>
+      <CustomerSection
+        customerQuery={customerQuery}
+        onCustomerVehicleChanged={onSelectChange}
+      />
 
       <Divider orientation="left" plain>
         Items
@@ -763,7 +709,7 @@ const CreatePaint = () => {
             style={{ width: "350px" }}
             showSearch
             onChange={onPaymentChanged}
-            filterOption={customFilter}
+            filterOption={optionLabelFilter}
             options={paymentCatalogQuery.data.map((c) => ({
               value: c.id,
               label: c.accountName,
@@ -857,5 +803,4 @@ const CreatePaint = () => {
     </Form>
   );
 };
-
 export default CreatePaint;

@@ -1,7 +1,6 @@
 import { Flex, Space } from "antd";
 import ThousandSeparator from "../../components/ThousandSeparator.jsx";
-import {StatusTag} from "../../utils.jsx";
-
+import {StatusTag} from "../../components/StatusTag.jsx";
 const listPaintColumns = [
   {
     title: "#",
@@ -28,9 +27,9 @@ const listPaintColumns = [
     dataIndex: "vehicle",
     render: (_, record) => (
       <Flex vertical>
-        <Space>Make : {record.paint.customerCar.make}</Space>
-        <Space>Model : {record.paint.customerCar.model}</Space>
-        <Space>Plate : {record.paint.customerCar.plateNumber}</Space>
+        <Space key={`make${record.paint.id}`}>Make : {record.paint.customerCar.make}</Space>
+        <Space key={`model${record.paint.id}`}>Model : {record.paint.customerCar.model}</Space>
+        <Space key={`plate${record.paint.id}`}>Plate : {record.paint.customerCar.plateNumber}</Space>
       </Flex>
     ),
   },
