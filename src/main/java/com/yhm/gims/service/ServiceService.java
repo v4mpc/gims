@@ -67,6 +67,10 @@ public class ServiceService {
         for (ServiceLineItem serviceLineItem : service.getServices()) {
             serviceLineItem.setService(service);
         }
+
+        for (SpareLineItem spareLineItem : service.getSpares()) {
+            spareLineItem.setService(service);
+        }
         serviceRepository.save(service);
     }
 

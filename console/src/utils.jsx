@@ -101,7 +101,7 @@ export function toCustomerCars(customers) {
 }
 
 
-export function makeList(form,fields,sparefields) {
+export function toModelList(form, fields, sparefields) {
     const servicesList = fields.map((f) => ({
         item: form.getFieldValue(`sitemName_${f.key}`),
         price: form.getFieldValue(`sprice_${f.key}`),

@@ -10,7 +10,7 @@ import {
   DATE_FORMAT,
   DEFAULT_PAGE_SIZE,
   getLookupData,
-  makeList,
+  toModelList,
   openNotification,
   putItem,
   serviceGrandTotal,
@@ -148,7 +148,7 @@ const CreateService = () => {
     },
   });
 
-  const onValueChanged = (_, _) => {
+  const onValueChanged = () => {
     // console.log(changed,all)
     form.setFieldsValue({
       grandTotal: serviceGrandTotal(form, fields, sparefields),
@@ -211,7 +211,7 @@ const CreateService = () => {
             status = "UNPAID";
           }
 
-          const { servicesList, spareList } = makeList(
+          const { servicesList, spareList } = toModelList(
             form,
             fields,
             sparefields,
@@ -257,7 +257,7 @@ const CreateService = () => {
       form
         .validateFields()
         .then((values) => {
-          const { servicesList, spareList } = makeList(
+          const { servicesList, spareList } = toModelList(
             form,
             fields,
             sparefields,
@@ -269,6 +269,7 @@ const CreateService = () => {
               spares: spareList,
               status: "PAID",
             };
+            console.log(updatedValues);
             const data = {
               values: updatedValues,
               urlPath: API_ROUTES.services,
