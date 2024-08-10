@@ -45,10 +45,9 @@ public class ServiceService {
 
     public Page<ServiceDto> getServices(String searchTerm, Pageable pageable) {
 
-        Sort backendSort = Sort.by(Sort.Direction.DESC, "id");
 
-        Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), backendSort);
-        Page<GService> servicesPage = serviceRepository.findAll(Specification.anyOf(ServiceSpecs.searchByCustomerName(searchTerm), ServiceSpecs.searchByCustomerPhone(searchTerm), ServiceSpecs.searchByCustomerMake(searchTerm), ServiceSpecs.searchByCustomerModel(searchTerm), ServiceSpecs.searchByCustomerPlateNumber(searchTerm)), pageableWithSort);
+
+        Page<GService> servicesPage = serviceRepository.findAll(Specification.anyOf(ServiceSpecs.searchByCustomerName(searchTerm), ServiceSpecs.searchByCustomerPhone(searchTerm), ServiceSpecs.searchByCustomerMake(searchTerm), ServiceSpecs.searchByCustomerModel(searchTerm), ServiceSpecs.searchByCustomerPlateNumber(searchTerm)), pageable);
         List<GService> GServices = servicesPage.getContent();
         Pageable servicesPageable = servicesPage.getPageable();
         long servicesTotal = servicesPage.getTotalElements();
