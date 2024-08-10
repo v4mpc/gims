@@ -10,8 +10,8 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const ServiceSection = ({ form,saveOnlyValidations,editMode }) => {
-  const [fields, setFields] = useState([]);
+const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields }) => {
+
   const [services, setServices] = useState([]);
 
   const results = useQueries({
@@ -89,27 +89,28 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode }) => {
   return (
     <Flex vertical>
       <Space style={{ marginBottom: "10px" }} align="baseline">
-        <Form.Item name="selectedService">
-          <Select
-            placeholder="Select service"
-
-
-
+        <Form.Item
             rules={[
                 ...(saveOnlyValidations
                     ? []
                     : [
                         {
                             validator: async (_, names) => {
+                                console.log("am here");
                                 if (services.length===serviceCatalogQuery.data.length) {
                                     return Promise.reject(
-                                        new Error("At least 1 Item required"),
+                                        new Error("At least 1 service is required"),
                                     );
                                 }
                             },
                         },
                     ]),
-            ]}
+            ]} name="selectedService">
+          <Select
+            placeholder="Select service"
+
+
+
 
 
             options={services.map((c) => ({
