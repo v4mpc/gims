@@ -40,10 +40,10 @@ const CreateService = () => {
       },
 
       {
-        queryKey: ["singlePaint", id],
+        queryKey: ["singleService", id],
         placeholderData: [],
         enabled: editMode,
-        queryFn: () => getLookupData(`${API_ROUTES.paints}/${id}`),
+        queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
     ],
   });
@@ -161,7 +161,7 @@ const CreateService = () => {
             const updatedValues = { ...values, status: status };
             const data = {
               values: updatedValues,
-              urlPath: API_ROUTES.paints,
+              urlPath: API_ROUTES.services,
               method: "POST",
             };
             createItem(data);
@@ -169,7 +169,7 @@ const CreateService = () => {
             const updatedValues = { ...values, status: status };
             const data = {
               values: updatedValues,
-              urlPath: `${API_ROUTES.paints}/${id}`,
+              urlPath: `${API_ROUTES.services}/${id}`,
               method: "PUT",
             };
             updateItem(data);
@@ -192,7 +192,7 @@ const CreateService = () => {
           //     const updatedValues = { ...values, status: "PAID" };
           //     const data = {
           //         values: updatedValues,
-          //         urlPath: API_ROUTES.paints,
+          //         urlPath: API_ROUTES.services,
           //         method: "POST",
           //     };
           //     createItem(data);
@@ -200,7 +200,7 @@ const CreateService = () => {
           //     const updatedValues = { ...values, status: "PAID" };
           //     const data = {
           //         values: updatedValues,
-          //         urlPath: `${API_ROUTES.paints}/${id}`,
+          //         urlPath: `${API_ROUTES.services}/${id}`,
           //         method: "PUT",
           //     };
           //     updateItem(data);

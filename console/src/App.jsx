@@ -17,7 +17,7 @@ import StockOnhand from "./pages/stockOnhand/StockOnhand.jsx";
 import Buy from "./pages/Buy.jsx";
 import BuySuccess from "./pages/BuySuccess.jsx";
 import Sell from "./pages/Sell.jsx";
-import CreateService from "./pages/GService/CreateService.jsx";
+import CreateService from "./pages/Service/CreateService.jsx";
 import CreatePaint from "./pages/paint/CreatePaint.jsx";
 import ListPaint from "./pages/paint/ListPaint.jsx";
 
