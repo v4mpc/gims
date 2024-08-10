@@ -123,7 +123,7 @@ export function toFormList(services, spares) {
     {
       [`itemName_${index}`]: s.item,
       [`price_${index}`]: s.price,
-      // { [`unit_${index}`]: s.unitOfMeasure.code },
+      [`unit_${index}`]: s.unit ,
       [`quantity_${index}`]: s.quantity,
       [`currentKm_${index}`]: s.currentKm,
       [`nextKm_${index}`]: s.nextKm,

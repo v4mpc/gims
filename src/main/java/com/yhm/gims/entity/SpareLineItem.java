@@ -24,6 +24,8 @@ public class SpareLineItem extends BaseEntity {
     @NotNull
     private String item;
 
+    private String unit;
+
     @NotNull
     private Float price;
 
