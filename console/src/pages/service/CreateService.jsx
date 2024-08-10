@@ -148,6 +148,39 @@ const CreateService = () => {
     };
 
 
+    const finalize = async () => {
+        setSaveOnlyValidation(false);
+
+        setTimeout(() => {
+            form
+                .validateFields()
+                .then((values) => {
+                    // if (!editMode) {
+                    //     const updatedValues = { ...values, status: "PAID" };
+                    //     const data = {
+                    //         values: updatedValues,
+                    //         urlPath: API_ROUTES.paints,
+                    //         method: "POST",
+                    //     };
+                    //     createItem(data);
+                    // } else {
+                    //     const updatedValues = { ...values, status: "PAID" };
+                    //     const data = {
+                    //         values: updatedValues,
+                    //         urlPath: `${API_ROUTES.paints}/${id}`,
+                    //         method: "PUT",
+                    //     };
+                    //     updateItem(data);
+                    // }
+
+                    console.log("Form values:", values);
+                })
+                .catch((errorInfo) => {
+                    console.error("Validation failed:", errorInfo);
+                });
+        }, 0);
+    };
+
 
   return (
     <Form
@@ -172,17 +205,17 @@ const CreateService = () => {
         Services
       </Divider>
 
-      <ServiceSection form={form} />
+      <ServiceSection form={form} saveOnlyValidations={saveOnlyValidations} editMode={editMode} />
 
-      <Divider orientation="left" plain>
-        Spares
-      </Divider>
+      {/*<Divider orientation="left" plain>*/}
+      {/*  Spares*/}
+      {/*</Divider>*/}
 
-      <SpareSection form={form} />
-        <Divider orientation="left" plain>
-            Payments
-        </Divider>
-        <PaymentSection saveOnlyValidations={true}/>
+      {/*<SpareSection form={form} />*/}
+      {/*  <Divider orientation="left" plain>*/}
+      {/*      Payments*/}
+      {/*  </Divider>*/}
+      {/*  <PaymentSection saveOnlyValidations={true}/>*/}
 
 
 
@@ -210,9 +243,9 @@ const CreateService = () => {
                     Save for later
                 </Button>
 
-                {/*<Button type="primary" htmlType="button" onClick={finalize}>*/}
-                {/*    Finalize*/}
-                {/*</Button>*/}
+                <Button type="primary" htmlType="button" onClick={finalize}>
+                    Finalize
+                </Button>
             </Space>
         </Flex>
 

@@ -10,7 +10,7 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const SpareSection = ({ form }) => {
+const SpareSection = ({ form,saveOnlyValidations }) => {
   const [fields, setFields] = useState([]);
   const [spares, setSpares] = useState([]);
 
@@ -138,6 +138,11 @@ const SpareSection = ({ form }) => {
           <Form.Item
             name={field.names[2]}
             label={field.key === 0 ? "Price" : ""}
+            rules={[
+                ...(saveOnlyValidations
+                    ? []
+                    : [{ required: true, message: "Missing price" }]),
+            ]}
           >
             <InputNumber
               style={{ width: "100px" }}
@@ -152,6 +157,11 @@ const SpareSection = ({ form }) => {
           <Form.Item
             name={field.names[3]}
             label={field.key === 0 ? "Quantity" : ""}
+            rules={[
+                ...(saveOnlyValidations
+                    ? []
+                    : [{ required: true, message: "Missing quantity" }]),
+            ]}
           >
             <InputNumber
               onChange={(value) => onQuantityChange(value, field.key)}
@@ -187,12 +197,22 @@ const SpareSection = ({ form }) => {
                     parser={thousanSeparatorparser}
                     style={{ width: "150px" }}
                     placeholder="Current Kms"
+                    rules={[
+                        ...(saveOnlyValidations
+                            ? []
+                            : [{ required: true, message: "Missing current Kms" }]),
+                    ]}
                   />
                 </Form.Item>
 
                 <Form.Item
                   name={field.names[6]}
                   label={field.key === 0 ? "Next Kms" : ""}
+                  rules={[
+                      ...(saveOnlyValidations
+                          ? []
+                          : [{ required: true, message: "Missing next Kms" }]),
+                  ]}
                 >
                   <InputNumber
                     formatter={thousanSeparatorformatter}

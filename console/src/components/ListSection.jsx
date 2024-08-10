@@ -10,24 +10,12 @@ const ListSection = ({saveOnlyValidations,onPriceChange,onQuantityChange}) => {
     <Form.List
       name="paints"
       rules={[
-        // {
-        //   validator: async (_, names) => {
-        //     if (!names || names.length < 1) {
-        //       //   TODO : this should trigger when finalize/print invoice is clicked
-        //       //  TODO  Infact add dynamic validation on required field on finalize/print clicked
-        //       return Promise.reject(new Error("At least 1 Item required"));
-        //     }
-        //   },
-        // },
-
         ...(saveOnlyValidations
           ? []
           : [
               {
                 validator: async (_, names) => {
                   if (!names || names.length < 1) {
-                    //   TODO : this should trigger when finalize/print invoice is clicked
-                    //  TODO  Infact add dynamic validation on required field on finalize/print clicked
                     return Promise.reject(
                       new Error("At least 1 Item required"),
                     );

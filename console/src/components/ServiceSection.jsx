@@ -10,7 +10,7 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const ServiceSection = ({ form }) => {
+const ServiceSection = ({ form,saveOnlyValidations,editMode }) => {
   const [fields, setFields] = useState([]);
   const [services, setServices] = useState([]);
 
@@ -82,12 +82,36 @@ const ServiceSection = ({ form }) => {
     });
   };
 
+
+
+
+
   return (
     <Flex vertical>
       <Space style={{ marginBottom: "10px" }} align="baseline">
         <Form.Item name="selectedService">
           <Select
             placeholder="Select service"
+
+
+
+            rules={[
+                ...(saveOnlyValidations
+                    ? []
+                    : [
+                        {
+                            validator: async (_, names) => {
+                                if (services.length===serviceCatalogQuery.data.length) {
+                                    return Promise.reject(
+                                        new Error("At least 1 Item required"),
+                                    );
+                                }
+                            },
+                        },
+                    ]),
+            ]}
+
+
             options={services.map((c) => ({
               value: c.id,
               label: c.name,
@@ -119,6 +143,11 @@ const ServiceSection = ({ form }) => {
           <Form.Item
             name={field.names[1]}
             label={field.key === 0 ? "Price" : ""}
+            rules={[
+                ...(saveOnlyValidations
+                    ? []
+                    : [{ required: true, message: "Missing price" }]),
+            ]}
           >
             <InputNumber
               style={{ width: "150px" }}
@@ -133,6 +162,12 @@ const ServiceSection = ({ form }) => {
           <Form.Item
             name={field.names[2]}
             label={field.key === 0 ? "Quantity" : ""}
+
+            rules={[
+                ...(saveOnlyValidations
+                    ? []
+                    : [{ required: true, message: "Missing quantity" }]),
+            ]}
           >
             <InputNumber
               onChange={(value) => onQuantityChange(value, field.key)}
