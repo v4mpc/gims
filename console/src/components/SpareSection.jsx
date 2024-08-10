@@ -45,9 +45,12 @@ const SpareSection = ({ form }) => {
         key: nextKey,
         names: [
           `itemName_${nextKey}`,
+          `unit_${nextKey}`,
           `price_${nextKey}`,
           `quantity_${nextKey}`,
           `total_${nextKey}`,
+            `currentKm_${nextKey}`,
+            `nextKm_${nextKey}`,
         ],
       },
     ]);
@@ -55,6 +58,7 @@ const SpareSection = ({ form }) => {
     form.setFieldsValue({
       [`itemName_${nextKey}`]: `${spareObject.code}-${spareObject.name}-${spareObject.category.name}`,
       [`price_${nextKey}`]: spareObject.salePrice,
+      [`unit_${nextKey}`]: spareObject.unitOfMeasure.code,
     });
     form.resetFields(["selectedSpare"]);
   };
@@ -116,8 +120,15 @@ const SpareSection = ({ form }) => {
           >
             <Input disabled style={{ width: "250px" }} placeholder="Item" />
           </Form.Item>
+
+            <Form.Item
+                name={field.names[1]}
+                label={field.key === 0 ? "Unit" : ""}
+            >
+                <Input disabled style={{ width: "50px" }} />
+            </Form.Item>
           <Form.Item
-            name={field.names[1]}
+            name={field.names[2]}
             label={field.key === 0 ? "Price" : ""}
           >
             <InputNumber
@@ -131,7 +142,7 @@ const SpareSection = ({ form }) => {
           </Form.Item>
 
           <Form.Item
-            name={field.names[2]}
+            name={field.names[3]}
             label={field.key === 0 ? "Quantity" : ""}
           >
             <InputNumber
@@ -145,7 +156,7 @@ const SpareSection = ({ form }) => {
 
           <Space align={field.key === 0 ? undefined : "baseline"}>
             <Form.Item
-              name={field.names[3]}
+              name={field.names[4]}
               label={field.key === 0 ? "Total" : ""}
             >
               <InputNumber
@@ -156,6 +167,39 @@ const SpareSection = ({ form }) => {
                 placeholder="Total"
               />
             </Form.Item>
+
+
+              {field.key===1&&(
+                  <>
+                      <Form.Item
+                          name={field.names[5]}
+                          label={field.key === 0 ? "Current Kms" : ""}
+                      >
+                          <InputNumber
+                              formatter={thousanSeparatorformatter}
+                              parser={thousanSeparatorparser}
+
+                              style={{ width: "200px" }}
+                              placeholder="Current Kms"
+                          />
+                      </Form.Item>
+
+
+                      <Form.Item
+                          name={field.names[6]}
+                          label={field.key === 0 ? "Next Kms" : ""}
+                      >
+                          <InputNumber
+                              formatter={thousanSeparatorformatter}
+                              parser={thousanSeparatorparser}
+
+                              style={{ width: "200px" }}
+                              placeholder="Next Kms"
+                          />
+                      </Form.Item>
+
+                  </>
+              )}
 
             <MinusCircleOutlined onClick={() => removeField(field.key)} />
           </Space>

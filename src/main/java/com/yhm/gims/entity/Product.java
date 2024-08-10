@@ -68,4 +68,7 @@ public class Product extends BaseEntity {
     @Column(name = "active")
     private Boolean active=true;
 
+    @Column(name = "is_oil")
+    private Boolean isOil=false;
+
 }

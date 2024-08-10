@@ -56,6 +56,7 @@ public class ProductService {
                 .name(productDto.getName())
                 .salePrice(productDto.getSalePrice())
                 .buyPrice(productDto.getBuyPrice())
+                .isOil(productDto.getIsOil())
                 .description(productDto.getDescription())
                 .category(productDto.getCategory())
                 .unitOfMeasure(productDto.getUnitOfMeasure())
@@ -81,6 +82,7 @@ public class ProductService {
         updateProduct.setUnitOfMeasure(productDto.getUnitOfMeasure());
         updateProduct.setCategory(productDto.getCategory());
         updateProduct.setActive(productDto.getActive());
+        updateProduct.setIsOil(productDto.getIsOil());
         updateProduct.setDescription(productDto.getDescription());
         updateProduct.setVehicles(new HashSet<>(vehicleRepository.findAllById(productDto.getVehicles())));
 

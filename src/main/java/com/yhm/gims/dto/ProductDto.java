@@ -39,4 +39,8 @@ public class ProductDto {
     private Float salePrice;
 
     private Boolean active = true;
+
+
+    private Boolean isOil = false;
+
 }
