@@ -49,8 +49,8 @@ const SpareSection = ({ form }) => {
           `price_${nextKey}`,
           `quantity_${nextKey}`,
           `total_${nextKey}`,
-            `currentKm_${nextKey}`,
-            `nextKm_${nextKey}`,
+          `currentKm_${nextKey}`,
+          `nextKm_${nextKey}`,
         ],
       },
     ]);
@@ -61,6 +61,14 @@ const SpareSection = ({ form }) => {
       [`unit_${nextKey}`]: spareObject.unitOfMeasure.code,
     });
     form.resetFields(["selectedSpare"]);
+  };
+
+  const isOilByKey = (key) => {
+    const itemName = form.getFieldValue(`itemName_${key}`);
+    const [spareObject] = spareCatalogQuery.data.filter(
+      (s) => `${s.code}-${s.name}-${s.category.name}` === itemName,
+    );
+    return spareObject.isOil;
   };
 
   const removeField = (key) => {
@@ -96,7 +104,7 @@ const SpareSection = ({ form }) => {
               value: c.id,
               label: `${c.code}-${c.name}-${c.category.name}`,
             }))}
-            style={{ width: "400px" }}
+            style={{ width: "450px" }}
             showSearch
             loading={spareCatalogQuery.isLoading}
             filterOption={optionLabelFilter}
@@ -118,21 +126,21 @@ const SpareSection = ({ form }) => {
             name={field.names[0]}
             label={field.key === 0 ? "Item" : ""}
           >
-            <Input disabled style={{ width: "250px" }} placeholder="Item" />
+            <Input disabled style={{ width: "450px" }} placeholder="Item" />
           </Form.Item>
 
-            <Form.Item
-                name={field.names[1]}
-                label={field.key === 0 ? "Unit" : ""}
-            >
-                <Input disabled style={{ width: "50px" }} />
-            </Form.Item>
+          <Form.Item
+            name={field.names[1]}
+            label={field.key === 0 ? "Unit" : ""}
+          >
+            <Input disabled style={{ width: "50px" }} />
+          </Form.Item>
           <Form.Item
             name={field.names[2]}
             label={field.key === 0 ? "Price" : ""}
           >
             <InputNumber
-              style={{ width: "150px" }}
+              style={{ width: "100px" }}
               formatter={thousanSeparatorformatter}
               parser={thousanSeparatorparser}
               min={1}
@@ -163,43 +171,38 @@ const SpareSection = ({ form }) => {
                 formatter={thousanSeparatorformatter}
                 parser={thousanSeparatorparser}
                 disabled
-                style={{ width: "200px" }}
+                style={{ width: "100px" }}
                 placeholder="Total"
               />
             </Form.Item>
 
+            {isOilByKey(field.key) && (
+              <>
+                <Form.Item
+                  name={field.names[5]}
+                  label={field.key === 0 ? "Current Kms" : ""}
+                >
+                  <InputNumber
+                    formatter={thousanSeparatorformatter}
+                    parser={thousanSeparatorparser}
+                    style={{ width: "150px" }}
+                    placeholder="Current Kms"
+                  />
+                </Form.Item>
 
-              {field.key===1&&(
-                  <>
-                      <Form.Item
-                          name={field.names[5]}
-                          label={field.key === 0 ? "Current Kms" : ""}
-                      >
-                          <InputNumber
-                              formatter={thousanSeparatorformatter}
-                              parser={thousanSeparatorparser}
-
-                              style={{ width: "200px" }}
-                              placeholder="Current Kms"
-                          />
-                      </Form.Item>
-
-
-                      <Form.Item
-                          name={field.names[6]}
-                          label={field.key === 0 ? "Next Kms" : ""}
-                      >
-                          <InputNumber
-                              formatter={thousanSeparatorformatter}
-                              parser={thousanSeparatorparser}
-
-                              style={{ width: "200px" }}
-                              placeholder="Next Kms"
-                          />
-                      </Form.Item>
-
-                  </>
-              )}
+                <Form.Item
+                  name={field.names[6]}
+                  label={field.key === 0 ? "Next Kms" : ""}
+                >
+                  <InputNumber
+                    formatter={thousanSeparatorformatter}
+                    parser={thousanSeparatorparser}
+                    style={{ width: "150px" }}
+                    placeholder="Next Kms"
+                  />
+                </Form.Item>
+              </>
+            )}
 
             <MinusCircleOutlined onClick={() => removeField(field.key)} />
           </Space>

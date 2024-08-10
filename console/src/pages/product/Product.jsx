@@ -164,6 +164,11 @@ export default function Product() {
           />
         </Form.Item>
 
+
+          <Form.Item name="isOil" valuePropName="checked">
+              <Checkbox>Is Oil</Checkbox>
+          </Form.Item>
+
         <Form.Item name="active" valuePropName="checked">
           <Checkbox>Active</Checkbox>
         </Form.Item>
