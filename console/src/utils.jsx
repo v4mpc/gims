@@ -101,48 +101,51 @@ export function toCustomerCars(customers) {
 
 export function toFormList(services, spares) {
   const formFields = services.map((s, index) => ({
-    key: index + 1,
+    key: index,
     names: [
-      `sitemName_${index + 1}`,
-      `sprice_${index + 1}`,
-      `squantity_${index + 1}`,
-      `stotal_${index + 1}`,
+      `sitemName_${index}`,
+      `sprice_${index}`,
+      `squantity_${index}`,
+      `stotal_${index}`,
     ],
   }));
 
-  const serviceValues = services.flatMap((s, index) => [
+  const _serviceValues = services.flatMap((s, index) => [
     {
-      [`sitemName_${index + 1}`]: s.item,
-      [`sprice_${index + 1}`]: s.price,
-      [`squantity_${index + 1}`]: s.quantity,
-      [`stotal_${index + 1}`]: s.quantity * s.price,
+      [`sitemName_${index}`]: s.item,
+      [`sprice_${index}`]: s.price,
+      [`squantity_${index}`]: s.quantity,
+      [`stotal_${index}`]: s.quantity * s.price,
     },
   ]);
 
-  const spareValues = spares.flatMap((s, index) => [
+  const _spareValues = spares.flatMap((s, index) => [
     {
-      [`itemName_${index + 1}`]: s.item,
-      [`price_${index + 1}`]: s.price,
-      // { [`unit_${index + 1}`]: s.unitOfMeasure.code },
-      [`quantity_${index + 1}`]: s.quantity,
-      [`currentKm_${index + 1}`]: s.currentKm,
-      [`nextKm_${index + 1}`]: s.nextKm,
-      [`total_${index + 1}`]: s.quantity * s.price,
+      [`itemName_${index}`]: s.item,
+      [`price_${index}`]: s.price,
+      // { [`unit_${index}`]: s.unitOfMeasure.code },
+      [`quantity_${index}`]: s.quantity,
+      [`currentKm_${index}`]: s.currentKm,
+      [`nextKm_${index}`]: s.nextKm,
+      [`total_${index}`]: s.quantity * s.price,
     },
   ]);
 
   const formSpareFields = spares.map((s, index) => ({
-    key: index + 1,
+    key: index,
     names: [
-      `itemName_${index + 1}`,
-      `unit_${index + 1}`,
-      `price_${index + 1}`,
-      `quantity_${index + 1}`,
-      `total_${index + 1}`,
-      `currentKm_${index + 1}`,
-      `nextKm_${index + 1}`,
+      `itemName_${index}`,
+      `unit_${index}`,
+      `price_${index}`,
+      `quantity_${index}`,
+      `total_${index}`,
+      `currentKm_${index}`,
+      `nextKm_${index}`,
     ],
   }));
+
+  const [spareValues]=_spareValues;
+  const [serviceValues]=_serviceValues;
 
   return { formFields, formSpareFields, serviceValues, spareValues };
 }

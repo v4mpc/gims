@@ -10,9 +10,9 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields }) => {
+const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields,services,setServices }) => {
 
-  const [services, setServices] = useState([]);
+
 
   const results = useQueries({
     queries: [

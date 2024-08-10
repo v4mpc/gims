@@ -24,12 +24,14 @@ import dayjs from "dayjs";
 
 const CreateService = () => {
   const [form] = Form.useForm();
+  const [services, setServices] = useState([]);
+  const [spares, setSpares] = useState([]);
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
   const { id } = useParams();
   const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
   const queryClient = useQueryClient();
-  const [sparefields, setSparefields] = useState([]);
+  const [spareFields, setSpareFields] = useState([]);
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [payViaInsurance, setPayViaInsurance] = useState(false);
 
@@ -50,9 +52,32 @@ const CreateService = () => {
         enabled: editMode,
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
+      {
+        staleTime: 1000 * 60 * 20,
+        queryKey: ["serviceAll"],
+        placeholderData: [],
+        queryFn: () => getLookupData(API_ROUTES.serviceCatalogsAll),
+      },
+
+      {
+        queryKey: ["spareAll"],
+        staleTime: 1000 * 60 * 20,
+        placeholderData: [],
+        queryFn: () => getLookupData(API_ROUTES.productAll),
+      },
     ],
   });
-  const [paymentCatalogQuery, serviceQuery] = results;
+  const [
+    paymentCatalogQuery,
+    serviceQuery,
+    serviceCatalogQuery,
+    spareCatalogQuery,
+  ] = results;
+
+  useEffect(() => {
+    setServices(serviceCatalogQuery.data);
+    setSpares(spareCatalogQuery.data);
+  }, [serviceCatalogQuery.data, spareCatalogQuery.data]);
 
   let editValues = {
     initialPayment: 0,
@@ -78,11 +103,23 @@ const CreateService = () => {
           serviceQuery.data.service?.services ?? [],
           serviceQuery.data.service?.spares ?? [],
         );
-        //
-        // setFields(formFields);
-        // setSparefields(formSpareFields);
+      //
 
+      const selectedServices = serviceQuery.data.service?.services.map(
+        (s) => s.item,
+      );
 
+      const selectedSpares = serviceQuery.data.service?.spares.map((s) => s.item);
+
+      setFields(formFields);
+      setSpareFields(formSpareFields);
+      setServices(
+        serviceCatalogQuery.data.filter((s) => !selectedServices.includes(s.name)),
+      );
+
+      setSpares(
+        spareCatalogQuery.data.filter((s) => !selectedSpares.includes(`${s.code}-${s.name}-${s.category.name}`)),
+      );
 
       const grandTotal = serviceTotal + spareTotal;
       const [selectedPayment] = paymentCatalogQuery.data.filter(
@@ -115,13 +152,12 @@ const CreateService = () => {
         payViaInsurance: serviceQuery.data.service?.payViaInsurance,
         accountNumber: serviceQuery.data.service?.paymentMethod.accountNumber,
         accountName: serviceQuery.data.service?.paymentMethod.accountName,
-        // ...serviceValues,
-        // ...spareValues,
       });
 
-
+      form.setFieldsValue(serviceValues);
+      form.setFieldsValue(spareValues);
     }
-  }, [serviceQuery, form, editMode, paymentCatalogQuery.data]);
+  }, [editMode, serviceQuery.data, paymentCatalogQuery.data]);
 
   const { mutate: createItem, isLoading: isCreating } = useMutation({
     mutationFn: putItem,
@@ -161,10 +197,10 @@ const CreateService = () => {
     },
   });
 
-  const onValueChanged = () => {
-    // console.log(changed,all)
+  const onValueChanged = (changed, all) => {
+    console.log(all);
     form.setFieldsValue({
-      grandTotal: serviceGrandTotal(form, fields, sparefields),
+      grandTotal: serviceGrandTotal(form, fields, spareFields),
     });
   };
 
@@ -202,7 +238,7 @@ const CreateService = () => {
     );
 
     form.setFields(
-      sparefields.flatMap((f) => [
+      spareFields.flatMap((f) => [
         { name: `itemName_${f.key}`, errors: [] },
         { name: `price_${f.key}`, errors: [] },
         { name: `quantity_${f.key}`, errors: [] },
@@ -227,7 +263,7 @@ const CreateService = () => {
           const { servicesList, spareList } = toModelList(
             form,
             fields,
-            sparefields,
+            spareFields,
           );
 
           if (!editMode) {
@@ -273,7 +309,7 @@ const CreateService = () => {
           const { servicesList, spareList } = toModelList(
             form,
             fields,
-            sparefields,
+            spareFields,
           );
           if (!editMode) {
             const updatedValues = {
@@ -357,6 +393,8 @@ const CreateService = () => {
         editMode={editMode}
         fields={fields}
         setFields={setFields}
+        services={services}
+        setServices={setServices}
       />
 
       <Divider orientation="left" plain>
@@ -366,8 +404,11 @@ const CreateService = () => {
       <SpareSection
         form={form}
         saveOnlyValidations={saveOnlyValidations}
-        setSparefields={setSparefields}
-        sparefields={sparefields}
+        setSparefields={setSpareFields}
+        sparefields={spareFields}
+        spares={spares}
+        setSpares={setSpares}
+        spareCatalogQuery={spareCatalogQuery}
       />
       <Divider orientation="left" plain>
         Payments
