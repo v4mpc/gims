@@ -10,8 +10,8 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const SpareSection = ({ form,saveOnlyValidations }) => {
-  const [fields, setFields] = useState([]);
+const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields }) => {
+
   const [spares, setSpares] = useState([]);
 
   const results = useQueries({
@@ -38,9 +38,9 @@ const SpareSection = ({ form,saveOnlyValidations }) => {
     const [spareObject] = spareCatalogQuery.data.filter(
       (s) => s.id === form.getFieldValue("selectedSpare"),
     );
-    const nextKey = fields.length;
-    setFields([
-      ...fields,
+    const nextKey = sparefields.length;
+    setSparefields([
+      ...sparefields,
       {
         key: nextKey,
         names: [
@@ -76,7 +76,7 @@ const SpareSection = ({ form,saveOnlyValidations }) => {
     const [removedSpareObject] = spareCatalogQuery.data.filter(
       (s) => `${s.code}-${s.name}-${s.category.name}` === itemName,
     );
-    setFields(fields.filter((field) => field.key !== key));
+    setSparefields(sparefields.filter((field) => field.key !== key));
     setSpares([...spares, removedSpareObject]);
   };
 
@@ -97,7 +97,10 @@ const SpareSection = ({ form,saveOnlyValidations }) => {
   return (
     <Flex vertical>
       <Space style={{ marginBottom: "10px" }} align="baseline">
-        <Form.Item name="selectedSpare">
+        <Form.Item name="selectedSpare"
+
+
+        >
           <Select
             placeholder="Select spare"
             options={spares.map((c) => ({
@@ -116,7 +119,7 @@ const SpareSection = ({ form,saveOnlyValidations }) => {
         </Button>
       </Space>
 
-      {fields.map((field, index) => (
+      {sparefields.map((field, index) => (
         <Space
           key={field.key}
           style={{ display: "flex", marginBottom: 5 }}
@@ -190,6 +193,11 @@ const SpareSection = ({ form,saveOnlyValidations }) => {
               <>
                 <Form.Item
                   name={field.names[5]}
+                  rules={[
+                      ...(saveOnlyValidations
+                          ? []
+                          : [{ required: true, message: "Missing current Kms" }]),
+                  ]}
                   label={field.key === 0 ? "Current Kms" : ""}
                 >
                   <InputNumber
@@ -197,11 +205,7 @@ const SpareSection = ({ form,saveOnlyValidations }) => {
                     parser={thousanSeparatorparser}
                     style={{ width: "150px" }}
                     placeholder="Current Kms"
-                    rules={[
-                        ...(saveOnlyValidations
-                            ? []
-                            : [{ required: true, message: "Missing current Kms" }]),
-                    ]}
+
                   />
                 </Form.Item>
 

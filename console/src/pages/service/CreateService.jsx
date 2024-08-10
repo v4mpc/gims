@@ -23,6 +23,7 @@ const CreateService = () => {
   const { id } = useParams();
   const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
   const queryClient = useQueryClient();
+    const [sparefields, setSparefields] = useState([]);
 
   const editMode = id !== undefined;
   let editValues = {
@@ -92,6 +93,11 @@ const CreateService = () => {
         name: "finalPaymentDate",
         errors: [],
       },
+
+        {
+            name: "selectedService",
+            errors: [],
+        },
     ]);
 
     form.setFields(
@@ -103,6 +109,22 @@ const CreateService = () => {
         ),
       ),
     );
+
+
+      form.setFields(
+          sparefields.flatMap(
+              (f) => (
+                  [{ name: `itemName_${f.key}`,errors:[] },
+                      { name: `price_${f.key}`,errors:[] },
+                      { name: `quantity_${f.key}`,errors:[]},
+                      { name: `currentKm_${f.key}`,errors:[]},
+                      { name: `nextKm_${f.key}`,errors:[]},
+
+                  ]
+              ),
+          ),
+      );
+
 
     setTimeout(() => {
       form
@@ -204,11 +226,11 @@ const CreateService = () => {
         setFields={setFields}
       />
 
-      {/*<Divider orientation="left" plain>*/}
-      {/*  Spares*/}
-      {/*</Divider>*/}
+      <Divider orientation="left" plain>
+        Spares
+      </Divider>
 
-      {/*<SpareSection form={form} />*/}
+      <SpareSection form={form} saveOnlyValidations={saveOnlyValidations} setSparefields={setSparefields} sparefields={sparefields} />
       {/*  <Divider orientation="left" plain>*/}
       {/*      Payments*/}
       {/*  </Divider>*/}
