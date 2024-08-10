@@ -114,11 +114,11 @@ const CreateService = () => {
       setFields(formFields);
       setSpareFields(formSpareFields);
       setServices(
-        serviceCatalogQuery.data.filter((s) => !selectedServices.includes(s.name)),
+        serviceCatalogQuery.data.filter((s) => !selectedServices?.includes(s.name)),
       );
 
       setSpares(
-        spareCatalogQuery.data.filter((s) => !selectedSpares.includes(`${s.code}-${s.name}-${s.category.name}`)),
+        spareCatalogQuery.data.filter((s) => !selectedSpares?.includes(`${s.code}-${s.name}-${s.category.name}`)),
       );
 
       const grandTotal = serviceTotal + spareTotal;

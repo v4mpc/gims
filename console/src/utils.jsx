@@ -160,6 +160,7 @@ export function toModelList(form, fields, sparefields) {
   const spareList = sparefields.map((f) => ({
     item: form.getFieldValue(`itemName_${f.key}`),
     price: form.getFieldValue(`price_${f.key}`),
+    unit: form.getFieldValue(`unit_${f.key}`),
     quantity: form.getFieldValue(`quantity_${f.key}`),
     currentKm: form.getFieldValue(`currentKm_${f.key}`),
     nextKm: form.getFieldValue(`nextKm_${f.key}`),

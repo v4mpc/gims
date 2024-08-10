@@ -11,9 +11,7 @@ import com.yhm.gims.repository.CustomerCarRepository;
 import com.yhm.gims.repository.ServiceRepository;
 import com.yhm.gims.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +44,11 @@ public class ServiceService {
 
 
     public Page<ServiceDto> getServices(String searchTerm, Pageable pageable) {
-        Page<GService> servicesPage = serviceRepository.findAll(Specification.anyOf(ServiceSpecs.searchByCustomerName(searchTerm), ServiceSpecs.searchByCustomerPhone(searchTerm), ServiceSpecs.searchByCustomerMake(searchTerm), ServiceSpecs.searchByCustomerModel(searchTerm), ServiceSpecs.searchByCustomerPlateNumber(searchTerm)), pageable);
+
+        Sort backendSort = Sort.by(Sort.Direction.DESC, "id");
+
+        Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), backendSort);
+        Page<GService> servicesPage = serviceRepository.findAll(Specification.anyOf(ServiceSpecs.searchByCustomerName(searchTerm), ServiceSpecs.searchByCustomerPhone(searchTerm), ServiceSpecs.searchByCustomerMake(searchTerm), ServiceSpecs.searchByCustomerModel(searchTerm), ServiceSpecs.searchByCustomerPlateNumber(searchTerm)), pageableWithSort);
         List<GService> GServices = servicesPage.getContent();
         Pageable servicesPageable = servicesPage.getPageable();
         long servicesTotal = servicesPage.getTotalElements();
