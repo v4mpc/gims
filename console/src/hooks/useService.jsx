@@ -34,6 +34,8 @@ const useService = () => {
       {
         queryKey: ["singlePaint", id],
         placeholderData: [],
+        staleTime: 1000 * 60 * 20,
+
         enabled: editMode,
         queryFn: () => getLookupData(`${API_ROUTES.paints}/${id}`),
       },
@@ -132,11 +134,21 @@ const useService = () => {
     },
   });
 
-
-
-  return {form,paymentCatalogQuery,setSelectedPayment,selectedPayment,saveOnlyValidations,setPayViaInsurance,setSaveOnlyValidation,updateItem,editMode,createItem,editValues,payViaInsurance,id}
-
-
+  return {
+    form,
+    paymentCatalogQuery,
+    setSelectedPayment,
+    selectedPayment,
+    saveOnlyValidations,
+    setPayViaInsurance,
+    setSaveOnlyValidation,
+    updateItem,
+    editMode,
+    createItem,
+    editValues,
+    payViaInsurance,
+    id,
+  };
 };
 
 export default useService;

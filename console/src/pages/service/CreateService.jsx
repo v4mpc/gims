@@ -6,15 +6,15 @@ import CustomerSection from "../../components/CustomerSection.jsx";
 import PaymentMethodSection from "../../components/PaymentMethodSection.jsx";
 import PaymentSection from "../../components/PaymentSection.jsx";
 import {
-  API_ROUTES,
-  DEFAULT_PAGE_SIZE,
-  getLookupData,
-  openNotification,
-  putItem,
-  serviceGrandTotal,
+    API_ROUTES, DATE_FORMAT,
+    DEFAULT_PAGE_SIZE,
+    getLookupData,
+    openNotification,
+    putItem,
+    serviceGrandTotal,
 } from "../../utils.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
 
@@ -42,12 +42,13 @@ const CreateService = () => {
       {
         queryKey: ["singleService", id],
         placeholderData: [],
-        enabled: editMode,
+          staleTime: 1000 * 60 * 20,
+          enabled: editMode,
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
     ],
   });
-  const [paymentCatalogQuery, paintQuery] = results;
+  const [paymentCatalogQuery, serviceQuery] = results;
 
   let editValues = {
     initialPayment: 0,
@@ -55,6 +56,59 @@ const CreateService = () => {
     grandTotal: 0,
     status: "DRAFT",
   };
+
+
+
+    useEffect(() => {
+    if (editMode && !serQuery.isLoading) {
+        const grandTotal = serviceQuery.data.service?.services.reduce(
+            (acc, cr) => acc + cr.quantity * cr.price,
+            0,
+        );
+        const [selectedPayment] = paymentCatalogQuery.data.filter(
+            (pc) => pc.id === serviceQuery.data.service?.paymentMethod.id,
+        );
+        setSelectedPayment(selectedPayment);
+        setPayViaInsurance(serviceQuery.data.service?.payViaInsurance);
+        form.setFieldsValue({
+            customerName: serviceQuery.data.customerName,
+            customerPhone: serviceQuery.data.customerPhone,
+            customerCar: serviceQuery.data.service?.customerCar.id,
+            plateNumber: serviceQuery.data.service?.customerCar.plateNumber,
+            model: serviceQuery.data.service?.customerCar.model,
+            make: serviceQuery.data.service?.customerCar.make,
+            initialPayment: serviceQuery.data.service?.initialPayment,
+            services: serviceQuery.data.service?.services.map((p) => ({
+                ...p,
+                total: p.quantity * p.price,
+            })),
+            initialPaymentDate:
+                serviceQuery.data.service?.initialPaymentDate !== null
+                    ? dayjs(serviceQuery.data.service?.initialPaymentDate, DATE_FORMAT)
+                    : null,
+            finalPaymentDate:
+                serviceQuery.data.service?.finalPaymentDate !== null
+                    ? dayjs(serviceQuery.data.service?.finalPaymentDate, DATE_FORMAT)
+                    : null,
+            finalPayment: serviceQuery.data.service?.finalPayment,
+
+            paymentMethod: serviceQuery.data.service?.paymentMethod.id,
+            status: serviceQuery.data.service?.status,
+            grandTotal: grandTotal,
+            insuranceName: serviceQuery.data.service?.insuranceName,
+            payViaInsurance: serviceQuery.data.service?.payViaInsurance,
+            accountNumber: serviceQuery.data.service?.paymentMethod.accountNumber,
+            accountName: serviceQuery.data.service?.paymentMethod.accountName,
+        });
+    }
+}, [serviceQuery, form, editMode, paymentCatalogQuery.data]);
+
+
+
+
+
+
+
 
   const { mutate: createItem, isLoading: isCreating } = useMutation({
     mutationFn: putItem,
@@ -94,7 +148,19 @@ const CreateService = () => {
     },
   });
 
-  const onValueChanged = (changed, all) => {
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  const onValueChanged = (_, _) => {
     // console.log(changed,all)
     form.setFieldsValue({
       grandTotal: serviceGrandTotal(form, fields, sparefields),
@@ -183,9 +249,6 @@ const CreateService = () => {
 
   const finalize = () => {
     setSaveOnlyValidation(false);
-
-    console.log(editMode)
-
     setTimeout(() => {
       form
         .validateFields()
@@ -298,7 +361,7 @@ const CreateService = () => {
         <Space>
           <Button
             htmlType="button"
-            onClick={() => navigate(`/paint?page=1&size=${DEFAULT_PAGE_SIZE}`)}
+            onClick={() => navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`)}
           >
             Cancel
           </Button>
