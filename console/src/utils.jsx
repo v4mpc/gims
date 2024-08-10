@@ -1,7 +1,7 @@
-import {notification, DatePicker, Tag} from "antd";
+import { notification, DatePicker, Tag } from "antd";
 import dayjs from "dayjs";
 import qs from "qs";
-import {useEffect} from "react";
+import { useEffect } from "react";
 
 // export const BASE_URL = "http://localhost:3000";
 export const BASE_URL = "http://localhost:8080/api";
@@ -67,21 +67,20 @@ export function openNotification(key, type, title, description) {
   });
 }
 
+export function serviceGrandTotal(form, fields, sparefields) {
+  const grandTotal = sparefields.reduce((acc, curr) => {
+    const qty = form.getFieldValue(`quantity_${curr.key}`) ?? 0;
+    const price = form.getFieldValue(`price_${curr.key}`) ?? 0;
+    return acc + qty * price;
+  }, 0);
 
-export function serviceGrandTotal(form,fields,sparefields) {
-    const grandTotal=sparefields.reduce((acc,curr)=>{
-        const qty=form.getFieldValue(`quantity_${curr.key}`)??0;
-        const price=form.getFieldValue(`price_${curr.key}`)??0;
-        return acc+(qty*price);
-    },0);
+  const sgrandTotal = fields.reduce((acc, curr) => {
+    const qty = form.getFieldValue(`squantity_${curr.key}`) ?? 0;
+    const price = form.getFieldValue(`sprice_${curr.key}`) ?? 0;
+    return acc + qty * price;
+  }, 0);
 
-    const sgrandTotal=fields.reduce((acc,curr)=>{
-        const qty=form.getFieldValue(`squantity_${curr.key}`)??0;
-        const price=form.getFieldValue(`sprice_${curr.key}`)??0;
-        return acc+(qty*price);
-    },0);
-
-    return sgrandTotal+grandTotal;
+  return sgrandTotal + grandTotal;
 }
 
 export function toCustomerCars(customers) {
@@ -100,23 +99,70 @@ export function toCustomerCars(customers) {
   return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
 }
 
+export function toFormList(services, spares) {
+  const formFields = services.map((s, index) => ({
+    key: index + 1,
+    names: [
+      `sitemName_${index + 1}`,
+      `sprice_${index + 1}`,
+      `squantity_${index + 1}`,
+      `stotal_${index + 1}`,
+    ],
+  }));
+
+  const serviceValues = services.flatMap((s, index) => [
+    {
+      [`sitemName_${index + 1}`]: s.item,
+      [`sprice_${index + 1}`]: s.price,
+      [`squantity_${index + 1}`]: s.quantity,
+      [`stotal_${index + 1}`]: s.quantity * s.price,
+    },
+  ]);
+
+  const spareValues = spares.flatMap((s, index) => [
+    {
+      [`itemName_${index + 1}`]: s.item,
+      [`price_${index + 1}`]: s.price,
+      // { [`unit_${index + 1}`]: s.unitOfMeasure.code },
+      [`quantity_${index + 1}`]: s.quantity,
+      [`currentKm_${index + 1}`]: s.currentKm,
+      [`nextKm_${index + 1}`]: s.nextKm,
+      [`total_${index + 1}`]: s.quantity * s.price,
+    },
+  ]);
+
+  const formSpareFields = spares.map((s, index) => ({
+    key: index + 1,
+    names: [
+      `itemName_${index + 1}`,
+      `unit_${index + 1}`,
+      `price_${index + 1}`,
+      `quantity_${index + 1}`,
+      `total_${index + 1}`,
+      `currentKm_${index + 1}`,
+      `nextKm_${index + 1}`,
+    ],
+  }));
+
+  return { formFields, formSpareFields, serviceValues, spareValues };
+}
 
 export function toModelList(form, fields, sparefields) {
-    const servicesList = fields.map((f) => ({
-        item: form.getFieldValue(`sitemName_${f.key}`),
-        price: form.getFieldValue(`sprice_${f.key}`),
-        quantity: form.getFieldValue(`squantity_${f.key}`),
-    }));
+  const servicesList = fields.map((f) => ({
+    item: form.getFieldValue(`sitemName_${f.key}`),
+    price: form.getFieldValue(`sprice_${f.key}`),
+    quantity: form.getFieldValue(`squantity_${f.key}`),
+  }));
 
-    const spareList = sparefields.map((f) => ({
-        item: form.getFieldValue(`itemName_${f.key}`),
-        price: form.getFieldValue(`price_${f.key}`),
-        quantity: form.getFieldValue(`quantity_${f.key}`),
-        currentKm: form.getFieldValue(`currentKm_${f.key}`),
-        nextKm: form.getFieldValue(`nextKm_${f.key}`),
-    }));
+  const spareList = sparefields.map((f) => ({
+    item: form.getFieldValue(`itemName_${f.key}`),
+    price: form.getFieldValue(`price_${f.key}`),
+    quantity: form.getFieldValue(`quantity_${f.key}`),
+    currentKm: form.getFieldValue(`currentKm_${f.key}`),
+    nextKm: form.getFieldValue(`nextKm_${f.key}`),
+  }));
 
-    return {servicesList,spareList}
+  return { servicesList, spareList };
 }
 
 const getItemParams = (tableParams, searchQuery, searchCategory) => ({
@@ -189,7 +235,10 @@ export async function putItem(data) {
     };
   }
 
-  if (Object.hasOwn(modifiedData, "initialPaymentDate") &&  data.values.initialPaymentDate != null) {
+  if (
+    Object.hasOwn(modifiedData, "initialPaymentDate") &&
+    data.values.initialPaymentDate != null
+  ) {
     Date.prototype.toISOString = function () {
       return dayjs(this).format(DATE_FORMAT);
     };
@@ -219,23 +268,19 @@ export async function putItem(data) {
     };
   }
 
+  if (Object.hasOwn(modifiedData, "customerCar")) {
+    modifiedData = {
+      ...modifiedData,
+      customerCar: { id: modifiedData.customerCar },
+    };
+  }
 
-
-    if (Object.hasOwn(modifiedData, "customerCar")) {
-        modifiedData = {
-            ...modifiedData,
-            customerCar: { id: modifiedData.customerCar },
-        };
-    }
-
-
-
-    if (Object.hasOwn(modifiedData, "paymentMethod")) {
-        modifiedData = {
-            ...modifiedData,
-            paymentMethod: { id: modifiedData.paymentMethod },
-        };
-    }
+  if (Object.hasOwn(modifiedData, "paymentMethod")) {
+    modifiedData = {
+      ...modifiedData,
+      paymentMethod: { id: modifiedData.paymentMethod },
+    };
+  }
 
   if (Object.hasOwn(modifiedData, "category")) {
     modifiedData = {
@@ -253,12 +298,9 @@ export async function putItem(data) {
   return resp.json();
 }
 
-
-export function optionLabelFilter (input, option)  {
-    return option.label.toLowerCase().includes(input.toLowerCase());
+export function optionLabelFilter(input, option) {
+  return option.label.toLowerCase().includes(input.toLowerCase());
 }
-
-
 
 export async function bulkTx(data) {
   Date.prototype.toISOString = function () {

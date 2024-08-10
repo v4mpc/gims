@@ -197,44 +197,44 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields }) =
               />
             </Form.Item>
 
-            {isOilByKey(field.key) && (
-              <>
-                <Form.Item
-                  name={field.names[5]}
-                  rules={[
-                      ...(saveOnlyValidations
-                          ? []
-                          : [{ required: true, message: "Missing current Kms" }]),
-                  ]}
-                  label={field.key === 0 ? "Current Kms" : ""}
-                >
-                  <InputNumber
-                    formatter={thousanSeparatorformatter}
-                    parser={thousanSeparatorparser}
-                    style={{ width: "150px" }}
-                    placeholder="Current Kms"
+            {/*{isOilByKey(field.key) && (*/}
+            {/*  <>*/}
+            {/*    <Form.Item*/}
+            {/*      name={field.names[5]}*/}
+            {/*      rules={[*/}
+            {/*          ...(saveOnlyValidations*/}
+            {/*              ? []*/}
+            {/*              : [{ required: true, message: "Missing current Kms" }]),*/}
+            {/*      ]}*/}
+            {/*      label={field.key === 0 ? "Current Kms" : ""}*/}
+            {/*    >*/}
+            {/*      <InputNumber*/}
+            {/*        formatter={thousanSeparatorformatter}*/}
+            {/*        parser={thousanSeparatorparser}*/}
+            {/*        style={{ width: "150px" }}*/}
+            {/*        placeholder="Current Kms"*/}
 
-                  />
-                </Form.Item>
+            {/*      />*/}
+            {/*    </Form.Item>*/}
 
-                <Form.Item
-                  name={field.names[6]}
-                  label={field.key === 0 ? "Next Kms" : ""}
-                  rules={[
-                      ...(saveOnlyValidations
-                          ? []
-                          : [{ required: true, message: "Missing next Kms" }]),
-                  ]}
-                >
-                  <InputNumber
-                    formatter={thousanSeparatorformatter}
-                    parser={thousanSeparatorparser}
-                    style={{ width: "150px" }}
-                    placeholder="Next Kms"
-                  />
-                </Form.Item>
-              </>
-            )}
+            {/*    <Form.Item*/}
+            {/*      name={field.names[6]}*/}
+            {/*      label={field.key === 0 ? "Next Kms" : ""}*/}
+            {/*      rules={[*/}
+            {/*          ...(saveOnlyValidations*/}
+            {/*              ? []*/}
+            {/*              : [{ required: true, message: "Missing next Kms" }]),*/}
+            {/*      ]}*/}
+            {/*    >*/}
+            {/*      <InputNumber*/}
+            {/*        formatter={thousanSeparatorformatter}*/}
+            {/*        parser={thousanSeparatorparser}*/}
+            {/*        style={{ width: "150px" }}*/}
+            {/*        placeholder="Next Kms"*/}
+            {/*      />*/}
+            {/*    </Form.Item>*/}
+            {/*  </>*/}
+            {/*)}*/}
 
             <MinusCircleOutlined onClick={() => removeField(field.key)} />
           </Space>

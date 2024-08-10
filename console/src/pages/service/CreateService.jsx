@@ -14,11 +14,13 @@ import {
   openNotification,
   putItem,
   serviceGrandTotal,
+  toFormList,
 } from "../../utils.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
+import dayjs from "dayjs";
 
 const CreateService = () => {
   const [form] = Form.useForm();
@@ -71,6 +73,17 @@ const CreateService = () => {
         0,
       );
 
+      const { serviceValues, spareValues, formSpareFields, formFields } =
+        toFormList(
+          serviceQuery.data.service?.services ?? [],
+          serviceQuery.data.service?.spares ?? [],
+        );
+        //
+        // setFields(formFields);
+        // setSparefields(formSpareFields);
+
+
+
       const grandTotal = serviceTotal + spareTotal;
       const [selectedPayment] = paymentCatalogQuery.data.filter(
         (pc) => pc.id === serviceQuery.data.service?.paymentMethod.id,
@@ -85,10 +98,6 @@ const CreateService = () => {
         model: serviceQuery.data.service?.customerCar.model,
         make: serviceQuery.data.service?.customerCar.make,
         initialPayment: serviceQuery.data.service?.initialPayment,
-        services: serviceQuery.data.service?.services.map((p) => ({
-          ...p,
-          total: p.quantity * p.price,
-        })),
         initialPaymentDate:
           serviceQuery.data.service?.initialPaymentDate !== null
             ? dayjs(serviceQuery.data.service?.initialPaymentDate, DATE_FORMAT)
@@ -106,7 +115,11 @@ const CreateService = () => {
         payViaInsurance: serviceQuery.data.service?.payViaInsurance,
         accountNumber: serviceQuery.data.service?.paymentMethod.accountNumber,
         accountName: serviceQuery.data.service?.paymentMethod.accountName,
+        // ...serviceValues,
+        // ...spareValues,
       });
+
+
     }
   }, [serviceQuery, form, editMode, paymentCatalogQuery.data]);
 
