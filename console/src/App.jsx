@@ -20,6 +20,7 @@ import Sell from "./pages/Sell.jsx";
 import CreateService from "./pages/Service/CreateService.jsx";
 import CreatePaint from "./pages/paint/CreatePaint.jsx";
 import ListPaint from "./pages/paint/ListPaint.jsx";
+import ListService from "./pages/service/ListService.jsx";
 
 
 const queryClient = new QueryClient(
@@ -46,10 +47,16 @@ export default function App() {
                         <Route path="stock-on-hand" element={<StockOnhand />} />
                         <Route path="buy" element={<Buy />} />
                         <Route path="sell" element={<Sell />} />
-                        <Route path="GService" element={<CreateService />} />
+
                         <Route path="paint" element={<ListPaint />} />
                         <Route path="paint/:id" element={<CreatePaint />} />
                         <Route path="paint/create" element={<CreatePaint />} />
+
+                        <Route path="service" element={<ListService />} />
+                        <Route path="service/:id" element={<CreateService />} />
+                        <Route path="service/create" element={<CreateService />} />
+
+
                         <Route path="settings/units" element={<Unit/>}/>
                         <Route path="settings/categories" element={<Category/>}/>
                         <Route path="settings/customers" element={<Customer/>}/>

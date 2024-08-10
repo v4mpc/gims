@@ -100,7 +100,20 @@ export default function GenericTable({
                 </Button>
             ),
         };
+    }else if(obj.key==="service"){
+        return {
+            ...obj,
+            render: (_, record) => (
+                <Button
+                    type="primary"
+                    onClick={() =>navigateToLink(`${record.service.id}`)}
+                >
+                    Edit
+                </Button>
+            ),
+        };
     }
+
     return obj;
   });
 

@@ -7,7 +7,7 @@ const listServiceColumns = [
     dataIndex: "id",
     key: "id",
     width: "5%",
-    render: (_, record) => record.paint.id,
+    render: (_, record) => record.service.id,
   },
   {
     title: "Customer Name",
@@ -27,42 +27,42 @@ const listServiceColumns = [
     dataIndex: "vehicle",
     render: (_, record) => (
       <Flex vertical>
-        <Space key={`make${record.paint.id}`}>Make : {record.paint.customerCar.make}</Space>
-        <Space key={`model${record.paint.id}`}>Model : {record.paint.customerCar.model}</Space>
-        <Space key={`plate${record.paint.id}`}>Plate : {record.paint.customerCar.plateNumber}</Space>
+        <Space key={`make${record.service.id}`}>Make : {record.service.customerCar.make}</Space>
+        <Space key={`model${record.service.id}`}>Model : {record.service.customerCar.model}</Space>
+        <Space key={`plate${record.service.id}`}>Plate : {record.service.customerCar.plateNumber}</Space>
       </Flex>
     ),
   },
 
-  {
-    title: "Amounts",
-    key: "amounts",
-    dataIndex: "amounts",
-    render: (_, record) => {
-      const totalPaid = record.paint.initialPayment + record.paint.finalPayment;
-      const estimateAmount = record.paint.estimateAmount;
-      const remain =
-        estimateAmount - totalPaid >= 0 ? estimateAmount - totalPaid : 0;
-      return (
-        <Flex vertical>
-          <Space>Total : {<ThousandSeparator value={estimateAmount} />}</Space>
-          <Space>Paid : {<ThousandSeparator value={totalPaid} />}</Space>
-          <Space>Remaining : {<ThousandSeparator value={remain} />}</Space>
-        </Flex>
-      );
-    },
-  },
+  // {
+  //   title: "Amounts",
+  //   key: "amounts",
+  //   dataIndex: "amounts",
+  //   render: (_, record) => {
+  //     const totalPaid = record.service.initialPayment + record.service.finalPayment;
+  //     const estimateAmount = record.service.estimateAmount;
+  //     const remain =
+  //       estimateAmount - totalPaid >= 0 ? estimateAmount - totalPaid : 0;
+  //     return (
+  //       <Flex vertical>
+  //         <Space>Total : {<ThousandSeparator value={estimateAmount} />}</Space>
+  //         <Space>Paid : {<ThousandSeparator value={totalPaid} />}</Space>
+  //         <Space>Remaining : {<ThousandSeparator value={remain} />}</Space>
+  //       </Flex>
+  //     );
+  //   },
+  // },
 
   {
     title: "Status",
     key: "status",
     dataIndex: "status",
-    render: (_, record) => (<StatusTag status={record.paint.status}/>),
+    render: (_, record) => (<StatusTag status={record.service.status}/>),
   },
 
   {
     title: "Action",
-    key: "paint",
+    key: "service",
   },
 ];
 

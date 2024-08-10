@@ -36,9 +36,9 @@ public class ServiceService {
     }
 
 
-    public ServiceDto toServiceDto(GService GService, String customerName, String customerPhone) {
+    public ServiceDto toServiceDto(GService service, String customerName, String customerPhone) {
         return ServiceDto.builder()
-                .GService(GService)
+                .service(service)
                 .customerName(customerName)
                 .customerPhone(customerPhone)
                 .build();

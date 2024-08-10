@@ -100,7 +100,7 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields }) 
                                 console.log("am here");
                                 if (services.length===serviceCatalogQuery.data.length) {
                                     return Promise.reject(
-                                        new Error("At least 1 GService is required"),
+                                        new Error("At least 1 service is required"),
                                     );
                                 }
                             },
@@ -108,7 +108,7 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields }) 
                     ]),
             ]} name="selectedService">
           <Select
-            placeholder="Select GService"
+            placeholder="Select service"
 
 
 

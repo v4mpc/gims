@@ -53,10 +53,10 @@ const items = [
 
 
     {
-        key: "GService",
+        key: "service",
         icon: <ToolOutlined />,
         label: (
-            <Link to="/GService">Services</Link>
+            <Link to={`/service?page=1&size=${DEFAULT_PAGE_SIZE}`}>Services</Link>
         ),
     },
 

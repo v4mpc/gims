@@ -14,7 +14,7 @@ public class ServiceDto {
 
 
     @NotNull
-    private GService GService;
+    private GService service;
 
     @NotNull
     private String customerName;
