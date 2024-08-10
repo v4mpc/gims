@@ -19,7 +19,7 @@ public class SpareLineItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id")
     @JsonIgnore
-    private Service service;
+    private GService GService;
 
     @NotNull
     private String item;

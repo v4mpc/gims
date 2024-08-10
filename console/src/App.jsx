@@ -17,7 +17,7 @@ import StockOnhand from "./pages/stockOnhand/StockOnhand.jsx";
 import Buy from "./pages/Buy.jsx";
 import BuySuccess from "./pages/BuySuccess.jsx";
 import Sell from "./pages/Sell.jsx";
-import CreateService from "./pages/service/CreateService.jsx";
+import CreateService from "./pages/GService/CreateService.jsx";
 import CreatePaint from "./pages/paint/CreatePaint.jsx";
 import ListPaint from "./pages/paint/ListPaint.jsx";
 
@@ -46,7 +46,7 @@ export default function App() {
                         <Route path="stock-on-hand" element={<StockOnhand />} />
                         <Route path="buy" element={<Buy />} />
                         <Route path="sell" element={<Sell />} />
-                        <Route path="service" element={<CreateService />} />
+                        <Route path="GService" element={<CreateService />} />
                         <Route path="paint" element={<ListPaint />} />
                         <Route path="paint/:id" element={<CreatePaint />} />
                         <Route path="paint/create" element={<CreatePaint />} />
@@ -55,7 +55,7 @@ export default function App() {
                         <Route path="settings/customers" element={<Customer/>}/>
                         <Route path="settings/products" element={<Product/>}/>
                         <Route path="settings/payment-catalog" element={<PaymentCatalog/>}/>
-                        <Route path="settings/service-catalogs" element={<ServiceCatalog/>}/>
+                        <Route path="settings/GService-catalogs" element={<ServiceCatalog/>}/>
                         <Route path="settings/vehicles" element={<Vehicle/>}/>
                     </Route>
                     <Route path="*" element={<PageNotFound/>}/>

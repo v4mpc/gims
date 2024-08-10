@@ -53,10 +53,10 @@ const items = [
 
 
     {
-        key: "service",
+        key: "GService",
         icon: <ToolOutlined />,
         label: (
-            <Link to="/service">Services</Link>
+            <Link to="/GService">Services</Link>
         ),
     },
 
@@ -115,7 +115,7 @@ const items = [
         key: "serviceCatalogs",
         label: (
           <Link
-            to={`/settings/service-catalogs?page=1&size=${DEFAULT_PAGE_SIZE}`}
+            to={`/settings/GService-catalogs?page=1&size=${DEFAULT_PAGE_SIZE}`}
           >
             ❁ Service catalog
           </Link>

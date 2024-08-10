@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "services")
-public class Service extends BaseEntity {
+public class GService extends BaseEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
@@ -48,13 +48,13 @@ public class Service extends BaseEntity {
 
 
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "GService", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<ServiceLineItem> services = new ArrayList<>();
 
 
 
 
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "GService", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<SpareLineItem> spares = new ArrayList<>();
 
 
@@ -82,13 +82,13 @@ public class Service extends BaseEntity {
 
     public void addLineItem(ServiceLineItem sli) {
         services.add(sli);
-        sli.setService(this);
+        sli.setGService(this);
     }
 
 
     public void addSpareLineItem(SpareLineItem sli) {
         spares.add(sli);
-        sli.setService(this);
+        sli.setGService(this);
     }
 
 }
