@@ -66,6 +66,23 @@ export function openNotification(key, type, title, description) {
   });
 }
 
+
+export function serviceGrandTotal(form,fields,sparefields) {
+    const grandTotal=sparefields.reduce((acc,curr)=>{
+        const qty=form.getFieldValue(`quantity_${curr.key}`)??0;
+        const price=form.getFieldValue(`price_${curr.key}`)??0;
+        return acc+(qty*price);
+    },0);
+
+    const sgrandTotal=fields.reduce((acc,curr)=>{
+        const qty=form.getFieldValue(`squantity_${curr.key}`)??0;
+        const price=form.getFieldValue(`sprice_${curr.key}`)??0;
+        return acc+(qty*price);
+    },0);
+
+    return sgrandTotal+grandTotal;
+}
+
 export function toCustomerCars(customers) {
   const listOfListOfcars = customers.map((customer) => {
     return customer.cars.map((car) => ({

@@ -44,23 +44,23 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields }) 
       {
         key: nextKey,
         names: [
-          `itemName_${nextKey}`,
-          `price_${nextKey}`,
-          `quantity_${nextKey}`,
-          `total_${nextKey}`,
+          `sitemName_${nextKey}`,
+          `sprice_${nextKey}`,
+          `squantity_${nextKey}`,
+          `stotal_${nextKey}`,
         ],
       },
     ]);
     setServices((curr) => curr.filter((c) => c.id !== serviceObject.id));
     form.setFieldsValue({
-      [`itemName_${nextKey}`]: serviceObject.name,
-      [`price_${nextKey}`]: serviceObject.cost,
+      [`sitemName_${nextKey}`]: serviceObject.name,
+      [`sprice_${nextKey}`]: serviceObject.cost,
     });
     form.resetFields(["selectedService"]);
   };
 
   const removeField = (key) => {
-    const itemName = form.getFieldValue(`itemName_${key}`);
+    const itemName = form.getFieldValue(`sitemName_${key}`);
     const [removedServiceObject] = serviceCatalogQuery.data.filter(
       (s) => s.name === itemName,
     );
@@ -69,16 +69,17 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields }) 
   };
 
   const onPriceChange = (e, key) => {
-    const quantity = form.getFieldValue(`quantity_${key}`) ?? 0;
+    const quantity = form.getFieldValue(`squantity_${key}`) ?? 0;
     form.setFieldsValue({
-      [`total_${key}`]: e * quantity,
+      [`stotal_${key}`]: e * quantity,
     });
+
   };
 
   const onQuantityChange = (e, key) => {
-    const price = form.getFieldValue(`price_${key}`) ?? 0;
+    const price = form.getFieldValue(`sprice_${key}`) ?? 0;
     form.setFieldsValue({
-      [`total_${key}`]: price * e,
+      [`stotal_${key}`]: price * e,
     });
   };
 

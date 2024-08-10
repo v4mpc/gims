@@ -8,24 +8,47 @@ import PaymentSection from "../../components/PaymentSection.jsx";
 import {
   API_ROUTES,
   DEFAULT_PAGE_SIZE,
+  getLookupData,
   openNotification,
   putItem,
+  serviceGrandTotal,
 } from "../../utils.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
 
 const CreateService = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-    const [fields, setFields] = useState([]);
+  const [fields, setFields] = useState([]);
   const { id } = useParams();
   const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
   const queryClient = useQueryClient();
-    const [sparefields, setSparefields] = useState([]);
+  const [sparefields, setSparefields] = useState([]);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [payViaInsurance, setPayViaInsurance] = useState(false);
 
   const editMode = id !== undefined;
+
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["paymentCatalogAll"],
+        placeholderData: [],
+        queryFn: () => getLookupData(API_ROUTES.paymentCatalogAll),
+      },
+
+      {
+        queryKey: ["singlePaint", id],
+        placeholderData: [],
+        enabled: editMode,
+        queryFn: () => getLookupData(`${API_ROUTES.paints}/${id}`),
+      },
+    ],
+  });
+  const [paymentCatalogQuery, paintQuery] = results;
+
   let editValues = {
     initialPayment: 0,
     finalPayment: 0,
@@ -73,6 +96,9 @@ const CreateService = () => {
 
   const onValueChanged = (changed, all) => {
     // console.log(changed,all)
+    form.setFieldsValue({
+      grandTotal: serviceGrandTotal(form, fields, sparefields),
+    });
   };
 
   const saveForLater = () => {
@@ -94,37 +120,29 @@ const CreateService = () => {
         errors: [],
       },
 
-        {
-            name: "selectedService",
-            errors: [],
-        },
+      {
+        name: "selectedService",
+        errors: [],
+      },
     ]);
 
     form.setFields(
-      fields.flatMap(
-        (f) => (
-          [{ name: `itemName_${f.key}`,errors:[] },
-          { name: `price_${f.key}`,errors:[] },
-          { name: `quantity_${f.key}`,errors:[] }]
-        ),
-      ),
+      fields.flatMap((f) => [
+        { name: `itemName_${f.key}`, errors: [] },
+        { name: `price_${f.key}`, errors: [] },
+        { name: `quantity_${f.key}`, errors: [] },
+      ]),
     );
 
-
-      form.setFields(
-          sparefields.flatMap(
-              (f) => (
-                  [{ name: `itemName_${f.key}`,errors:[] },
-                      { name: `price_${f.key}`,errors:[] },
-                      { name: `quantity_${f.key}`,errors:[]},
-                      { name: `currentKm_${f.key}`,errors:[]},
-                      { name: `nextKm_${f.key}`,errors:[]},
-
-                  ]
-              ),
-          ),
-      );
-
+    form.setFields(
+      sparefields.flatMap((f) => [
+        { name: `itemName_${f.key}`, errors: [] },
+        { name: `price_${f.key}`, errors: [] },
+        { name: `quantity_${f.key}`, errors: [] },
+        { name: `currentKm_${f.key}`, errors: [] },
+        { name: `nextKm_${f.key}`, errors: [] },
+      ]),
+    );
 
     setTimeout(() => {
       form
@@ -196,6 +214,23 @@ const CreateService = () => {
     }, 0);
   };
 
+  const onPaymentChanged = (paymentId) => {
+    const [selectedPayment] = paymentCatalogQuery.data.filter(
+      (pc) => pc.id === paymentId,
+    );
+    setSelectedPayment(selectedPayment);
+
+    if (selectedPayment.accountNumber !== null) {
+      form.setFieldsValue({
+        accountNumber: selectedPayment.accountNumber,
+      });
+    }
+  };
+
+  const onPayViaInsuranceChanged = (e) => {
+    setPayViaInsurance(e.target.checked);
+  };
+
   return (
     <Form
       key="serviceForm"
@@ -230,11 +265,28 @@ const CreateService = () => {
         Spares
       </Divider>
 
-      <SpareSection form={form} saveOnlyValidations={saveOnlyValidations} setSparefields={setSparefields} sparefields={sparefields} />
-      {/*  <Divider orientation="left" plain>*/}
-      {/*      Payments*/}
-      {/*  </Divider>*/}
-      {/*  <PaymentSection saveOnlyValidations={true}/>*/}
+      <SpareSection
+        form={form}
+        saveOnlyValidations={saveOnlyValidations}
+        setSparefields={setSparefields}
+        sparefields={sparefields}
+      />
+      <Divider orientation="left" plain>
+        Payments
+      </Divider>
+      <PaymentSection saveOnlyValidations={saveOnlyValidations} />
+
+      <Divider orientation="left" plain>
+        Payment method
+      </Divider>
+
+      <PaymentMethodSection
+        onPaymentChanged={onPaymentChanged}
+        selectedPayment={selectedPayment}
+        paymentCatalogQuery={paymentCatalogQuery}
+        onPayViaInsuranceChanged={onPayViaInsuranceChanged}
+        payViaInsurance={payViaInsurance}
+      />
 
       <Divider orientation="left" plain />
 

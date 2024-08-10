@@ -85,6 +85,11 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields }) =
     form.setFieldsValue({
       [`total_${key}`]: e * quantity,
     });
+
+
+
+
+
   };
 
   const onQuantityChange = (e, key) => {
@@ -92,6 +97,8 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields }) =
     form.setFieldsValue({
       [`total_${key}`]: price * e,
     });
+
+
   };
 
   return (
