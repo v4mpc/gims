@@ -20,7 +20,7 @@ public class ServiceLineItem extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id")
     @JsonIgnore
-    private GService GService;
+    private GService service;
 
     @NotNull
     private String item;

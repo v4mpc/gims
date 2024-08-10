@@ -57,17 +57,17 @@ public class ServiceService {
 
 
     public ServiceDto get(Integer serviceId) {
-        GService GService = serviceRepository.findById(serviceId).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + serviceId));
-        return toServiceDto(GService, GService.getCustomerCar().getCustomer().getName(), GService.getCustomerCar().getCustomer().getPhone());
+        GService service = serviceRepository.findById(serviceId).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + serviceId));
+        return toServiceDto(service, service.getCustomerCar().getCustomer().getName(), service.getCustomerCar().getCustomer().getPhone());
     }
 
 
     @Transactional
-    public void save(GService GService) {
-        for (ServiceLineItem serviceLineItem : GService.getServices()) {
-            serviceLineItem.setGService(GService);
+    public void save(GService service) {
+        for (ServiceLineItem serviceLineItem : service.getServices()) {
+            serviceLineItem.setService(service);
         }
-        serviceRepository.save(GService);
+        serviceRepository.save(service);
     }
 
 

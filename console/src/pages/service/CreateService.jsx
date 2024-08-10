@@ -6,15 +6,16 @@ import CustomerSection from "../../components/CustomerSection.jsx";
 import PaymentMethodSection from "../../components/PaymentMethodSection.jsx";
 import PaymentSection from "../../components/PaymentSection.jsx";
 import {
-    API_ROUTES, DATE_FORMAT,
-    DEFAULT_PAGE_SIZE,
-    getLookupData,
-    openNotification,
-    putItem,
-    serviceGrandTotal,
+  API_ROUTES,
+  DATE_FORMAT,
+  DEFAULT_PAGE_SIZE,
+  getLookupData,
+  openNotification,
+  putItem,
+  serviceGrandTotal,
 } from "../../utils.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
 
@@ -42,8 +43,8 @@ const CreateService = () => {
       {
         queryKey: ["singleService", id],
         placeholderData: [],
-          staleTime: 1000 * 60 * 20,
-          enabled: editMode,
+        staleTime: 1000 * 60 * 20,
+        enabled: editMode,
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
     ],
@@ -57,58 +58,56 @@ const CreateService = () => {
     status: "DRAFT",
   };
 
+  useEffect(() => {
+    if (editMode && !serviceQuery.isLoading) {
+      const serviceTotal = serviceQuery.data.service?.services.reduce(
+        (acc, cr) => acc + cr.quantity * cr.price,
+        0,
+      );
 
+      const spareTotal = serviceQuery.data.service?.spares.reduce(
+        (acc, cr) => acc + cr.quantity * cr.price,
+        0,
+      );
 
-    useEffect(() => {
-    if (editMode && !serQuery.isLoading) {
-        const grandTotal = serviceQuery.data.service?.services.reduce(
-            (acc, cr) => acc + cr.quantity * cr.price,
-            0,
-        );
-        const [selectedPayment] = paymentCatalogQuery.data.filter(
-            (pc) => pc.id === serviceQuery.data.service?.paymentMethod.id,
-        );
-        setSelectedPayment(selectedPayment);
-        setPayViaInsurance(serviceQuery.data.service?.payViaInsurance);
-        form.setFieldsValue({
-            customerName: serviceQuery.data.customerName,
-            customerPhone: serviceQuery.data.customerPhone,
-            customerCar: serviceQuery.data.service?.customerCar.id,
-            plateNumber: serviceQuery.data.service?.customerCar.plateNumber,
-            model: serviceQuery.data.service?.customerCar.model,
-            make: serviceQuery.data.service?.customerCar.make,
-            initialPayment: serviceQuery.data.service?.initialPayment,
-            services: serviceQuery.data.service?.services.map((p) => ({
-                ...p,
-                total: p.quantity * p.price,
-            })),
-            initialPaymentDate:
-                serviceQuery.data.service?.initialPaymentDate !== null
-                    ? dayjs(serviceQuery.data.service?.initialPaymentDate, DATE_FORMAT)
-                    : null,
-            finalPaymentDate:
-                serviceQuery.data.service?.finalPaymentDate !== null
-                    ? dayjs(serviceQuery.data.service?.finalPaymentDate, DATE_FORMAT)
-                    : null,
-            finalPayment: serviceQuery.data.service?.finalPayment,
+      const grandTotal = serviceTotal + spareTotal;
+      const [selectedPayment] = paymentCatalogQuery.data.filter(
+        (pc) => pc.id === serviceQuery.data.service?.paymentMethod.id,
+      );
+      setSelectedPayment(selectedPayment);
+      setPayViaInsurance(serviceQuery.data.service?.payViaInsurance);
+      form.setFieldsValue({
+        customerName: serviceQuery.data.customerName,
+        customerPhone: serviceQuery.data.customerPhone,
+        customerCar: serviceQuery.data.service?.customerCar.id,
+        plateNumber: serviceQuery.data.service?.customerCar.plateNumber,
+        model: serviceQuery.data.service?.customerCar.model,
+        make: serviceQuery.data.service?.customerCar.make,
+        initialPayment: serviceQuery.data.service?.initialPayment,
+        services: serviceQuery.data.service?.services.map((p) => ({
+          ...p,
+          total: p.quantity * p.price,
+        })),
+        initialPaymentDate:
+          serviceQuery.data.service?.initialPaymentDate !== null
+            ? dayjs(serviceQuery.data.service?.initialPaymentDate, DATE_FORMAT)
+            : null,
+        finalPaymentDate:
+          serviceQuery.data.service?.finalPaymentDate !== null
+            ? dayjs(serviceQuery.data.service?.finalPaymentDate, DATE_FORMAT)
+            : null,
+        finalPayment: serviceQuery.data.service?.finalPayment,
 
-            paymentMethod: serviceQuery.data.service?.paymentMethod.id,
-            status: serviceQuery.data.service?.status,
-            grandTotal: grandTotal,
-            insuranceName: serviceQuery.data.service?.insuranceName,
-            payViaInsurance: serviceQuery.data.service?.payViaInsurance,
-            accountNumber: serviceQuery.data.service?.paymentMethod.accountNumber,
-            accountName: serviceQuery.data.service?.paymentMethod.accountName,
-        });
+        paymentMethod: serviceQuery.data.service?.paymentMethod.id,
+        status: serviceQuery.data.service?.status,
+        grandTotal: grandTotal,
+        insuranceName: serviceQuery.data.service?.insuranceName,
+        payViaInsurance: serviceQuery.data.service?.payViaInsurance,
+        accountNumber: serviceQuery.data.service?.paymentMethod.accountNumber,
+        accountName: serviceQuery.data.service?.paymentMethod.accountName,
+      });
     }
-}, [serviceQuery, form, editMode, paymentCatalogQuery.data]);
-
-
-
-
-
-
-
+  }, [serviceQuery, form, editMode, paymentCatalogQuery.data]);
 
   const { mutate: createItem, isLoading: isCreating } = useMutation({
     mutationFn: putItem,
@@ -148,18 +147,6 @@ const CreateService = () => {
     },
   });
 
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   const onValueChanged = (_, _) => {
     // console.log(changed,all)
     form.setFieldsValue({
@@ -253,25 +240,25 @@ const CreateService = () => {
       form
         .validateFields()
         .then((values) => {
-            console.log(editMode);
+          console.log(editMode);
           if (!editMode) {
-              const updatedValues = { ...values, status: "PAID" };
-              const data = {
-                  values: updatedValues,
-                  urlPath: API_ROUTES.services,
-                  method: "POST",
-              };
+            const updatedValues = { ...values, status: "PAID" };
+            const data = {
+              values: updatedValues,
+              urlPath: API_ROUTES.services,
+              method: "POST",
+            };
 
-              console.log(data);
-              createItem(data);
+            console.log(data);
+            createItem(data);
           } else {
-              const updatedValues = { ...values, status: "PAID" };
-              const data = {
-                  values: updatedValues,
-                  urlPath: `${API_ROUTES.services}/${id}`,
-                  method: "PUT",
-              };
-              updateItem(data);
+            const updatedValues = { ...values, status: "PAID" };
+            const data = {
+              values: updatedValues,
+              urlPath: `${API_ROUTES.services}/${id}`,
+              method: "PUT",
+            };
+            updateItem(data);
           }
           console.log("Form values:", values);
         })
@@ -361,7 +348,9 @@ const CreateService = () => {
         <Space>
           <Button
             htmlType="button"
-            onClick={() => navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`)}
+            onClick={() =>
+              navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`)
+            }
           >
             Cancel
           </Button>
@@ -379,7 +368,7 @@ const CreateService = () => {
             Save for later
           </Button>
 
-          <Button type="primary"  onClick={finalize}>
+          <Button type="primary" onClick={finalize}>
             Finalize
           </Button>
         </Space>

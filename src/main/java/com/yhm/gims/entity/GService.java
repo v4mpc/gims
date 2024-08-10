@@ -48,13 +48,13 @@ public class GService extends BaseEntity {
 
 
 
-    @OneToMany(mappedBy = "GService", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<ServiceLineItem> services = new ArrayList<>();
 
 
 
 
-    @OneToMany(mappedBy = "GService", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<SpareLineItem> spares = new ArrayList<>();
 
 
@@ -82,13 +82,13 @@ public class GService extends BaseEntity {
 
     public void addLineItem(ServiceLineItem sli) {
         services.add(sli);
-        sli.setGService(this);
+        sli.setService(this);
     }
 
 
     public void addSpareLineItem(SpareLineItem sli) {
         spares.add(sli);
-        sli.setGService(this);
+        sli.setService(this);
     }
 
 }
