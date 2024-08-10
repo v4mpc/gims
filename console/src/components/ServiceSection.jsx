@@ -92,7 +92,7 @@ const ServiceSection = ({ form }) => {
               value: c.id,
               label: c.name,
             }))}
-            style={{ width: "400px" }}
+            style={{ width: "450px" }}
             showSearch
             loading={serviceCatalogQuery.isLoading}
             filterOption={optionLabelFilter}

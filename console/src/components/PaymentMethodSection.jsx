@@ -3,7 +3,11 @@ import {Checkbox, Divider, Flex, Form, Input, InputNumber, Select, Space} from "
 
 
 const PaymentMethodSection = ({paymentCatalogQuery,onPaymentChanged,selectedPayment,onPayViaInsuranceChanged,payViaInsurance}) => {
-  return (
+
+
+
+
+    return (
 
 
       <>
