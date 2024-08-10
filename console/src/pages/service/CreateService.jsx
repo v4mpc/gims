@@ -181,31 +181,35 @@ const CreateService = () => {
     }, 0);
   };
 
-  const finalize = async () => {
+  const finalize = () => {
     setSaveOnlyValidation(false);
+
+    console.log(editMode)
 
     setTimeout(() => {
       form
         .validateFields()
         .then((values) => {
-          // if (!editMode) {
-          //     const updatedValues = { ...values, status: "PAID" };
-          //     const data = {
-          //         values: updatedValues,
-          //         urlPath: API_ROUTES.services,
-          //         method: "POST",
-          //     };
-          //     createItem(data);
-          // } else {
-          //     const updatedValues = { ...values, status: "PAID" };
-          //     const data = {
-          //         values: updatedValues,
-          //         urlPath: `${API_ROUTES.services}/${id}`,
-          //         method: "PUT",
-          //     };
-          //     updateItem(data);
-          // }
+            console.log(editMode);
+          if (!editMode) {
+              const updatedValues = { ...values, status: "PAID" };
+              const data = {
+                  values: updatedValues,
+                  urlPath: API_ROUTES.services,
+                  method: "POST",
+              };
 
+              console.log(data);
+              createItem(data);
+          } else {
+              const updatedValues = { ...values, status: "PAID" };
+              const data = {
+                  values: updatedValues,
+                  urlPath: `${API_ROUTES.services}/${id}`,
+                  method: "PUT",
+              };
+              updateItem(data);
+          }
           console.log("Form values:", values);
         })
         .catch((errorInfo) => {
@@ -312,7 +316,7 @@ const CreateService = () => {
             Save for later
           </Button>
 
-          <Button type="primary" htmlType="button" onClick={finalize}>
+          <Button type="primary"  onClick={finalize}>
             Finalize
           </Button>
         </Space>

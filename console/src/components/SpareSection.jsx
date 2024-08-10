@@ -18,7 +18,8 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields }) =
     queries: [
       {
         queryKey: ["spareAll"],
-        placeholderData: [],
+          staleTime: 1000 * 60 * 20,
+          placeholderData: [],
         queryFn: () => getLookupData(API_ROUTES.productAll),
       },
     ],

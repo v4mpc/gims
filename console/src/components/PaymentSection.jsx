@@ -22,14 +22,14 @@ const PaymentSection = ({ saveOnlyValidations }) => {
                                     value &&
                                     getFieldValue("initialPayment") +
                                     getFieldValue("finalPayment") >=
-                                    getFieldValue("estimateAmount")
+                                    getFieldValue("grandTotal")
                                 ) {
                                     return Promise.resolve();
                                 }
 
                                 return Promise.reject(
                                     new Error(
-                                        "Payments should be greater on equal to Estimate amount to finalize.",
+                                        "Payments should be greater on equal to Grand Total amount to finalize.",
                                     ),
                                 );
                             },

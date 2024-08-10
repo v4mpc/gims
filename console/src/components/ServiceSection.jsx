@@ -17,7 +17,8 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields }) 
   const results = useQueries({
     queries: [
       {
-        queryKey: ["serviceAll"],
+          staleTime: 1000 * 60 * 20,
+          queryKey: ["serviceAll"],
         placeholderData: [],
         queryFn: () => getLookupData(API_ROUTES.serviceCatalogsAll),
       },
@@ -97,7 +98,6 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields }) 
                     : [
                         {
                             validator: async (_, names) => {
-                                console.log("am here");
                                 if (services.length===serviceCatalogQuery.data.length) {
                                     return Promise.reject(
                                         new Error("At least 1 service is required"),
