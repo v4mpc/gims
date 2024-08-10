@@ -172,6 +172,7 @@ export function toModelList(form, fields, sparefields) {
 const getItemParams = (tableParams, searchQuery, searchCategory) => ({
   size: tableParams.pagination?.pageSize,
   page: tableParams.pagination?.current - 1,
+    sort:'id,desc',
   q: searchQuery,
   c: searchCategory,
 });
