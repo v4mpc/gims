@@ -10,6 +10,7 @@ import {
   DATE_FORMAT,
   DEFAULT_PAGE_SIZE,
   getLookupData,
+  makeList,
   openNotification,
   putItem,
   serviceGrandTotal,
@@ -210,8 +211,19 @@ const CreateService = () => {
             status = "UNPAID";
           }
 
+          const { servicesList, spareList } = makeList(
+            form,
+            fields,
+            sparefields,
+          );
+
           if (!editMode) {
-            const updatedValues = { ...values, status: status };
+            const updatedValues = {
+              ...values,
+              services: servicesList,
+              spares: spareList,
+              status: status,
+            };
             const data = {
               values: updatedValues,
               urlPath: API_ROUTES.services,
@@ -219,7 +231,12 @@ const CreateService = () => {
             };
             createItem(data);
           } else {
-            const updatedValues = { ...values, status: status };
+            const updatedValues = {
+              ...values,
+              services: servicesList,
+              spares: spareList,
+              status: status,
+            };
             const data = {
               values: updatedValues,
               urlPath: `${API_ROUTES.services}/${id}`,
@@ -240,19 +257,32 @@ const CreateService = () => {
       form
         .validateFields()
         .then((values) => {
-          console.log(editMode);
+          const { servicesList, spareList } = makeList(
+            form,
+            fields,
+            sparefields,
+          );
           if (!editMode) {
-            const updatedValues = { ...values, status: "PAID" };
+            const updatedValues = {
+              ...values,
+              services: servicesList,
+              spares: spareList,
+              status: "PAID",
+            };
             const data = {
               values: updatedValues,
               urlPath: API_ROUTES.services,
               method: "POST",
             };
 
-            console.log(data);
             createItem(data);
           } else {
-            const updatedValues = { ...values, status: "PAID" };
+            const updatedValues = {
+              ...values,
+              services: servicesList,
+              spares: spareList,
+              status: "PAID",
+            };
             const data = {
               values: updatedValues,
               urlPath: `${API_ROUTES.services}/${id}`,

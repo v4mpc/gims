@@ -100,6 +100,25 @@ export function toCustomerCars(customers) {
   return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
 }
 
+
+export function makeList(form,fields,sparefields) {
+    const servicesList = fields.map((f) => ({
+        item: form.getFieldValue(`sitemName_${f.key}`),
+        price: form.getFieldValue(`sprice_${f.key}`),
+        quantity: form.getFieldValue(`squantity_${f.key}`),
+    }));
+
+    const spareList = sparefields.map((f) => ({
+        item: form.getFieldValue(`itemName_${f.key}`),
+        price: form.getFieldValue(`price_${f.key}`),
+        quantity: form.getFieldValue(`quantity_${f.key}`),
+        currentKm: form.getFieldValue(`currentKm_${f.key}`),
+        nextKm: form.getFieldValue(`nextKm_${f.key}`),
+    }));
+
+    return {servicesList,spareList}
+}
+
 const getItemParams = (tableParams, searchQuery, searchCategory) => ({
   size: tableParams.pagination?.pageSize,
   page: tableParams.pagination?.current - 1,
