@@ -9,6 +9,17 @@ const listServiceColumns = [
     width: "5%",
     render: (_, record) => record.service.id,
   },
+
+
+    {
+        title: "Date",
+        key: "createdAt",
+        dataIndex: "createdAt",
+        render:(_,record)=>record.service.createdAt
+    },
+
+
+
   {
     title: "Customer Name",
     key: "customerName",

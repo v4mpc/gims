@@ -9,6 +9,13 @@ const listPaintColumns = [
     width: "5%",
     render: (_, record) => record.paint.id,
   },
+    {
+        title: "Date",
+        key: "createdAt",
+        dataIndex: "createdAt",
+        render:(_,record)=>record.paint.createdAt
+    },
+    ,
   {
     title: "Customer Name",
     key: "customerName",
