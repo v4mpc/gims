@@ -21,6 +21,9 @@ public class SpareLineItem extends BaseEntity {
     @JsonIgnore
     private GService service;
 
+
+    private Integer itemId;
+
     @NotNull
     private String item;
 

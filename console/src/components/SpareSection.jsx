@@ -33,6 +33,7 @@ const SpareSection = ({
       {
         key: nextKey,
         names: [
+          `itemId_${nextKey}`,
           `itemName_${nextKey}`,
           `unit_${nextKey}`,
           `price_${nextKey}`,
@@ -44,8 +45,11 @@ const SpareSection = ({
         ],
       },
     ]);
-    setSpares((curr) => curr.filter((c) => c.product.id !== spareObject.product.id));
+    setSpares((curr) =>
+      curr.filter((c) => c.product.id !== spareObject.product.id),
+    );
     form.setFieldsValue({
+      [`itemId_${nextKey}`]: spareObject.product.id,
       [`itemName_${nextKey}`]: `${spareObject.product.code}-${spareObject.product.name}-${spareObject.product.category.name}`,
       [`price_${nextKey}`]: spareObject.product.salePrice,
       [`soh_${nextKey}`]: spareObject.stockOnhand,
@@ -57,7 +61,9 @@ const SpareSection = ({
   const isOilByKey = (key) => {
     const itemName = form.getFieldValue(`itemName_${key}`);
     const [spareObject] = spareCatalogQuery.data.filter(
-      (s) => `${s.product.code}-${s.product.name}-${s.product.category.name}` === itemName,
+      (s) =>
+        `${s.product.code}-${s.product.name}-${s.product.category.name}` ===
+        itemName,
     );
     return spareObject.product.isOil;
   };
@@ -65,7 +71,9 @@ const SpareSection = ({
   const removeField = (key) => {
     const itemName = form.getFieldValue(`itemName_${key}`);
     const [removedSpareObject] = spareCatalogQuery.data.filter(
-      (s) => `${s.product.code}-${s.product.name}-${s.product.category.name}` === itemName,
+      (s) =>
+        `${s.product.code}-${s.product.name}-${s.product.category.name}` ===
+        itemName,
     );
     setSparefields(sparefields.filter((field) => field.key !== key));
     setSpares([...spares, removedSpareObject]);
@@ -113,21 +121,29 @@ const SpareSection = ({
           style={{ display: "flex", marginBottom: 5 }}
           align="baseline"
         >
+
+            <Form.Item
+                name={field.names[0]}
+               hidden={true}
+            >
+                <InputNumber disabled/>
+            </Form.Item>
+
           <Form.Item
-            name={field.names[0]}
+            name={field.names[1]}
             label={field.key === 0 ? "Item" : ""}
           >
             <Input disabled style={{ width: "450px" }} placeholder="Item" />
           </Form.Item>
 
           <Form.Item
-            name={field.names[1]}
+            name={field.names[2]}
             label={field.key === 0 ? "Unit" : ""}
           >
             <Input disabled style={{ width: "50px" }} />
           </Form.Item>
           <Form.Item
-            name={field.names[2]}
+            name={field.names[3]}
             label={field.key === 0 ? "Price" : ""}
             rules={[
               ...(saveOnlyValidations
@@ -145,45 +161,41 @@ const SpareSection = ({
             />
           </Form.Item>
 
-
-            <Form.Item
-                name={field.names[3]}
-                label={field.key === 0 ? "SOH" : ""}
-            >
-                <InputNumber
-                    formatter={thousanSeparatorformatter}
-                    parser={thousanSeparatorparser}
-                    placeholder="SOH"
-                    disabled={true}
-                    min={1}
-
-                />
-            </Form.Item>
+          <Form.Item name={field.names[4]} label={field.key === 0 ? "SOH" : ""}>
+            <InputNumber
+              formatter={thousanSeparatorformatter}
+              parser={thousanSeparatorparser}
+              placeholder="SOH"
+              disabled={true}
+              min={1}
+            />
+          </Form.Item>
 
           <Form.Item
-            name={field.names[4]}
+            name={field.names[5]}
             label={field.key === 0 ? "Quantity" : ""}
             rules={[
               ...(saveOnlyValidations
                 ? []
-                : [{ required: true, message: "Missing quantity" },
+                : [
+                    { required: true, message: "Missing quantity" },
 
-                      {
-                          validator: async (_, value) => {
-                              if(value>form.getFieldValue(`soh_${field.key}`)){
-                                  console.log(value,form.getFieldValue(`soh_${field.key}`))
-                                  return Promise.reject(
-                                      new Error("Quantity should be less or equal to SOH"),
-                                  );
-
-                              }
-                              return Promise.resolve();
-
-                          },
-                      }
-
-
-
+                    {
+                      validator: async (_, value) => {
+                        if (value > form.getFieldValue(`soh_${field.key}`)) {
+                          console.log(
+                            value,
+                            form.getFieldValue(`soh_${field.key}`),
+                          );
+                          return Promise.reject(
+                            new Error(
+                              "Quantity should be less or equal to SOH",
+                            ),
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
                   ]),
             ]}
           >
@@ -198,7 +210,7 @@ const SpareSection = ({
 
           <Space align={field.key === 0 ? undefined : "baseline"}>
             <Form.Item
-              name={field.names[5]}
+              name={field.names[6]}
               label={field.key === 0 ? "Total" : ""}
             >
               <InputNumber
@@ -213,7 +225,7 @@ const SpareSection = ({
             {isOilByKey(field.key) && (
               <>
                 <Form.Item
-                  name={field.names[6]}
+                  name={field.names[7]}
                   rules={[
                     ...(saveOnlyValidations
                       ? []
@@ -230,7 +242,7 @@ const SpareSection = ({
                 </Form.Item>
 
                 <Form.Item
-                  name={field.names[7]}
+                  name={field.names[8]}
                   label={field.key === 0 ? "Next Kms" : ""}
                   rules={[
                     ...(saveOnlyValidations
