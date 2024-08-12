@@ -7,11 +7,11 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class ProductSpecs {
     public static Specification<Product> searchByName(String searchTerm) {
-        return (root, query, builder) -> builder.like(root.get("name"), "%" + searchTerm.toLowerCase() + "%");
+        return (root, query, builder) -> builder.like(builder.lower(root.get("name")), "%" + searchTerm.toLowerCase() + "%");
     }
 
     public static Specification<Product> searchByCode(String searchTerm) {
-        return (root, query, builder) -> builder.like(root.get("code"), "%" + searchTerm.toLowerCase() + "%");
+        return (root, query, builder) -> builder.like(builder.lower(root.get("code")), "%" + searchTerm.toLowerCase() + "%");
     }
 
 

@@ -97,7 +97,7 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
       key: "quantity",
       render: (_, record) =>
         isSale ? (
-          <InputNumber formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
+          <InputNumber
             min={0}
             onBlur={(e) => handleInputQuantityChanged(record, e)}
             max={record.stockOnHand}
@@ -105,7 +105,7 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
           />
         ) : (
           <InputNumber
-              formatter={thousanSeparatorformatter} parser={thousanSeparatorparser}
+            
             min={0}
             onBlur={(e) => handleInputQuantityChanged(record, e)}
             defaultValue={record.saleQuantity}
