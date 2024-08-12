@@ -110,14 +110,19 @@ export function toFormList(services, spares, dbSpares) {
     ],
   }));
 
-  const _serviceValues = services.flatMap((s, index) => [
-    {
-      [`sitemName_${index}`]: s.item,
-      [`sprice_${index}`]: s.price,
-      [`squantity_${index}`]: s.quantity,
-      [`stotal_${index}`]: s.quantity * s.price,
-    },
-  ]);
+  const _serviceValues = services.flatMap((s, index) => ({
+    [`sitemName_${index}`]: s.item,
+    [`sprice_${index}`]: s.price,
+    [`squantity_${index}`]: s.quantity,
+    [`stotal_${index}`]: s.quantity * s.price,
+  }));
+
+
+    const serviceValues = _serviceValues.reduce((acc, obj) => {
+        return { ...acc, ...obj };
+    }, {});
+
+
 
   const _spareValues = spares.map((s, index) => {
     const [itemSoh] = dbSpares
@@ -125,17 +130,16 @@ export function toFormList(services, spares, dbSpares) {
       .map((ms) => ms.stockOnhand);
 
     return {
-        [`itemId_${index}`]: s.itemId,
-        [`itemName_${index}`]: s.item,
-        [`price_${index}`]: s.price,
-        [`unit_${index}`]: s.unit,
-        [`soh_${index}`]: itemSoh??0,
-        [`quantity_${index}`]: s.quantity,
-        [`currentKm_${index}`]: s.currentKm,
-        [`nextKm_${index}`]: s.nextKm,
-        [`total_${index}`]: s.quantity * s.price,
-      }
-
+      [`itemId_${index}`]: s.itemId,
+      [`itemName_${index}`]: s.item,
+      [`price_${index}`]: s.price,
+      [`unit_${index}`]: s.unit,
+      [`soh_${index}`]: itemSoh ?? 0,
+      [`quantity_${index}`]: s.quantity,
+      [`currentKm_${index}`]: s.currentKm,
+      [`nextKm_${index}`]: s.nextKm,
+      [`total_${index}`]: s.quantity * s.price,
+    };
   });
 
   const formSpareFields = spares.map((s, index) => ({
@@ -153,13 +157,12 @@ export function toFormList(services, spares, dbSpares) {
     ],
   }));
 
-
   // console.log(_spareValues);
 
   const spareValues = _spareValues.reduce((acc, obj) => {
-      return { ...acc, ...obj };
+    return { ...acc, ...obj };
   }, {});
-  const [serviceValues] = _serviceValues;
+
 
   return { formFields, formSpareFields, serviceValues, spareValues };
 }

@@ -105,7 +105,7 @@ export default function GenericBuy({ urlPath, isSale, queryKey }) {
           />
         ) : (
           <InputNumber
-            
+
             min={0}
             onBlur={(e) => handleInputQuantityChanged(record, e)}
             defaultValue={record.saleQuantity}
