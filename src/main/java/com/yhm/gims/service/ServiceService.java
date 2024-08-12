@@ -2,6 +2,8 @@ package com.yhm.gims.service;
 
 
 import com.yhm.gims.domain.ServiceSpecs;
+import com.yhm.gims.domain.StockEvent;
+import com.yhm.gims.domain.TransactionType;
 import com.yhm.gims.domain.enumaration.Status;
 import com.yhm.gims.dto.ServiceDto;
 import com.yhm.gims.entity.GService;
@@ -17,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,6 +27,7 @@ import java.util.List;
 public class ServiceService {
 
     private final ServiceRepository serviceRepository;
+    private final StockOnhandService stockOnhandService;
 
 
     public Page<GService> findAll(Pageable pageable) {
@@ -47,7 +51,6 @@ public class ServiceService {
     public Page<ServiceDto> getServices(String searchTerm, Pageable pageable) {
 
 
-
         Page<GService> servicesPage = serviceRepository.findAll(Specification.anyOf(ServiceSpecs.searchByCustomerName(searchTerm), ServiceSpecs.searchByCustomerPhone(searchTerm), ServiceSpecs.searchByCustomerMake(searchTerm), ServiceSpecs.searchByCustomerModel(searchTerm), ServiceSpecs.searchByCustomerPlateNumber(searchTerm)), pageable);
         List<GService> GServices = servicesPage.getContent();
         Pageable servicesPageable = servicesPage.getPageable();
@@ -66,6 +69,12 @@ public class ServiceService {
 
     @Transactional
     public void save(GService service) {
+
+
+        if (service.getStatus().equals(Status.PAID)) {
+            updateStock(service.getSpares());
+        }
+
         for (ServiceLineItem serviceLineItem : service.getServices()) {
             serviceLineItem.setService(service);
         }
@@ -77,12 +86,30 @@ public class ServiceService {
     }
 
 
+    public void updateStock(List<SpareLineItem> spares) {
+        for (SpareLineItem p : spares) {
+            StockEvent e = StockEvent.builder()
+                    .eventDate(LocalDate.now())
+                    .tx(TransactionType.CREDIT)
+                    .productId(p.getItemId())
+                    .quantity(p.getQuantity())
+                    .build();
+            stockOnhandService.update(e);
+        }
+    }
+
+
+    @Transactional
     public GService update(GService GService, int id) {
         GService updateGService = serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + id));
 
 
-        if(updateGService.getStatus().equals(Status.PAID)){
+        if (updateGService.getStatus().equals(Status.PAID)) {
             throw new RuntimeException("Can not update PAID status");
+        }
+
+        if (GService.getStatus().equals(Status.PAID)) {
+            updateStock(GService.getSpares());
         }
 
 
