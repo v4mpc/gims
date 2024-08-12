@@ -21,6 +21,14 @@ import {
 
 const { Header, Content, Footer, Sider } = Layout;
 const items = [
+
+
+    {
+        key: "dashboard",
+        icon: <DashboardOutlined />,
+        label: <Link to="/dashboard">Dashboard</Link>,
+    }
+    ,
   {
     key: "spares",
     icon: <CarOutlined />,

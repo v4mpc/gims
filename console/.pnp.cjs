@@ -35,6 +35,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-dom", "npm:18.3.0"],\
           ["@vitejs/plugin-react-swc", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:3.7.0"],\
           ["antd", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.19.3"],\
+          ["chart.js", "npm:4.4.3"],\
           ["dayjs", "npm:1.11.12"],\
           ["eslint", "npm:8.57.0"],\
           ["eslint-config-prettier", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:9.1.0"],\
@@ -45,6 +46,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.3.3"],\
           ["qs", "npm:6.12.3"],\
           ["react", "npm:18.3.1"],\
+          ["react-chartjs-2", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.2.0"],\
           ["react-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:18.3.1"],\
           ["react-highlight-words", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.20.0"],\
           ["react-router-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:6.25.1"],\
@@ -516,6 +518,15 @@ const RAW_RUNTIME_STATE =
             "wrap-ansi",\
             "npm:7.0.0"\
           ]]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@kurkle/color", [\
+      ["npm:0.3.2", {\
+        "packageLocation": "../../../.yarn/berry/cache/@kurkle-color-npm-0.3.2-98f2086013-10c0.zip/node_modules/@kurkle/color/",\
+        "packageDependencies": [\
+          ["@kurkle/color", "npm:0.3.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1833,6 +1844,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["chart.js", [\
+      ["npm:4.4.3", {\
+        "packageLocation": "../../../.yarn/berry/cache/chart.js-npm-4.4.3-26ab2c8866-10c0.zip/node_modules/chart.js/",\
+        "packageDependencies": [\
+          ["chart.js", "npm:4.4.3"],\
+          ["@kurkle/color", "npm:0.3.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["chownr", [\
       ["npm:2.0.0", {\
         "packageLocation": "../../../.yarn/berry/cache/chownr-npm-2.0.0-638f1c9c61-10c0.zip/node_modules/chownr/",\
@@ -3060,6 +3081,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react-dom", "npm:18.3.0"],\
           ["@vitejs/plugin-react-swc", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:3.7.0"],\
           ["antd", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.19.3"],\
+          ["chart.js", "npm:4.4.3"],\
           ["dayjs", "npm:1.11.12"],\
           ["eslint", "npm:8.57.0"],\
           ["eslint-config-prettier", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:9.1.0"],\
@@ -3070,6 +3092,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.3.3"],\
           ["qs", "npm:6.12.3"],\
           ["react", "npm:18.3.1"],\
+          ["react-chartjs-2", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.2.0"],\
           ["react-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:18.3.1"],\
           ["react-highlight-words", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.20.0"],\
           ["react-router-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:6.25.1"],\
@@ -5804,6 +5827,32 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["react", "npm:18.3.1"],\
           ["loose-envify", "npm:1.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["react-chartjs-2", [\
+      ["npm:5.2.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/react-chartjs-2-npm-5.2.0-03632f5179-10c0.zip/node_modules/react-chartjs-2/",\
+        "packageDependencies": [\
+          ["react-chartjs-2", "npm:5.2.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.2.0", {\
+        "packageLocation": "./.yarn/__virtual__/react-chartjs-2-virtual-128d91bdce/4/.yarn/berry/cache/react-chartjs-2-npm-5.2.0-03632f5179-10c0.zip/node_modules/react-chartjs-2/",\
+        "packageDependencies": [\
+          ["react-chartjs-2", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.2.0"],\
+          ["@types/chart.js", null],\
+          ["@types/react", "npm:18.3.3"],\
+          ["chart.js", "npm:4.4.3"],\
+          ["react", "npm:18.3.1"]\
+        ],\
+        "packagePeers": [\
+          "@types/chart.js",\
+          "@types/react",\
+          "chart.js",\
+          "react"\
         ],\
         "linkType": "HARD"\
       }]\

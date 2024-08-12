@@ -15,9 +15,11 @@
     "@tanstack/react-query": "^5.51.16",
     "@tanstack/react-query-devtools": "^5.51.16",
     "antd": "^5.19.3",
+    "chart.js": "^4.4.3",
     "dayjs": "^1.11.12",
     "qs": "^6.12.3",
     "react": "^18.3.1",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-highlight-words": "^0.20.0",
     "react-router-dom": "^6.25.1"

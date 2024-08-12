@@ -21,6 +21,7 @@ import CreateService from "./pages/Service/CreateService.jsx";
 import CreatePaint from "./pages/paint/CreatePaint.jsx";
 import ListPaint from "./pages/paint/ListPaint.jsx";
 import ListService from "./pages/service/ListService.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 
 
 const queryClient = new QueryClient(
@@ -41,7 +42,8 @@ export default function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<AppLayout/>}>
-                        <Route index element={<Navigate to="settings/units"/>}/>
+                        <Route index element={<Navigate to="dashboard"/>}/>
+                        <Route path="dashboard" element={<Dashboard />} />
                         <Route path="expense" element={<Expense />} />
                         <Route path="tx-success" element={<BuySuccess />} />
                         <Route path="stock-on-hand" element={<StockOnhand />} />
@@ -55,7 +57,6 @@ export default function App() {
                         <Route path="service" element={<ListService />} />
                         <Route path="service/:id" element={<CreateService />} />
                         <Route path="service/create" element={<CreateService />} />
-
 
                         <Route path="settings/units" element={<Unit/>}/>
                         <Route path="settings/categories" element={<Category/>}/>
