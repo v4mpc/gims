@@ -63,7 +63,7 @@ const CreateService = () => {
         queryKey: ["spareAll"],
         staleTime: 1000 * 60 * 20,
         placeholderData: [],
-        queryFn: () => getLookupData(API_ROUTES.productAll),
+        queryFn: () => getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=true`),
       },
     ],
   });
@@ -118,7 +118,7 @@ const CreateService = () => {
       );
 
       setSpares(
-        spareCatalogQuery.data.filter((s) => !selectedSpares?.includes(`${s.code}-${s.name}-${s.category.name}`)),
+        spareCatalogQuery.data.filter((s) => !selectedSpares?.includes(`${s.product.code}-${s.product.name}-${s.product.category.name}`)),
       );
 
       const grandTotal = serviceTotal + spareTotal;

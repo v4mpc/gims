@@ -10,21 +10,22 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spares,setSpares,spareCatalogQuery }) => {
-
-
-
-
-
-
-
+const SpareSection = ({
+  form,
+  saveOnlyValidations,
+  sparefields,
+  setSparefields,
+  spares,
+  setSpares,
+  spareCatalogQuery,
+}) => {
   const addField = () => {
     if (form.getFieldValue("selectedSpare") === undefined) {
       return;
     }
 
     const [spareObject] = spareCatalogQuery.data.filter(
-      (s) => s.id === form.getFieldValue("selectedSpare"),
+      (s) => s.product.id === form.getFieldValue("selectedSpare"),
     );
     const nextKey = sparefields.length;
     setSparefields([
@@ -35,6 +36,7 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
           `itemName_${nextKey}`,
           `unit_${nextKey}`,
           `price_${nextKey}`,
+          `soh_${nextKey}`,
           `quantity_${nextKey}`,
           `total_${nextKey}`,
           `currentKm_${nextKey}`,
@@ -42,11 +44,12 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
         ],
       },
     ]);
-    setSpares((curr) => curr.filter((c) => c.id !== spareObject.id));
+    setSpares((curr) => curr.filter((c) => c.product.id !== spareObject.product.id));
     form.setFieldsValue({
-      [`itemName_${nextKey}`]: `${spareObject.code}-${spareObject.name}-${spareObject.category.name}`,
-      [`price_${nextKey}`]: spareObject.salePrice,
-      [`unit_${nextKey}`]: spareObject.unitOfMeasure.code,
+      [`itemName_${nextKey}`]: `${spareObject.product.code}-${spareObject.product.name}-${spareObject.product.category.name}`,
+      [`price_${nextKey}`]: spareObject.product.salePrice,
+      [`soh_${nextKey}`]: spareObject.stockOnhand,
+      [`unit_${nextKey}`]: spareObject.product.unitOfMeasure.code,
     });
     form.resetFields(["selectedSpare"]);
   };
@@ -54,15 +57,15 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
   const isOilByKey = (key) => {
     const itemName = form.getFieldValue(`itemName_${key}`);
     const [spareObject] = spareCatalogQuery.data.filter(
-      (s) => `${s.code}-${s.name}-${s.category.name}` === itemName,
+      (s) => `${s.product.code}-${s.product.name}-${s.product.category.name}` === itemName,
     );
-    return spareObject.isOil;
+    return spareObject.product.isOil;
   };
 
   const removeField = (key) => {
     const itemName = form.getFieldValue(`itemName_${key}`);
     const [removedSpareObject] = spareCatalogQuery.data.filter(
-      (s) => `${s.code}-${s.name}-${s.category.name}` === itemName,
+      (s) => `${s.product.code}-${s.product.name}-${s.product.category.name}` === itemName,
     );
     setSparefields(sparefields.filter((field) => field.key !== key));
     setSpares([...spares, removedSpareObject]);
@@ -73,11 +76,6 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
     form.setFieldsValue({
       [`total_${key}`]: e * quantity,
     });
-
-
-
-
-
   };
 
   const onQuantityChange = (e, key) => {
@@ -85,22 +83,17 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
     form.setFieldsValue({
       [`total_${key}`]: price * e,
     });
-
-
   };
 
   return (
     <Flex vertical>
       <Space style={{ marginBottom: "10px" }} align="baseline">
-        <Form.Item name="selectedSpare"
-
-
-        >
+        <Form.Item name="selectedSpare">
           <Select
             placeholder="Select spare"
             options={spares.map((c) => ({
-              value: c.id,
-              label: `${c.code}-${c.name}-${c.category.name}`,
+              value: c.product.id,
+              label: `${c.product.code}-${c.product.name}-${c.product.category.name}`,
             }))}
             style={{ width: "450px" }}
             showSearch
@@ -137,9 +130,9 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
             name={field.names[2]}
             label={field.key === 0 ? "Price" : ""}
             rules={[
-                ...(saveOnlyValidations
-                    ? []
-                    : [{ required: true, message: "Missing price" }]),
+              ...(saveOnlyValidations
+                ? []
+                : [{ required: true, message: "Missing price" }]),
             ]}
           >
             <InputNumber
@@ -152,13 +145,46 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
             />
           </Form.Item>
 
+
+            <Form.Item
+                name={field.names[3]}
+                label={field.key === 0 ? "SOH" : ""}
+            >
+                <InputNumber
+                    formatter={thousanSeparatorformatter}
+                    parser={thousanSeparatorparser}
+                    placeholder="SOH"
+                    disabled={true}
+                    min={1}
+
+                />
+            </Form.Item>
+
           <Form.Item
-            name={field.names[3]}
+            name={field.names[4]}
             label={field.key === 0 ? "Quantity" : ""}
             rules={[
-                ...(saveOnlyValidations
-                    ? []
-                    : [{ required: true, message: "Missing quantity" }]),
+              ...(saveOnlyValidations
+                ? []
+                : [{ required: true, message: "Missing quantity" },
+
+                      {
+                          validator: async (_, value) => {
+                              if(value>form.getFieldValue(`soh_${field.key}`)){
+                                  console.log(value,form.getFieldValue(`soh_${field.key}`))
+                                  return Promise.reject(
+                                      new Error("Quantity should be less or equal to SOH"),
+                                  );
+
+                              }
+                              return Promise.resolve();
+
+                          },
+                      }
+
+
+
+                  ]),
             ]}
           >
             <InputNumber
@@ -172,7 +198,7 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
 
           <Space align={field.key === 0 ? undefined : "baseline"}>
             <Form.Item
-              name={field.names[4]}
+              name={field.names[5]}
               label={field.key === 0 ? "Total" : ""}
             >
               <InputNumber
@@ -187,11 +213,11 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
             {isOilByKey(field.key) && (
               <>
                 <Form.Item
-                  name={field.names[5]}
+                  name={field.names[6]}
                   rules={[
-                      ...(saveOnlyValidations
-                          ? []
-                          : [{ required: true, message: "Missing current Kms" }]),
+                    ...(saveOnlyValidations
+                      ? []
+                      : [{ required: true, message: "Missing current Kms" }]),
                   ]}
                   label={field.key === 0 ? "Current Kms" : ""}
                 >
@@ -200,17 +226,16 @@ const SpareSection = ({ form,saveOnlyValidations,sparefields,setSparefields,spar
                     parser={thousanSeparatorparser}
                     style={{ width: "150px" }}
                     placeholder="Current Kms"
-
                   />
                 </Form.Item>
 
                 <Form.Item
-                  name={field.names[6]}
+                  name={field.names[7]}
                   label={field.key === 0 ? "Next Kms" : ""}
                   rules={[
-                      ...(saveOnlyValidations
-                          ? []
-                          : [{ required: true, message: "Missing next Kms" }]),
+                    ...(saveOnlyValidations
+                      ? []
+                      : [{ required: true, message: "Missing next Kms" }]),
                   ]}
                 >
                   <InputNumber

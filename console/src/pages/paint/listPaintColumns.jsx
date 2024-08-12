@@ -15,7 +15,7 @@ const listPaintColumns = [
         dataIndex: "createdAt",
         render:(_,record)=>record.paint.createdAt
     },
-    ,
+
   {
     title: "Customer Name",
     key: "customerName",
