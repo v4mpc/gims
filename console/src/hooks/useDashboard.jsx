@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import dayjs from "dayjs";
-import {API_ROUTES, fetchData, getLookupData, LINE_TENSION} from "../utils.jsx";
+import {API_ROUTES, getLookupData, LINE_TENSION} from "../utils.jsx";
 import {useQueries} from "@tanstack/react-query";
 
 

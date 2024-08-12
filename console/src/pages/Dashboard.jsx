@@ -37,7 +37,7 @@ const options = {
     },
     title: {
       display: false,
-      text: "Sales and Expenses trends",
+      text: "Sells and Expenses trends",
     },
   },
 };
@@ -120,13 +120,13 @@ export default function Dashboard() {
 
 
                 <Statistic
-                  title="Total Sales"
+                  title="Total Sells"
                   value={dashboardData?.totalSales}
                   precision={DASHBOARD_METRICS_PRECISION}
                 />
 
                 <Statistic
-                  title="Sales Profit"
+                  title="Sells Profit"
                   value={dashboardData?.totalSalesProfit}
                   precision={DASHBOARD_METRICS_PRECISION}
                 />
@@ -158,13 +158,13 @@ export default function Dashboard() {
             </Flex>
           </Flex>
           <Flex>
-            <Divider orientation={DASHBOARD_DIVIDER_ORIENTATION}>Sales / Expenses trends</Divider>
+            <Divider orientation={DASHBOARD_DIVIDER_ORIENTATION}>Sells / Expenses trends</Divider>
           </Flex>
           <Flex vertical>
             <Line options={options} data={chartData} height={"90%"} />
           </Flex>
           <Flex>
-            <Divider orientation={DASHBOARD_DIVIDER_ORIENTATION}>Sales / Expenses summary</Divider>
+            <Divider orientation={DASHBOARD_DIVIDER_ORIENTATION}>Sells / Expenses summary</Divider>
           </Flex>
 
           <Flex vertical={false} gap="middle">
@@ -176,7 +176,7 @@ export default function Dashboard() {
             >
 
               <Table
-                title={() => "Top Sales"}
+                title={() => "Top Sells"}
                 columns={columns}
                 dataSource={dashboardData?.topSales}
                 scroll={{ x: 'max-content' }}
