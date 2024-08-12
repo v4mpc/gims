@@ -7,7 +7,6 @@ import {
   LineElement,
   Title,
     Tooltip as ChartTooltip,
-
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
@@ -107,7 +106,6 @@ export default function Dashboard() {
             }}
             picker="month"
           />
-
         </Flex>
       </Flex>
 
@@ -174,19 +172,13 @@ export default function Dashboard() {
                 width: "50%",
               }}
             >
-
               <Table
                 title={() => "Top Sells"}
                 columns={columns}
                 dataSource={dashboardData?.topSales}
                 scroll={{ x: 'max-content' }}
-
               />
-
             </Card>
-
-
-
             <Card
               styles={{ body: { padding: "0px" } }}
               style={{

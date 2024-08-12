@@ -87,6 +87,13 @@ const items = [
     ),
   },
 
+
+    {
+        key: "reports",
+        icon: <FileTextOutlined />,
+        label: <Link to="/reports">Reports</Link>,
+    },
+
   {
     key: "settings",
     icon: <SettingOutlined />,
@@ -159,10 +166,10 @@ const items = [
         ),
       },
 
-      // {
-      //     key: "designer",
-      //     label: <Link to="/settings/report-designer">❁ Designer</Link>,
-      // },
+      {
+          key: "designer",
+          label: <Link to="/settings/report-designer">❁ Designer</Link>,
+      },
     ],
   },
   // {

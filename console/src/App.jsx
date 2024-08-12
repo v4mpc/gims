@@ -22,6 +22,8 @@ import CreatePaint from "./pages/paint/CreatePaint.jsx";
 import ListPaint from "./pages/paint/ListPaint.jsx";
 import ListService from "./pages/service/ListService.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import ReportDesigner from "./pages/report/ReportDesigner.jsx";
+import Reports from "./pages/report/Reports.jsx";
 
 
 const queryClient = new QueryClient(
@@ -50,6 +52,8 @@ export default function App() {
                         <Route path="buy" element={<Buy />} />
                         <Route path="sell" element={<Sell />} />
 
+                        <Route path="reports" element={<Reports />} />
+
                         <Route path="paint" element={<ListPaint />} />
                         <Route path="paint/:id" element={<CreatePaint />} />
                         <Route path="paint/create" element={<CreatePaint />} />
@@ -65,6 +69,10 @@ export default function App() {
                         <Route path="settings/payment-catalog" element={<PaymentCatalog/>}/>
                         <Route path="settings/GService-catalogs" element={<ServiceCatalog/>}/>
                         <Route path="settings/vehicles" element={<Vehicle/>}/>
+                        <Route
+                            path="settings/report-designer"
+                            element={<ReportDesigner />}
+                        />
                     </Route>
                     <Route path="*" element={<PageNotFound/>}/>
                 </Routes>
