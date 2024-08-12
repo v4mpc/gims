@@ -108,7 +108,7 @@ export default function GenericTable({
                     type="primary"
                     onClick={() =>navigateToLink(`${record.service.id}`)}
                 >
-                    Edit
+                    {record.service.status==="PAID"?"View":"Edit"}
                 </Button>
             ),
         };

@@ -2,6 +2,7 @@ package com.yhm.gims.service;
 
 
 import com.yhm.gims.domain.ServiceSpecs;
+import com.yhm.gims.domain.enumaration.Status;
 import com.yhm.gims.dto.ServiceDto;
 import com.yhm.gims.entity.GService;
 import com.yhm.gims.entity.ServiceLineItem;
@@ -78,6 +79,13 @@ public class ServiceService {
 
     public GService update(GService GService, int id) {
         GService updateGService = serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + id));
+
+
+        if(updateGService.getStatus().equals(Status.PAID)){
+            throw new RuntimeException("Can not update PAID status");
+        }
+
+
         updateGService.setCustomerCar(GService.getCustomerCar());
         updateGService.setInitialPaymentDate(GService.getInitialPaymentDate());
         updateGService.setInitialPayment(GService.getInitialPayment());

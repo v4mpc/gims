@@ -375,6 +375,7 @@ const CreateService = () => {
       onValuesChange={onValueChanged}
       layout="vertical"
       autoComplete="off"
+      disabled={form.getFieldValue("status")==="PAID"}
     >
       <Flex justify="flex-end">
         <StatusTag status={form?.getFieldValue("status")} />
@@ -390,6 +391,7 @@ const CreateService = () => {
 
       <ServiceSection
         form={form}
+
         saveOnlyValidations={saveOnlyValidations}
         editMode={editMode}
         fields={fields}
