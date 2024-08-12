@@ -63,7 +63,7 @@ const CreateService = () => {
         queryKey: ["spareAll"],
         staleTime: 1000 * 60 * 20,
         placeholderData: [],
-        queryFn: () => getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=true`),
+        queryFn: () => getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
       },
     ],
   });
@@ -100,8 +100,9 @@ const CreateService = () => {
 
       const { serviceValues, spareValues, formSpareFields, formFields } =
         toFormList(
-          serviceQuery.data.service?.services ?? [],
-          serviceQuery.data.service?.spares ?? [],
+          serviceQuery.data.service?.services??[],
+          serviceQuery.data.service?.spares??[],
+            spareCatalogQuery.data
         );
       //
 
@@ -109,7 +110,7 @@ const CreateService = () => {
         (s) => s.item,
       );
 
-      const selectedSpares = serviceQuery.data.service?.spares.map((s) => s.item);
+      const selectedSpares = serviceQuery.data.service?.spares.map((s) => s.itemId);
 
       setFields(formFields);
       setSpareFields(formSpareFields);
@@ -118,7 +119,7 @@ const CreateService = () => {
       );
 
       setSpares(
-        spareCatalogQuery.data.filter((s) => !selectedSpares?.includes(`${s.product.code}-${s.product.name}-${s.product.category.name}`)),
+        spareCatalogQuery.data.filter((s) => !selectedSpares?.includes(s.product.id)),
       );
 
       const grandTotal = serviceTotal + spareTotal;
@@ -157,7 +158,7 @@ const CreateService = () => {
       form.setFieldsValue(serviceValues);
       form.setFieldsValue(spareValues);
     }
-  }, [editMode, serviceQuery.data, paymentCatalogQuery.data]);
+  }, [editMode, serviceQuery.data, paymentCatalogQuery.data,spareCatalogQuery.data]);
 
   const { mutate: createItem, isLoading: isCreating } = useMutation({
     mutationFn: putItem,
@@ -229,13 +230,13 @@ const CreateService = () => {
       },
     ]);
 
-    form.setFields(
-      fields.flatMap((f) => [
-        { name: `itemName_${f.key}`, errors: [] },
-        { name: `price_${f.key}`, errors: [] },
-        { name: `quantity_${f.key}`, errors: [] },
-      ]),
-    );
+    // form.setFields(
+    //   fields.flatMap((f) => [
+    //     { name: `itemName_${f.key}`, errors: [] },
+    //     { name: `price_${f.key}`, errors: [] },
+    //     { name: `quantity_${f.key}`, errors: [] },
+    //   ]),
+    // );
 
     form.setFields(
       spareFields.flatMap((f) => [

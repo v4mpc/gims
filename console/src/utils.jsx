@@ -99,7 +99,7 @@ export function toCustomerCars(customers) {
   return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
 }
 
-export function toFormList(services, spares) {
+export function toFormList(services, spares, dbSpares) {
   const formFields = services.map((s, index) => ({
     key: index,
     names: [
@@ -119,24 +119,33 @@ export function toFormList(services, spares) {
     },
   ]);
 
-  const _spareValues = spares.flatMap((s, index) => [
-    {
-      [`itemName_${index}`]: s.item,
-      [`price_${index}`]: s.price,
-      [`unit_${index}`]: s.unit ,
-      [`quantity_${index}`]: s.quantity,
-      [`currentKm_${index}`]: s.currentKm,
-      [`nextKm_${index}`]: s.nextKm,
-      [`total_${index}`]: s.quantity * s.price,
-    },
-  ]);
+  const _spareValues = spares.map((s, index) => {
+    const [itemSoh] = dbSpares
+      .filter((fc) => fc.product.id === s.itemId)
+      .map((ms) => ms.stockOnhand);
+
+    return {
+        [`itemId_${index}`]: s.itemId,
+        [`itemName_${index}`]: s.item,
+        [`price_${index}`]: s.price,
+        [`unit_${index}`]: s.unit,
+        [`soh_${index}`]: itemSoh??0,
+        [`quantity_${index}`]: s.quantity,
+        [`currentKm_${index}`]: s.currentKm,
+        [`nextKm_${index}`]: s.nextKm,
+        [`total_${index}`]: s.quantity * s.price,
+      }
+
+  });
 
   const formSpareFields = spares.map((s, index) => ({
     key: index,
     names: [
+      `itemId_${index}`,
       `itemName_${index}`,
       `unit_${index}`,
       `price_${index}`,
+      `soh_${index}`,
       `quantity_${index}`,
       `total_${index}`,
       `currentKm_${index}`,
@@ -144,8 +153,13 @@ export function toFormList(services, spares) {
     ],
   }));
 
-  const [spareValues]=_spareValues;
-  const [serviceValues]=_serviceValues;
+
+  // console.log(_spareValues);
+
+  const spareValues = _spareValues.reduce((acc, obj) => {
+      return { ...acc, ...obj };
+  }, {});
+  const [serviceValues] = _serviceValues;
 
   return { formFields, formSpareFields, serviceValues, spareValues };
 }
@@ -158,6 +172,7 @@ export function toModelList(form, fields, sparefields) {
   }));
 
   const spareList = sparefields.map((f) => ({
+    itemId: form.getFieldValue(`itemId_${f.key}`),
     item: form.getFieldValue(`itemName_${f.key}`),
     price: form.getFieldValue(`price_${f.key}`),
     unit: form.getFieldValue(`unit_${f.key}`),
@@ -172,7 +187,7 @@ export function toModelList(form, fields, sparefields) {
 const getItemParams = (tableParams, searchQuery, searchCategory) => ({
   size: tableParams.pagination?.pageSize,
   page: tableParams.pagination?.current - 1,
-    sort:'id,desc',
+  sort: "id,desc",
   q: searchQuery,
   c: searchCategory,
 });

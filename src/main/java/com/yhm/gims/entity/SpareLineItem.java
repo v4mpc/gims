@@ -24,15 +24,15 @@ public class SpareLineItem extends BaseEntity {
 
     private Integer itemId;
 
-    @NotNull
+
     private String item;
 
     private String unit;
 
-    @NotNull
+
     private Float price;
 
-    @NotNull
+
     private Integer quantity;
 
 

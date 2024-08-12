@@ -59,21 +59,19 @@ const SpareSection = ({
   };
 
   const isOilByKey = (key) => {
-    const itemName = form.getFieldValue(`itemName_${key}`);
+    const itemId = form.getFieldValue(`itemId_${key}`);
     const [spareObject] = spareCatalogQuery.data.filter(
-      (s) =>
-        `${s.product.code}-${s.product.name}-${s.product.category.name}` ===
-        itemName,
+      (s) => s.product.id === itemId,
     );
     return spareObject.product.isOil;
   };
 
   const removeField = (key) => {
-    const itemName = form.getFieldValue(`itemName_${key}`);
+    const itemId = form.getFieldValue(`itemId_${key}`);
     const [removedSpareObject] = spareCatalogQuery.data.filter(
       (s) =>
-        `${s.product.code}-${s.product.name}-${s.product.category.name}` ===
-        itemName,
+        s.product.id ===
+        itemId,
     );
     setSparefields(sparefields.filter((field) => field.key !== key));
     setSpares([...spares, removedSpareObject]);
@@ -99,10 +97,12 @@ const SpareSection = ({
         <Form.Item name="selectedSpare">
           <Select
             placeholder="Select spare"
-            options={spares.map((c) => ({
-              value: c.product.id,
-              label: `${c.product.code}-${c.product.name}-${c.product.category.name}`,
-            }))}
+            options={spares
+              .filter((fc) => fc.stockOnhand > 0)
+              .map((c) => ({
+                value: c.product.id,
+                label: `${c.product.code}-${c.product.name}-${c.product.category.name}`,
+              }))}
             style={{ width: "450px" }}
             showSearch
             loading={spareCatalogQuery.isLoading}
@@ -121,13 +121,9 @@ const SpareSection = ({
           style={{ display: "flex", marginBottom: 5 }}
           align="baseline"
         >
-
-            <Form.Item
-                name={field.names[0]}
-               hidden={true}
-            >
-                <InputNumber disabled/>
-            </Form.Item>
+          <Form.Item name={field.names[0]} hidden={true}>
+            <InputNumber disabled />
+          </Form.Item>
 
           <Form.Item
             name={field.names[1]}
@@ -182,6 +178,10 @@ const SpareSection = ({
 
                     {
                       validator: async (_, value) => {
+                        console.log(
+                          value,
+                          form.getFieldValue(`soh_${field.key}`),
+                        );
                         if (value > form.getFieldValue(`soh_${field.key}`)) {
                           console.log(
                             value,
