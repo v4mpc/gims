@@ -253,8 +253,8 @@ const CreateService = () => {
         .validateFields()
         .then((values) => {
           let status = "DRAFT";
-          const { estimateAmount, initialPayment, finalPayment } = values;
-          if (initialPayment + finalPayment < estimateAmount) {
+          const { grandTotal, initialPayment, finalPayment } = values;
+          if (initialPayment + finalPayment < grandTotal) {
             status = "PARTIALLY_PAID";
           }
           if (initialPayment + finalPayment === 0) {
