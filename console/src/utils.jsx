@@ -1,7 +1,7 @@
-import { notification, DatePicker, Tag } from "antd";
+import { notification, DatePicker,Form } from "antd";
 import dayjs from "dayjs";
 import qs from "qs";
-import { useEffect } from "react";
+import ProductSelect from "./components/ProductSelect.jsx";
 
 // export const BASE_URL = "http://localhost:3000";
 export const BASE_URL = "http://localhost:8080/api";
@@ -323,6 +323,48 @@ export async function putItem(data) {
 
 export function optionLabelFilter(input, option) {
   return option.label.toLowerCase().includes(input.toLowerCase());
+}
+
+export function filterOption(input, option) {
+    return (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+}
+
+export function toObject(data) {
+    return JSON.parse(data);
+}
+
+
+export function generateColumns(stringColumns) {
+    let objectColumns = toObject(stringColumns);
+    return objectColumns.map((column) => ({
+        title: column.displayName,
+        dataIndex: column.name,
+        key: column.name,
+        width: column.width,
+    }));
+}
+
+export function generateFilter(filter) {
+    if (filter.name === "product") {
+        return <ProductSelect key="product-select" />;
+    } else if (filter.name === "dateRange") {
+        return (
+            <Form.Item
+                label="Date range"
+                key="dateRange"
+                name="dateRange"
+                rules={[
+                    {
+                        required: true,
+                        message: "Please date",
+                    },
+                ]}
+            >
+                <RangePicker style={{ width: "100%" }} />
+            </Form.Item>
+        );
+    }
+    return null;
 }
 
 export async function bulkTx(data) {

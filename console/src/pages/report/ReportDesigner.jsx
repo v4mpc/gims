@@ -16,7 +16,7 @@ import "ace-builds/src-noconflict/mode-json";
 import "ace-builds/src-noconflict/mode-mysql";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
-import DesignerForm from "../components/DesignerForm.jsx";
+import DesignerForm from "../../components/DesignerForm.jsx";
 
 
 const AceEditorControl = ({ value, onChange, onBlur, ...rest }) => {

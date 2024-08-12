@@ -34,6 +34,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.3.3"],\
           ["@types/react-dom", "npm:18.3.0"],\
           ["@vitejs/plugin-react-swc", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:3.7.0"],\
+          ["ace-builds", "npm:1.35.4"],\
           ["antd", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.19.3"],\
           ["chart.js", "npm:4.4.3"],\
           ["dayjs", "npm:1.11.12"],\
@@ -46,6 +47,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.3.3"],\
           ["qs", "npm:6.12.3"],\
           ["react", "npm:18.3.1"],\
+          ["react-ace", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:12.0.0"],\
           ["react-chartjs-2", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.2.0"],\
           ["react-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:18.3.1"],\
           ["react-highlight-words", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.20.0"],\
@@ -1388,6 +1390,15 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["ace-builds", [\
+      ["npm:1.35.4", {\
+        "packageLocation": "../../../.yarn/berry/cache/ace-builds-npm-1.35.4-ddc35b9ffa-10c0.zip/node_modules/ace-builds/",\
+        "packageDependencies": [\
+          ["ace-builds", "npm:1.35.4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["acorn", [\
       ["npm:8.12.1", {\
         "packageLocation": "../../../.yarn/berry/cache/acorn-npm-8.12.1-610871d57c-10c0.zip/node_modules/acorn/",\
@@ -2201,6 +2212,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/destroy-npm-1.2.0-6a511802e2-10c0.zip/node_modules/destroy/",\
         "packageDependencies": [\
           ["destroy", "npm:1.2.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["diff-match-patch", [\
+      ["npm:1.0.5", {\
+        "packageLocation": "../../../.yarn/berry/cache/diff-match-patch-npm-1.0.5-f715ad1381-10c0.zip/node_modules/diff-match-patch/",\
+        "packageDependencies": [\
+          ["diff-match-patch", "npm:1.0.5"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3080,6 +3100,7 @@ const RAW_RUNTIME_STATE =
           ["@types/react", "npm:18.3.3"],\
           ["@types/react-dom", "npm:18.3.0"],\
           ["@vitejs/plugin-react-swc", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:3.7.0"],\
+          ["ace-builds", "npm:1.35.4"],\
           ["antd", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.19.3"],\
           ["chart.js", "npm:4.4.3"],\
           ["dayjs", "npm:1.11.12"],\
@@ -3092,6 +3113,7 @@ const RAW_RUNTIME_STATE =
           ["prettier", "npm:3.3.3"],\
           ["qs", "npm:6.12.3"],\
           ["react", "npm:18.3.1"],\
+          ["react-ace", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:12.0.0"],\
           ["react-chartjs-2", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.2.0"],\
           ["react-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:18.3.1"],\
           ["react-highlight-words", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.20.0"],\
@@ -3949,6 +3971,24 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/lodash-id-npm-0.14.1-219b309c3a-10c0.zip/node_modules/lodash-id/",\
         "packageDependencies": [\
           ["lodash-id", "npm:0.14.1"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["lodash.get", [\
+      ["npm:4.4.2", {\
+        "packageLocation": "../../../.yarn/berry/cache/lodash.get-npm-4.4.2-7bda64ed87-10c0.zip/node_modules/lodash.get/",\
+        "packageDependencies": [\
+          ["lodash.get", "npm:4.4.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["lodash.isequal", [\
+      ["npm:4.5.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/lodash.isequal-npm-4.5.0-f8b0f64d63-10c0.zip/node_modules/lodash.isequal/",\
+        "packageDependencies": [\
+          ["lodash.isequal", "npm:4.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -5827,6 +5867,37 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["react", "npm:18.3.1"],\
           ["loose-envify", "npm:1.4.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["react-ace", [\
+      ["npm:12.0.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/react-ace-npm-12.0.0-12b63610e0-10c0.zip/node_modules/react-ace/",\
+        "packageDependencies": [\
+          ["react-ace", "npm:12.0.0"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:12.0.0", {\
+        "packageLocation": "./.yarn/__virtual__/react-ace-virtual-4eefe56995/4/.yarn/berry/cache/react-ace-npm-12.0.0-12b63610e0-10c0.zip/node_modules/react-ace/",\
+        "packageDependencies": [\
+          ["react-ace", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:12.0.0"],\
+          ["@types/react", "npm:18.3.3"],\
+          ["@types/react-dom", "npm:18.3.0"],\
+          ["ace-builds", "npm:1.35.4"],\
+          ["diff-match-patch", "npm:1.0.5"],\
+          ["lodash.get", "npm:4.4.2"],\
+          ["lodash.isequal", "npm:4.5.0"],\
+          ["prop-types", "npm:15.8.1"],\
+          ["react", "npm:18.3.1"],\
+          ["react-dom", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:18.3.1"]\
+        ],\
+        "packagePeers": [\
+          "@types/react-dom",\
+          "@types/react",\
+          "react-dom",\
+          "react"\
         ],\
         "linkType": "HARD"\
       }]\
