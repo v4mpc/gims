@@ -3,6 +3,7 @@ package com.yhm.gims.service;
 
 import com.yhm.gims.dto.DashboardDto;
 import com.yhm.gims.entity.Expense;
+import com.yhm.gims.entity.Paint;
 import com.yhm.gims.entity.Product;
 import com.yhm.gims.entity.Sale;
 import com.yhm.gims.util.DateUtil;
@@ -23,10 +24,18 @@ public class DashboardService {
     private final ExpenseService expenseService;
     private final ProductService productService;
     private final StockOnhandService stockOnhandService;
+    private final PaintService paintService;
 
 
     public List<Sale> getSales(YearMonth yearMonth) {
         return saleService.findByMonthAndYear(yearMonth.getMonthValue(), yearMonth.getYear());
+    }
+
+
+
+
+    public List<Paint> getPaints(YearMonth yearMonth) {
+        return paintService.findByMonthAndYear(yearMonth.getMonthValue(), yearMonth.getYear());
     }
 
 
@@ -54,6 +63,10 @@ public class DashboardService {
 
     public Float getTotalSales(List<Sale> sales) {
         return sales.stream().map(s -> (s.getQuantity() * s.getSalePrice())).reduce(0F, Float::sum);
+    }
+
+    public Float getPaintTotalSells(List<Paint> paints){
+        return paints.stream().map(p->(p.getInitialPayment()+p.getFinalPayment())).reduce(0F,Float::sum);
     }
 
     public Float getTotalExpenses(List<Expense> expenses) {
@@ -91,6 +104,9 @@ public class DashboardService {
 
     }
 
+
+
+
     public DashboardDto getMetrics(YearMonth yearMonth) {
 
         List<Expense> expenses = getExpenses(yearMonth);
@@ -100,6 +116,7 @@ public class DashboardService {
         Float totalExpenses = getTotalExpenses(expenses);
         Float totalSalesProfit = getTotalProfit(sales);
         Float netProfit = totalSalesProfit - totalExpenses;
+        Float paintingSell=0F;
 
         return DashboardDto.builder()
                 .totalSales(getTotalSales(sales))

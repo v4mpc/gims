@@ -76,6 +76,13 @@ public class PaintService {
     }
 
 
+
+
+    public List<Paint> findByMonthAndYear(int month, int year){
+//        TODO :: filter only those with is_sale=true;
+        return paintRepository.findByMonthAndYear(month,year);
+    }
+
     public Paint update(Paint paint, int id) {
         Paint updatePaint = paintRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Paint not exist with id " + id));
         updatePaint.setCustomerCar(paint.getCustomerCar());
