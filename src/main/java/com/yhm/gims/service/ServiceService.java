@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -96,6 +97,12 @@ public class ServiceService {
                     .build();
             stockOnhandService.update(e);
         }
+    }
+
+
+
+    public List<GService> findByMonthAndYear(YearMonth yearMonth) {
+        return serviceRepository.findByMonthAndYear(yearMonth.getMonthValue(), yearMonth.getYear());
     }
 
 

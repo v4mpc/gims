@@ -2,10 +2,7 @@ package com.yhm.gims.service;
 
 
 import com.yhm.gims.dto.DashboardDto;
-import com.yhm.gims.entity.Expense;
-import com.yhm.gims.entity.Paint;
-import com.yhm.gims.entity.Product;
-import com.yhm.gims.entity.Sale;
+import com.yhm.gims.entity.*;
 import com.yhm.gims.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +22,7 @@ public class DashboardService {
     private final ProductService productService;
     private final StockOnhandService stockOnhandService;
     private final PaintService paintService;
+    private final ServiceService serviceService;
 
 
     public List<Sale> getSales(YearMonth yearMonth) {
@@ -36,6 +34,12 @@ public class DashboardService {
 
     public List<Paint> getPaints(YearMonth yearMonth) {
         return paintService.findByMonthAndYear(yearMonth.getMonthValue(), yearMonth.getYear());
+    }
+
+
+
+    public List<GService> getServices(YearMonth yearMonth) {
+        return serviceService.findByMonthAndYear(yearMonth);
     }
 
 
@@ -67,6 +71,11 @@ public class DashboardService {
 
     public Float getPaintTotalSells(List<Paint> paints){
         return paints.stream().map(p->(p.getInitialPayment()+p.getFinalPayment())).reduce(0F,Float::sum);
+    }
+
+
+    public Float getServiceTotalSells(List<GService> services){
+        return services.stream().map(p->(p.getInitialPayment()+p.getFinalPayment())).reduce(0F,Float::sum);
     }
 
     public Float getTotalExpenses(List<Expense> expenses) {
