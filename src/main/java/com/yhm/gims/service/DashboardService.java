@@ -1,6 +1,7 @@
 package com.yhm.gims.service;
 
 
+import com.yhm.gims.domain.enumaration.Status;
 import com.yhm.gims.dto.DashboardDto;
 import com.yhm.gims.entity.*;
 import com.yhm.gims.util.DateUtil;
@@ -103,6 +104,20 @@ public class DashboardService {
     public List<Float> getSalesTrend(List<Sale> sales, Integer daysInMonth, YearMonth yearMonth) {
         List<LocalDate> localDates = DateUtil.getLocalDateList(daysInMonth, yearMonth);
         return localDates.stream().map((d) -> sales.stream().filter(fp -> (fp.getCreatedAt().isEqual(d))).map(sf -> sf.getSalePrice() * sf.getQuantity()).reduce(0F, Float::sum)).toList();
+
+    }
+
+    public List<Float> getPaintTrend(List<Paint> paints, Integer daysInMonth, YearMonth yearMonth) {
+        List<LocalDate> localDates = DateUtil.getLocalDateList(daysInMonth, yearMonth);
+        return localDates.stream().map((d) -> paints.stream().filter(fp -> (fp.getCreatedAt().isEqual(d) && fp.getStatus().equals(Status.PAID))).map(sf -> sf.getInitialPayment() + sf.getFinalPayment()).reduce(0F, Float::sum)).toList();
+
+    }
+
+
+
+    public List<Float> getServiceTrend(List<GService> services, Integer daysInMonth, YearMonth yearMonth) {
+        List<LocalDate> localDates = DateUtil.getLocalDateList(daysInMonth, yearMonth);
+        return localDates.stream().map((d) -> services.stream().filter(fp -> (fp.getCreatedAt().isEqual(d) && fp.getStatus().equals(Status.PAID))).map(sf -> sf.getInitialPayment() + sf.getFinalPayment()).reduce(0F, Float::sum)).toList();
 
     }
 
