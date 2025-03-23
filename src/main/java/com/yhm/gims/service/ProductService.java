@@ -4,23 +4,20 @@ package com.yhm.gims.service;
 import com.yhm.gims.domain.ProductSpecs;
 import com.yhm.gims.dto.ProductDto;
 import com.yhm.gims.entity.Product;
-import com.yhm.gims.entity.Unit;
-import com.yhm.gims.entity.Vehicle;
 import com.yhm.gims.exception.ResourceNotFoundException;
 import com.yhm.gims.repository.ProductRepository;
 import com.yhm.gims.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+
 
 @Service
 @RequiredArgsConstructor

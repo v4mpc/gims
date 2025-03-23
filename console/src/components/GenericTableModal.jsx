@@ -73,7 +73,7 @@ export default function GenericTableModal({
     let modifiedInitialValues = {...selectedItem};
 
     if ("UPDATE" === formMode) {
-        if (Object.hasOwn(selectedItem, "createdAt")) {
+        if (Object.hasOwn(selectedItem, "date")) {
             modifiedInitialValues = {
                 ...modifiedInitialValues, createdAt: dayjs(selectedItem.createdAt, DATE_FORMAT),
             };

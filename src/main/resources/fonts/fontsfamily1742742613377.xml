@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+	<fontFamily name="Tangerine">
+		<normal><![CDATA[fonts/Tangerine/Tangerine-Regular.ttf]]></normal>
+		<bold><![CDATA[fonts/Tangerine/Tangerine-Bold.ttf]]></bold>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
+	<fontFamily name="Caprasimo">
+		<normal><![CDATA[fonts/Caprasimo/Caprasimo-Regular.ttf]]></normal>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
+	<fontFamily name="Roboto">
+		<normal><![CDATA[fonts/Roboto/Roboto-Regular.ttf]]></normal>
+		<bold><![CDATA[fonts/Roboto/Roboto-Bold.ttf]]></bold>
+		<italic><![CDATA[fonts/Roboto/Roboto-Italic.ttf]]></italic>
+		<boldItalic><![CDATA[fonts/Roboto/Roboto-BoldItalic.ttf]]></boldItalic>
+		<pdfEmbedded><![CDATA[true]]></pdfEmbedded>
+		<exportFonts/>
+	</fontFamily>
+</fontFamilies>
