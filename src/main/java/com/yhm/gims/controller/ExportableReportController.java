@@ -38,7 +38,7 @@ public class ExportableReportController {
 
         InvoicePdf invoice = InvoicePdf.builder()
                 .items(items)
-                .percentageVatInDecimal(0.0)
+                .percentageVatInDecimal(0.5)
                 .subTotal(items.stream().map(InvoicePdfItem::getTotalPrice).reduce(0.0, Double::sum))
                 .build();
         // Generate PDF
