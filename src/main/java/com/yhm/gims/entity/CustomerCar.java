@@ -17,7 +17,6 @@ import lombok.*;
 public class CustomerCar extends BaseEntity {
 
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     @JsonBackReference
@@ -32,6 +31,9 @@ public class CustomerCar extends BaseEntity {
     @NotNull
     private String plateNumber;
 
+    public String getPlateNumber() {
+        return plateNumber.toUpperCase();
+    }
 
 
 }

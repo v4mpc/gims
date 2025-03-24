@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 public class InvoicePdfItem {
 
     String description;
-    Integer price;
-    Double quantity;
+    Float price;
+    Float quantity;
 
 
-    public Double getTotalPrice() {
+    public Float getTotalPrice() {
         return price * quantity;
     }
 

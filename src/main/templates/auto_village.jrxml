@@ -14,12 +14,12 @@
 	<field name="description" class="java.lang.String"/>
 	<field name="price" class="java.lang.String"/>
 	<field name="totalPriceString" class="java.lang.String"/>
-	<field name="quantity" class="java.lang.Double"/>
+	<field name="quantity" class="java.lang.Float"/>
 	<group name="Table Summary">
 		<groupFooter>
 			<band height="79">
 				<staticText>
-					<reportElement x="234" y="0" width="115" height="26" uuid="3d9661ae-56ee-484d-8861-93a4c9f651ae">
+					<reportElement x="300" y="0" width="79" height="26" uuid="3d9661ae-56ee-484d-8861-93a4c9f651ae">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -32,10 +32,10 @@
 						<font fontName="Roboto" isBold="true"/>
 						<paragraph leftIndent="4"/>
 					</textElement>
-					<text><![CDATA[Sub Total]]></text>
+					<text><![CDATA[Sub total]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="349" y="0" width="51" height="26" uuid="60df56f3-4310-47b9-90ee-78f4cdd54d0f">
+					<reportElement x="379" y="0" width="51" height="26" uuid="60df56f3-4310-47b9-90ee-78f4cdd54d0f">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -50,7 +50,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="234" y="26" width="115" height="26" uuid="0d96b891-3e44-498f-bd83-e8ad1b4ca76d">
+					<reportElement x="300" y="26" width="79" height="26" uuid="0d96b891-3e44-498f-bd83-e8ad1b4ca76d">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -66,7 +66,7 @@
 					<text><![CDATA[18% VAT]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="349" y="26" width="51" height="26" uuid="1b1824d6-502f-4335-be34-b873bd7e6f89">
+					<reportElement x="379" y="26" width="51" height="26" uuid="1b1824d6-502f-4335-be34-b873bd7e6f89">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -81,7 +81,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="234" y="52" width="115" height="26" uuid="39451f92-487a-4fe1-8d98-7df328812bb5">
+					<reportElement x="300" y="52" width="79" height="26" uuid="39451f92-487a-4fe1-8d98-7df328812bb5">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -97,7 +97,7 @@
 					<text><![CDATA[TOTAL]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="349" y="52" width="51" height="26" uuid="4cf7c5df-7b99-4db9-98bb-dbf0f26ae440">
+					<reportElement x="379" y="52" width="51" height="26" uuid="4cf7c5df-7b99-4db9-98bb-dbf0f26ae440">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<box>
@@ -112,7 +112,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="400" y="26" width="129" height="26" uuid="8930ff4b-0000-4fe5-896d-9d9dddbb9e43"/>
+					<reportElement x="430" y="26" width="99" height="26" uuid="8930ff4b-0000-4fe5-896d-9d9dddbb9e43"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -126,7 +126,7 @@
 					<textFieldExpression><![CDATA[$P{vat}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="400" y="52" width="129" height="26" uuid="679fbfd7-7b61-410f-af15-c470856f5f67"/>
+					<reportElement x="430" y="52" width="99" height="26" uuid="679fbfd7-7b61-410f-af15-c470856f5f67"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -140,7 +140,7 @@
 					<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="400" y="0" width="129" height="26" uuid="a93b232b-05ef-40b9-b0ee-0b4391302640"/>
+					<reportElement x="430" y="0" width="99" height="26" uuid="a93b232b-05ef-40b9-b0ee-0b4391302640"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -322,7 +322,7 @@ TIN: 154 - 545 - 646]]></text>
 				<text><![CDATA[No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="234" y="1" width="115" height="21" uuid="9b0d1f72-c14f-4d5f-a712-5906dbb58e9f">
+				<reportElement x="300" y="1" width="79" height="21" uuid="9b0d1f72-c14f-4d5f-a712-5906dbb58e9f">
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -338,7 +338,7 @@ TIN: 154 - 545 - 646]]></text>
 				<text><![CDATA[Price]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="349" y="1" width="51" height="21" uuid="2cec7128-172f-4d0b-9031-f37924d5848b"/>
+				<reportElement x="379" y="1" width="51" height="21" uuid="2cec7128-172f-4d0b-9031-f37924d5848b"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -352,7 +352,7 @@ TIN: 154 - 545 - 646]]></text>
 				<text><![CDATA[Quantity]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="400" y="1" width="129" height="21" uuid="2490de0c-156d-432c-8bba-2e144a04bfa9"/>
+				<reportElement x="430" y="1" width="99" height="21" uuid="2490de0c-156d-432c-8bba-2e144a04bfa9"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -366,7 +366,7 @@ TIN: 154 - 545 - 646]]></text>
 				<text><![CDATA[Total Price]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="80" y="1" width="154" height="21" uuid="ebc09857-e2aa-4e12-8d92-0d5c8b4a42dd">
+				<reportElement x="80" y="1" width="220" height="21" uuid="ebc09857-e2aa-4e12-8d92-0d5c8b4a42dd">
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -402,7 +402,7 @@ TIN: 154 - 545 - 646]]></text>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="80" y="0" width="154" height="17" uuid="124e6552-9b55-48b1-8448-a180890e14ae">
+				<reportElement x="80" y="0" width="220" height="17" uuid="124e6552-9b55-48b1-8448-a180890e14ae">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="237a1baf-d154-4b62-88de-4b619fd8bc85"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
@@ -418,7 +418,7 @@ TIN: 154 - 545 - 646]]></text>
 				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="234" y="0" width="115" height="17" uuid="e33489ba-3f85-4d5b-b951-cfe059b4466f">
+				<reportElement x="300" y="0" width="79" height="17" uuid="e33489ba-3f85-4d5b-b951-cfe059b4466f">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e82697ea-efe7-4b85-bff5-b72acdce03af"/>
 				</reportElement>
 				<box>
@@ -433,7 +433,7 @@ TIN: 154 - 545 - 646]]></text>
 				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="349" y="0" width="51" height="17" uuid="c0693137-ad8a-4be1-8fe7-df67c7b00759">
+				<reportElement x="379" y="0" width="51" height="17" uuid="c0693137-ad8a-4be1-8fe7-df67c7b00759">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d3340ce9-7911-492c-b6b1-0a2e0e9b215a"/>
 				</reportElement>
 				<box>
@@ -446,7 +446,7 @@ TIN: 154 - 545 - 646]]></text>
 				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="400" y="0" width="129" height="17" uuid="be242917-36a9-47ce-a027-e620bb96d195">
+				<reportElement x="430" y="0" width="99" height="17" uuid="be242917-36a9-47ce-a027-e620bb96d195">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="25b6aa38-33a0-44aa-8224-1e24d04a5cda"/>
 					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
@@ -466,7 +466,7 @@ TIN: 154 - 545 - 646]]></text>
 	<pageFooter>
 		<band height="55" splitType="Stretch">
 			<staticText>
-				<reportElement x="40" y="2" width="270" height="50" uuid="b69e053c-035d-4611-abb2-26e4deea1a61"/>
+				<reportElement x="40" y="0" width="270" height="50" uuid="b69e053c-035d-4611-abb2-26e4deea1a61"/>
 				<textElement>
 					<font fontName="Roboto" size="9" isBold="true" isItalic="false"/>
 				</textElement>

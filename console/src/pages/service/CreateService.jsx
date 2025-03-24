@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Form, Space } from "antd";
+import { Button, Divider, Dropdown, Flex, Form, Space } from "antd";
 
 import ServiceSection from "../../components/ServiceSection.jsx";
 import SpareSection from "../../components/SpareSection.jsx";
@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
 import dayjs from "dayjs";
+import PrintButtons from "../../components/PrintButtons.jsx";
 
 const CreateService = () => {
   const [form] = Form.useForm();
@@ -63,7 +64,8 @@ const CreateService = () => {
         queryKey: ["spareAll"],
         staleTime: 1000 * 60 * 20,
         placeholderData: [],
-        queryFn: () => getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
+        queryFn: () =>
+          getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
       },
     ],
   });
@@ -100,9 +102,9 @@ const CreateService = () => {
 
       const { serviceValues, spareValues, formSpareFields, formFields } =
         toFormList(
-          serviceQuery.data.service?.services??[],
-          serviceQuery.data.service?.spares??[],
-            spareCatalogQuery.data
+          serviceQuery.data.service?.services ?? [],
+          serviceQuery.data.service?.spares ?? [],
+          spareCatalogQuery.data,
         );
       //
 
@@ -110,16 +112,22 @@ const CreateService = () => {
         (s) => s.item,
       );
 
-      const selectedSpares = serviceQuery.data.service?.spares.map((s) => s.itemId);
+      const selectedSpares = serviceQuery.data.service?.spares.map(
+        (s) => s.itemId,
+      );
 
       setFields(formFields);
       setSpareFields(formSpareFields);
       setServices(
-        serviceCatalogQuery.data.filter((s) => !selectedServices?.includes(s.name)),
+        serviceCatalogQuery.data.filter(
+          (s) => !selectedServices?.includes(s.name),
+        ),
       );
 
       setSpares(
-        spareCatalogQuery.data.filter((s) => !selectedSpares?.includes(s.product.id)),
+        spareCatalogQuery.data.filter(
+          (s) => !selectedSpares?.includes(s.product.id),
+        ),
       );
 
       const grandTotal = serviceTotal + spareTotal;
@@ -158,7 +166,12 @@ const CreateService = () => {
       form.setFieldsValue(serviceValues);
       form.setFieldsValue(spareValues);
     }
-  }, [editMode, serviceQuery.data, paymentCatalogQuery.data,spareCatalogQuery.data]);
+  }, [
+    editMode,
+    serviceQuery.data,
+    paymentCatalogQuery.data,
+    spareCatalogQuery.data,
+  ]);
 
   const { mutate: createItem, isLoading: isCreating } = useMutation({
     mutationFn: putItem,
@@ -229,14 +242,6 @@ const CreateService = () => {
         errors: [],
       },
     ]);
-
-    // form.setFields(
-    //   fields.flatMap((f) => [
-    //     { name: `itemName_${f.key}`, errors: [] },
-    //     { name: `price_${f.key}`, errors: [] },
-    //     { name: `quantity_${f.key}`, errors: [] },
-    //   ]),
-    // );
 
     form.setFields(
       spareFields.flatMap((f) => [
@@ -319,7 +324,6 @@ const CreateService = () => {
               spares: spareList,
               status: "PAID",
             };
-            console.log(updatedValues);
             const data = {
               values: updatedValues,
               urlPath: API_ROUTES.services,
@@ -375,7 +379,7 @@ const CreateService = () => {
       onValuesChange={onValueChanged}
       layout="vertical"
       autoComplete="off"
-      disabled={form.getFieldValue("status")==="PAID"}
+      disabled={form.getFieldValue("status") === "PAID"}
     >
       <Flex justify="flex-end">
         <StatusTag status={form?.getFieldValue("status")} />
@@ -391,7 +395,6 @@ const CreateService = () => {
 
       <ServiceSection
         form={form}
-
         saveOnlyValidations={saveOnlyValidations}
         editMode={editMode}
         fields={fields}
@@ -451,6 +454,8 @@ const CreateService = () => {
           {/*<Button type="dashed" onClick={finalize} htmlType="button">*/}
           {/*    Print invoice*/}
           {/*</Button>*/}
+
+          <PrintButtons />
 
           <Button type="primary" onClick={saveForLater} htmlType="button">
             Save for later

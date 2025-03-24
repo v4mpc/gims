@@ -2,25 +2,33 @@ package com.yhm.gims.service;
 
 
 import com.yhm.gims.domain.InvoicePdf;
+import com.yhm.gims.entity.GService;
+import com.yhm.gims.exception.ResourceNotFoundException;
+import com.yhm.gims.repository.ServiceRepository;
+import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class InvoiceService {
 
-    public byte[] generateInvoice(InvoicePdf pdf) throws Exception {
-        Map<String, Object> parameters = getStringObjectMap(pdf);
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(pdf.getItems());
+    private final ServiceRepository serviceRepository;
+
+    public byte[] generateInvoice(Integer id) throws Exception {
+
+        GService service = serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + id));
+        InvoicePdf invoice = service.generateInvoice();
+        Map<String, Object> parameters = getStringObjectMap(invoice);
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(invoice.getItems());
         ClassPathResource resource = new ClassPathResource("reports/auto_village.jasper");
         InputStream inputStream = resource.getInputStream();
         JasperPrint jasperPrint = JasperFillManager.fillReport(inputStream, parameters, dataSource);
@@ -35,10 +43,10 @@ public class InvoiceService {
         parameters.put("vat", pdf.getVat());
         parameters.put("subTotal", pdf.getSubTotal());
         parameters.put("billTo", "");
-        parameters.put("customerName", "EUGENE");
-        parameters.put("location", "DAR ES SALAAM");
-        parameters.put("invoiceNumber", "014");
-        parameters.put("invoiceDate", "07/09/2023");
+        parameters.put("customerName", pdf.getCustomerName());
+        parameters.put("location", pdf.getAddress());
+        parameters.put("invoiceNumber", pdf.getInvoiceNumber());
+        parameters.put("invoiceDate", pdf.getInvoiceDate());
         return parameters;
     }
 }

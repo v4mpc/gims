@@ -18,15 +18,21 @@ public class InvoicePdf {
 
 
     List<InvoicePdfItem> items;
-    Double percentageVatInDecimal = 0.0;
-    Double subTotal;
+    Float percentageVatInDecimal = 0F;
+    Float subTotal;
+    String title;
+    String customerName;
+    String address;
+    String invoiceNumber;
+    String invoiceDate;
+
 
 
     public String getTotal() {
-        if (percentageVatInDecimal <= 0.0) {
+        if (percentageVatInDecimal <= 0F) {
             return NumberFormatUtil.format(subTotal);
         }
-        return NumberFormatUtil.format(subTotal * percentageVatInDecimal);
+        return NumberFormatUtil.format((subTotal * percentageVatInDecimal) + subTotal);
     }
 
 
@@ -36,7 +42,7 @@ public class InvoicePdf {
 
 
     public String getVat() {
-        if (percentageVatInDecimal <= 0.0) {
+        if (percentageVatInDecimal <= 0F) {
             return "-";
         }
         return NumberFormatUtil.format(subTotal * percentageVatInDecimal);
