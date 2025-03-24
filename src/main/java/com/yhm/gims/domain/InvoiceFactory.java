@@ -1,6 +1,7 @@
 package com.yhm.gims.domain;
 
 import com.yhm.gims.domain.enumaration.InvoiceSource;
+import com.yhm.gims.repository.PaintRepository;
 import com.yhm.gims.repository.ServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,13 @@ import org.springframework.stereotype.Component;
 public class InvoiceFactory {
 
     private final ServiceRepository serviceRepository;
+    private final PaintRepository paintRepository;
 
     public BaseInvoice createInvoice(InvoiceSource invoiceSource, Integer id) {
         if (InvoiceSource.GARAGE_SERVICE == invoiceSource) {
             return new GarageServiceInvoice(serviceRepository, id);
+        } else if (InvoiceSource.PAINT == invoiceSource) {
+            return new PaintInvoice(paintRepository, id);
         } else {
             throw new RuntimeException("Unknown service source");
         }

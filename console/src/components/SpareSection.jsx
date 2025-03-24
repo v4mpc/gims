@@ -18,6 +18,7 @@ const SpareSection = ({
   spares,
   setSpares,
   spareCatalogQuery,
+  viewMode,
 }) => {
   const addField = () => {
     if (form.getFieldValue("selectedSpare") === undefined) {
@@ -69,9 +70,7 @@ const SpareSection = ({
   const removeField = (key) => {
     const itemId = form.getFieldValue(`itemId_${key}`);
     const [removedSpareObject] = spareCatalogQuery.data.filter(
-      (s) =>
-        s.product.id ===
-        itemId,
+      (s) => s.product.id === itemId,
     );
     setSparefields(sparefields.filter((field) => field.key !== key));
     setSpares([...spares, removedSpareObject]);
@@ -93,27 +92,29 @@ const SpareSection = ({
 
   return (
     <Flex vertical>
-      <Space style={{ marginBottom: "10px" }} align="baseline">
-        <Form.Item name="selectedSpare">
-          <Select
-            placeholder="Select spare"
-            options={spares
-              .filter((fc) => fc.stockOnhand > 0)
-              .map((c) => ({
-                value: c.product.id,
-                label: `${c.product.code}-${c.product.name}-${c.product.category.name}`,
-              }))}
-            style={{ width: "450px" }}
-            showSearch
-            loading={spareCatalogQuery.isLoading}
-            filterOption={optionLabelFilter}
-          ></Select>
-        </Form.Item>
+      {viewMode || (
+        <Space style={{ marginBottom: "10px" }} align="baseline">
+          <Form.Item name="selectedSpare">
+            <Select
+              placeholder="Select spare"
+              options={spares
+                .filter((fc) => fc.stockOnhand > 0)
+                .map((c) => ({
+                  value: c.product.id,
+                  label: `${c.product.code}-${c.product.name}-${c.product.category.name}`,
+                }))}
+              style={{ width: "450px" }}
+              showSearch
+              loading={spareCatalogQuery.isLoading}
+              filterOption={optionLabelFilter}
+            ></Select>
+          </Form.Item>
 
-        <Button type="dashed" onClick={addField} icon={<PlusOutlined />}>
-          Add
-        </Button>
-      </Space>
+          <Button type="dashed" onClick={addField} icon={<PlusOutlined />}>
+            Add
+          </Button>
+        </Space>
+      )}
 
       {sparefields.map((field, index) => (
         <Space
@@ -260,7 +261,7 @@ const SpareSection = ({
               </>
             )}
 
-            <MinusCircleOutlined onClick={() => removeField(field.key)} />
+              {viewMode||<MinusCircleOutlined onClick={() => removeField(field.key)} />}
           </Space>
         </Space>
       ))}

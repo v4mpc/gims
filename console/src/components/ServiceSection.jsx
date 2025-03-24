@@ -10,15 +10,21 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields,services,setServices }) => {
-
-
-
+const ServiceSection = ({
+  form,
+  saveOnlyValidations,
+  editMode,
+  fields,
+  setFields,
+  services,
+  setServices,
+  viewMode,
+}) => {
   const results = useQueries({
     queries: [
       {
-          staleTime: 1000 * 60 * 20,
-          queryKey: ["serviceAll"],
+        staleTime: 1000 * 60 * 20,
+        queryKey: ["serviceAll"],
         placeholderData: [],
         queryFn: () => getLookupData(API_ROUTES.serviceCatalogsAll),
       },
@@ -74,7 +80,6 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields,ser
     form.setFieldsValue({
       [`stotal_${key}`]: e * quantity,
     });
-
   };
 
   const onQuantityChange = (e, key) => {
@@ -84,51 +89,48 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields,ser
     });
   };
 
-
-
-
-
   return (
     <Flex vertical>
-      <Space style={{ marginBottom: "10px" }} align="baseline">
-        <Form.Item
+      {viewMode || (
+        <Space style={{ marginBottom: "10px" }} align="baseline">
+          <Form.Item
             rules={[
-                ...(saveOnlyValidations
-                    ? []
-                    : [
-                        {
-                            validator: async (_, names) => {
-                                if (services.length===serviceCatalogQuery.data.length) {
-                                    return Promise.reject(
-                                        new Error("At least 1 service is required"),
-                                    );
-                                }
-                            },
-                        },
-                    ]),
-            ]} name="selectedService">
-          <Select
-            placeholder="Select service"
+              ...(saveOnlyValidations
+                ? []
+                : [
+                    {
+                      validator: async (_, names) => {
+                        if (
+                          services.length === serviceCatalogQuery.data.length
+                        ) {
+                          return Promise.reject(
+                            new Error("At least 1 service is required"),
+                          );
+                        }
+                      },
+                    },
+                  ]),
+            ]}
+            name="selectedService"
+          >
+            <Select
+              placeholder="Select service"
+              options={services.map((c) => ({
+                value: c.id,
+                label: c.name,
+              }))}
+              style={{ width: "450px" }}
+              showSearch
+              loading={serviceCatalogQuery.isLoading}
+              filterOption={optionLabelFilter}
+            ></Select>
+          </Form.Item>
 
-
-
-
-
-            options={services.map((c) => ({
-              value: c.id,
-              label: c.name,
-            }))}
-            style={{ width: "450px" }}
-            showSearch
-            loading={serviceCatalogQuery.isLoading}
-            filterOption={optionLabelFilter}
-          ></Select>
-        </Form.Item>
-
-        <Button type="dashed" onClick={addField} icon={<PlusOutlined />}>
-          Add
-        </Button>
-      </Space>
+          <Button type="dashed" onClick={addField} icon={<PlusOutlined />}>
+            Add
+          </Button>
+        </Space>
+      )}
 
       {fields.map((field, index) => (
         <Space
@@ -146,9 +148,9 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields,ser
             name={field.names[1]}
             label={field.key === 0 ? "Price" : ""}
             rules={[
-                ...(saveOnlyValidations
-                    ? []
-                    : [{ required: true, message: "Missing price" }]),
+              ...(saveOnlyValidations
+                ? []
+                : [{ required: true, message: "Missing price" }]),
             ]}
           >
             <InputNumber
@@ -164,11 +166,10 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields,ser
           <Form.Item
             name={field.names[2]}
             label={field.key === 0 ? "Quantity" : ""}
-
             rules={[
-                ...(saveOnlyValidations
-                    ? []
-                    : [{ required: true, message: "Missing quantity" }]),
+              ...(saveOnlyValidations
+                ? []
+                : [{ required: true, message: "Missing quantity" }]),
             ]}
           >
             <InputNumber
@@ -194,7 +195,9 @@ const ServiceSection = ({ form,saveOnlyValidations,editMode,fields,setFields,ser
               />
             </Form.Item>
 
-            <MinusCircleOutlined onClick={() => removeField(field.key)} />
+            {viewMode || (
+              <MinusCircleOutlined onClick={() => removeField(field.key)} />
+            )}
           </Space>
         </Space>
       ))}

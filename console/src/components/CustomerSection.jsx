@@ -5,7 +5,7 @@ import { API_ROUTES, getLookupData, toCustomerCars } from "../utils.jsx";
 import { optionLabelFilter } from "../utils.jsx";
 import { useQuery } from "@tanstack/react-query";
 
-const CustomerSection = ({ form }) => {
+const CustomerSection = ({ form, viewMode }) => {
   const customerQuery = useQuery({
     queryKey: ["customerAll"],
     placeholderData: [],
@@ -25,40 +25,41 @@ const CustomerSection = ({ form }) => {
     });
   };
 
-
   const customers = toCustomerCars(customerQuery.data);
   return form.loading ? (
     <Skeleton active />
   ) : (
     <Flex justify="space-between" wrap>
-      <Form.Item
-        label="Customer vehicle"
-        tooltip={{
-          title:
-            "Vehicle name is in format PlateNumber-Make-Model-CustomerName",
-          icon: <InfoCircleOutlined />,
-        }}
-        rules={[
-          {
-            required: true,
-            message: "Please input!",
-          },
-        ]}
-        name="customerCar"
-      >
-        <Select
-          placeholder="Select customer vehicle"
-          loading={customerQuery.isLoading}
-          style={{ width: "400px" }}
-          showSearch
-          onChange={onSelectChange}
-          filterOption={optionLabelFilter}
-          options={customers.map((c) => ({
-            value: c.id,
-            label: c.name,
-          }))}
-        ></Select>
-      </Form.Item>
+      {viewMode || (
+        <Form.Item
+          label="Customer vehicle"
+          tooltip={{
+            title:
+              "Vehicle name is in format PlateNumber-Make-Model-CustomerName",
+            icon: <InfoCircleOutlined />,
+          }}
+          rules={[
+            {
+              required: true,
+              message: "Please input!",
+            },
+          ]}
+          name="customerCar"
+        >
+          <Select
+            placeholder="Select customer vehicle"
+            loading={customerQuery.isLoading}
+            style={{ width: "400px" }}
+            showSearch
+            onChange={onSelectChange}
+            filterOption={optionLabelFilter}
+            options={customers.map((c) => ({
+              value: c.id,
+              label: c.name,
+            }))}
+          ></Select>
+        </Form.Item>
+      )}
       <Form.Item name="customerName" label="Customer name">
         <Input disabled={true} />
       </Form.Item>

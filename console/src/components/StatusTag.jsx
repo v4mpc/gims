@@ -2,6 +2,8 @@ import {Tag} from "antd";
 
 
 export function StatusTag ({status}){
+
+
     const renderStatusTag = () => {
         switch (status) {
             case "DRAFT":

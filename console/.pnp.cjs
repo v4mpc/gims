@@ -45,6 +45,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react-refresh", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.4.9"],\
           ["json-server", "npm:0.17.4"],\
           ["prettier", "npm:3.3.3"],\
+          ["prop-types", "npm:15.8.1"],\
           ["qs", "npm:6.12.3"],\
           ["react", "npm:18.3.1"],\
           ["react-ace", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:12.0.0"],\
@@ -3111,6 +3112,7 @@ const RAW_RUNTIME_STATE =
           ["eslint-plugin-react-refresh", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:0.4.9"],\
           ["json-server", "npm:0.17.4"],\
           ["prettier", "npm:3.3.3"],\
+          ["prop-types", "npm:15.8.1"],\
           ["qs", "npm:6.12.3"],\
           ["react", "npm:18.3.1"],\
           ["react-ace", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:12.0.0"],\

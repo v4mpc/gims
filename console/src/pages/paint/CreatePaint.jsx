@@ -265,7 +265,11 @@ const CreatePaint = () => {
           </Button>
         </Space>
         <Space>
-          <PrintButtons primaryKey={id} invoiceSource="REPAIR" />
+          <PrintButtons
+            primaryKey={id}
+            printable={["TAX", "PROFORMA"]}
+            invoiceSource="PAINT"
+          />
           <Button type="primary" onClick={saveForLater} htmlType="button">
             Save for later
           </Button>

@@ -4,14 +4,14 @@ import {
 } from "../utils.jsx";
 import { Space, Form, InputNumber, DatePicker } from "antd";
 
-const PaymentSection = ({ saveOnlyValidations }) => {
+const PaymentSection = ({ saveOnlyValidations,viewMode }) => {
   return (
     <>
         <div>
             <Space>
                 <Form.Item
                     rules={[
-                        { required: true, message: "Please enter amount" },
+                        { required: !viewMode, message: "Please enter amount" },
                         ({ getFieldValue }) => ({
                             validator(_, value) {
                                 if (saveOnlyValidations) {
@@ -50,7 +50,7 @@ const PaymentSection = ({ saveOnlyValidations }) => {
                     rules={[
                         ...(saveOnlyValidations
                             ? []
-                            : [{ required: true, message: "Please select date" }]),
+                            : [{ required: !viewMode, message: "Please select date" }]),
                     ]}
                     label="Date"
                     name="initialPaymentDate"
@@ -69,7 +69,7 @@ const PaymentSection = ({ saveOnlyValidations }) => {
                 <Form.Item
                     dependencies={["initialPayment", "initialPaymentDate"]}
                     rules={[
-                        { required: true, message: "Please enter amount" },
+                        { required: !viewMode, message: "Please enter amount" },
                         ({ getFieldValue }) => ({
                             validator(_, value) {
                                 if (

@@ -1,31 +1,38 @@
 import { Button, Dropdown, Space } from "antd";
 import { DownOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { API_ROUTES, BASE_URL } from "../utils.jsx";
+import PropTypes from "prop-types";
 
-function PrintButtons({ primaryKey, invoiceSource }) {
-  const handleMenuClick = (e) => {
+PrintButtons.propTypes = {
+  primaryKey: PropTypes.number,
+  invoiceSource: PropTypes.string,
+  printable: PropTypes.arrayOf(PropTypes.oneOf(["TAX", "PROFORMA"])).isRequired,
+};
+
+function PrintButtons({ primaryKey, invoiceSource, printable }) {
+  //   printable =[TAX,PROFORMA]
+  const handleMenuClick = () => {
     if (primaryKey !== undefined) {
       window.open(
-        `${BASE_URL}/${API_ROUTES.exportInvoice}/invoiceSource/${primaryKey}`,
+        `${BASE_URL}/${API_ROUTES.exportInvoice}/${invoiceSource}/${primaryKey}`,
         "_blank",
-      ); // '_blank' opens in a ne
+      );
     }
-    console.log("click", e);
   };
 
   const items = [
     {
       label: "TAX INVOICE",
-      key: "1",
+      key: "TAX",
       icon: <FilePdfOutlined />,
     },
 
     {
-      label: "PROFOMA INVOICE",
-      key: "2",
+      label: "PROFORMA INVOICE",
+      key: "PROFORMA",
       icon: <FilePdfOutlined />,
     },
-  ];
+  ].filter((i) => printable.includes(i.key));
   const menuProps = {
     items,
     onClick: handleMenuClick,
@@ -33,7 +40,7 @@ function PrintButtons({ primaryKey, invoiceSource }) {
 
   return (
     <Dropdown menu={menuProps}>
-      <Button disabled={false}>
+      <Button disabled={false} type="dashed" size="large" >
         <Space>
           Print
           <DownOutlined />

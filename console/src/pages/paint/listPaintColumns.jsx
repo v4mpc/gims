@@ -33,10 +33,10 @@ const listPaintColumns = [
     key: "vehicle",
     dataIndex: "vehicle",
     render: (_, record) => (
-      <Flex vertical>
-        <Space key={`make${record.paint.id}`}>Make : {record.paint.customerCar.make}</Space>
-        <Space key={`model${record.paint.id}`}>Model : {record.paint.customerCar.model}</Space>
-        <Space key={`plate${record.paint.id}`}>Plate : {record.paint.customerCar.plateNumber}</Space>
+      <Flex vertical key="vh">
+        <Space key={`make${record.paint.id}11`}>Make : {record.paint.customerCar.make}</Space>
+        <Space key={`model${record.paint.id}22`}>Model : {record.paint.customerCar.model}</Space>
+        <Space key={`plate${record.paint.id}33`}>Plate : {record.paint.customerCar.plateNumber}</Space>
       </Flex>
     ),
   },
@@ -51,10 +51,10 @@ const listPaintColumns = [
       const remain =
         estimateAmount - totalPaid >= 0 ? estimateAmount - totalPaid : 0;
       return (
-        <Flex vertical>
-          <Space>Total : {<ThousandSeparator value={estimateAmount} />}</Space>
-          <Space>Paid : {<ThousandSeparator value={totalPaid} />}</Space>
-          <Space>Remaining : {<ThousandSeparator value={remain} />}</Space>
+        <Flex vertical key='am'>
+          <Space key={`make${record.paint.id}12`}>Total : {<ThousandSeparator key={`make${record.paint.id}124`} value={estimateAmount} />}</Space>
+          <Space key={`model${record.paint.id}13`}>Paid : {<ThousandSeparator key={`make${record.paint.id}12g`} value={totalPaid} />}</Space>
+          <Space key={`model${record.paint.id}34`}>Remaining : {<ThousandSeparator key={`make${record.paint.id}12k`} value={remain} />}</Space>
         </Flex>
       );
     },
@@ -70,6 +70,7 @@ const listPaintColumns = [
   {
     title: "Action",
     key: "paint",
+      dataIndex: "action"
   },
 ];
 

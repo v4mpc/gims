@@ -16,7 +16,9 @@ import {
   serviceGrandTotal,
   toFormList,
 } from "../../utils.jsx";
-import { useNavigate, useParams } from "react-router-dom";
+
+import styles from "../../components/CustomForm.module.css";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
@@ -25,6 +27,7 @@ import PrintButtons from "../../components/PrintButtons.jsx";
 
 const CreateService = () => {
   const [form] = Form.useForm();
+  const { pathname } = useLocation();
   const [services, setServices] = useState([]);
   const [spares, setSpares] = useState([]);
   const navigate = useNavigate();
@@ -35,8 +38,8 @@ const CreateService = () => {
   const [spareFields, setSpareFields] = useState([]);
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [payViaInsurance, setPayViaInsurance] = useState(false);
-
   const editMode = id !== undefined;
+  const viewMode = pathname.toLowerCase().endsWith("view") && id !== undefined;
 
   const results = useQueries({
     queries: [
@@ -49,12 +52,11 @@ const CreateService = () => {
       {
         queryKey: ["singleService", id],
         placeholderData: [],
-        staleTime: 1000 * 60 * 20,
+
         enabled: editMode,
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
       {
-        staleTime: 1000 * 60 * 20,
         queryKey: ["serviceAll"],
         placeholderData: [],
         queryFn: () => getLookupData(API_ROUTES.serviceCatalogsAll),
@@ -62,7 +64,7 @@ const CreateService = () => {
 
       {
         queryKey: ["spareAll"],
-        staleTime: 1000 * 60 * 20,
+
         placeholderData: [],
         queryFn: () =>
           getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
@@ -81,19 +83,23 @@ const CreateService = () => {
     setSpares(spareCatalogQuery.data);
   }, [serviceCatalogQuery.data, spareCatalogQuery.data]);
 
-  let editValues = {
-    initialPayment: 0,
-    finalPayment: 0,
-    grandTotal: 0,
-    status: "DRAFT",
-  };
+  useEffect(() => {
+    form.setFieldsValue({
+      initialPayment: 0,
+      finalPayment: 0,
+      grandTotal: 0,
+      status: "DRAFT",
+    });
+  }, []);
 
   useEffect(() => {
     if (
-      (editMode && serviceQuery.data && paymentCatalogQuery.data,
-      spareCatalogQuery.data)
+      editMode &&
+      serviceQuery.data &&
+      paymentCatalogQuery.data &&
+      spareCatalogQuery.data
     ) {
-      const serviceTotal = serviceQuery.data.service?.services.reduce(
+      const serviceTotal = serviceQuery.data?.service?.services.reduce(
         (acc, cr) => acc + cr.quantity * cr.price,
         0,
       );
@@ -216,7 +222,7 @@ const CreateService = () => {
 
   const onValueChanged = (changed, all) => {
     form.setFieldsValue({
-      grandTotal: serviceGrandTotal(form, fields, spareFields),
+      grandTotal: serviceGrandTotal(form, fields, spareFields) ?? 0,
     });
   };
 
@@ -241,6 +247,10 @@ const CreateService = () => {
 
       {
         name: "selectedService",
+        errors: [],
+      },
+      {
+        name: "paymentMethod",
         errors: [],
       },
     ]);
@@ -377,11 +387,11 @@ const CreateService = () => {
       key="serviceForm"
       variant="outlined"
       form={form}
-      initialValues={editValues}
+      className={styles.customForm}
       onValuesChange={onValueChanged}
       layout="vertical"
       autoComplete="off"
-      disabled={form.getFieldValue("status") === "PAID"}
+      disabled={editMode}
     >
       <Flex justify="flex-end">
         <StatusTag status={form?.getFieldValue("status")} />
@@ -390,7 +400,7 @@ const CreateService = () => {
         Customer
       </Divider>
 
-      <CustomerSection form={form} />
+      <CustomerSection form={form} viewMode={viewMode} />
 
       <Divider orientation="left" plain>
         Services
@@ -404,10 +414,11 @@ const CreateService = () => {
         setFields={setFields}
         services={services}
         setServices={setServices}
+        viewMode={viewMode}
       />
 
       <Divider orientation="left" plain>
-        Spares
+        Spare
       </Divider>
 
       <SpareSection
@@ -418,11 +429,15 @@ const CreateService = () => {
         spares={spares}
         setSpares={setSpares}
         spareCatalogQuery={spareCatalogQuery}
+        viewMode={viewMode}
       />
       <Divider orientation="left" plain>
         Payments
       </Divider>
-      <PaymentSection saveOnlyValidations={saveOnlyValidations} />
+      <PaymentSection
+        saveOnlyValidations={saveOnlyValidations}
+        viewMode={viewMode}
+      />
 
       <Divider orientation="left" plain>
         Payment method
@@ -430,10 +445,12 @@ const CreateService = () => {
 
       <PaymentMethodSection
         onPaymentChanged={onPaymentChanged}
+        saveOnlyValidations={saveOnlyValidations}
         selectedPayment={selectedPayment}
         paymentCatalogQuery={paymentCatalogQuery}
         onPayViaInsuranceChanged={onPayViaInsuranceChanged}
         payViaInsurance={payViaInsurance}
+        viewMode={viewMode}
       />
 
       <Divider orientation="left" plain />
@@ -441,7 +458,9 @@ const CreateService = () => {
       <Flex justify="space-between">
         <Space>
           <Button
-            htmlType="button"
+            disabled={false}
+            color="danger"
+            variant="solid"
             onClick={() =>
               navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`)
             }
@@ -449,20 +468,32 @@ const CreateService = () => {
             Cancel
           </Button>
 
-          <Button htmlType="button" onClick={form.resetFields}>
-            Reset
-          </Button>
+          {viewMode || (
+            <Button htmlType="button" onClick={form.resetFields}>
+              Reset
+            </Button>
+          )}
         </Space>
         <Space>
-          <PrintButtons primaryKey={id} invoiceSource="GARAGE_SERVICE" />
+          {viewMode && (
+            <PrintButtons
+              primaryKey={id}
+              printable={["TAX", "PROFORMA"]}
+              invoiceSource="GARAGE_SERVICE"
+            />
+          )}
 
-          <Button type="primary" onClick={saveForLater} htmlType="button">
-            Save for later
-          </Button>
+          {viewMode || (
+            <>
+              <Button type="primary" onClick={saveForLater} htmlType="button">
+                Save for later
+              </Button>
 
-          <Button type="primary" onClick={finalize}>
-            Finalize
-          </Button>
+              <Button type="primary" onClick={finalize}>
+                Finalize
+              </Button>
+            </>
+          )}
         </Space>
       </Flex>
     </Form>

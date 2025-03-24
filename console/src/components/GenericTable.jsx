@@ -106,7 +106,7 @@ export default function GenericTable({
             render: (_, record) => (
                 <Button
                     type="primary"
-                    onClick={() =>navigateToLink(`${record.service.id}`)}
+                    onClick={() =>navigateToLink(`${record.service.id}/view`)}
                 >
                     {record.service.status==="PAID"?"View":"Edit"}
                 </Button>
@@ -178,6 +178,7 @@ export default function GenericTable({
           {showCategoryFilter && (
             <Select
               showSearch
+              key="select"
               style={{ width: "200px" }}
               placeholder="Filter by category"
               filterOption={(input, option) =>
@@ -197,6 +198,7 @@ export default function GenericTable({
           <Search
             placeholder="Search item ..."
             allowClear
+            key="search"
             onSearch={onSearch}
             style={{ width: SEARCH_BOX_WIDTH }}
           />

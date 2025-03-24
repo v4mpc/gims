@@ -6,9 +6,6 @@ import com.yhm.gims.domain.InvoiceFactory;
 import com.yhm.gims.domain.InvoicePdf;
 import com.yhm.gims.domain.PrintableReport;
 import com.yhm.gims.domain.enumaration.InvoiceSource;
-import com.yhm.gims.entity.BaseEntity;
-import com.yhm.gims.entity.GService;
-import com.yhm.gims.exception.ResourceNotFoundException;
 import com.yhm.gims.repository.ServiceRepository;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -25,8 +22,6 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class InvoiceService {
-
-    private final ServiceRepository serviceRepository;
     private final InvoiceFactory invoiceFactory;
 
     public PrintableReport generateInvoice(InvoiceSource invoiceSource, Integer serviceId) throws Exception {

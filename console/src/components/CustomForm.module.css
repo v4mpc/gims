@@ -1,0 +1,9 @@
+/* CustomForm.module.css */
+.customForm :global([class*='ant-'][disabled]),
+.customForm :global(.ant-select-disabled .ant-select-selector),
+.customForm :global(.ant-picker-disabled .ant-picker-input input[disabled]) {
+    background-color: white !important;
+    color: black !important;
+    opacity: 1 !important;
+    border-color: #d9d9d9 !important;
+}
