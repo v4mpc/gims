@@ -2,12 +2,11 @@ import { Button, Dropdown, Space } from "antd";
 import { DownOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { API_ROUTES, BASE_URL } from "../utils.jsx";
 
-function PrintButtons({ serviceId }) {
-  console.log(serviceId);
+function PrintButtons({ primaryKey, invoiceSource }) {
   const handleMenuClick = (e) => {
-    if (serviceId !== undefined) {
+    if (primaryKey !== undefined) {
       window.open(
-        `${BASE_URL}/${API_ROUTES.exportInvoice}/${serviceId}`,
+        `${BASE_URL}/${API_ROUTES.exportInvoice}/invoiceSource/${primaryKey}`,
         "_blank",
       ); // '_blank' opens in a ne
     }

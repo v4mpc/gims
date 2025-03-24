@@ -1,9 +1,12 @@
 package com.yhm.gims.service;
 
 
+import com.yhm.gims.domain.BaseInvoice;
+import com.yhm.gims.domain.InvoiceFactory;
 import com.yhm.gims.domain.InvoicePdf;
 import com.yhm.gims.domain.PrintableReport;
 import com.yhm.gims.domain.enumaration.InvoiceSource;
+import com.yhm.gims.entity.BaseEntity;
 import com.yhm.gims.entity.GService;
 import com.yhm.gims.exception.ResourceNotFoundException;
 import com.yhm.gims.repository.ServiceRepository;
@@ -24,10 +27,11 @@ import java.util.Map;
 public class InvoiceService {
 
     private final ServiceRepository serviceRepository;
+    private final InvoiceFactory invoiceFactory;
 
-    public PrintableReport generateInvoice(Integer serviceId) throws Exception {
-        GService service = serviceRepository.findById(serviceId).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + serviceId));
-        InvoicePdf invoice = service.generateInvoice();
+    public PrintableReport generateInvoice(InvoiceSource invoiceSource, Integer serviceId) throws Exception {
+        BaseInvoice baseInvoice = invoiceFactory.createInvoice(invoiceSource, serviceId);
+        InvoicePdf invoice = baseInvoice.generateInvoice();
         Map<String, Object> parameters = getStringObjectMap(invoice);
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(invoice.getItems());
         ClassPathResource resource = new ClassPathResource("reports/auto_village.jasper");

@@ -29,9 +29,9 @@ public class ExportableReportController {
     @Autowired
     private InvoiceService invoiceService;
 
-    @GetMapping("invoice/{id}")
-    public ResponseEntity<byte[]> generateInvoice(@PathVariable Integer id) throws Exception {
-        PrintableReport printableReport = invoiceService.generateInvoice(id);
+    @GetMapping("invoice/{invoiceSource}/{id}")
+    public ResponseEntity<byte[]> generateInvoice(@PathVariable InvoiceSource invoiceSource, @PathVariable Integer id) throws Exception {
+        PrintableReport printableReport = invoiceService.generateInvoice(invoiceSource,id);
         // Set response headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);

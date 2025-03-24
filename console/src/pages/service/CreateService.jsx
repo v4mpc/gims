@@ -1,4 +1,4 @@
-import {Button, Divider, Dropdown, Flex, Form, Skeleton, Space} from "antd";
+import { Button, Divider, Dropdown, Flex, Form, Skeleton, Space } from "antd";
 
 import ServiceSection from "../../components/ServiceSection.jsx";
 import SpareSection from "../../components/SpareSection.jsx";
@@ -89,8 +89,10 @@ const CreateService = () => {
   };
 
   useEffect(() => {
-    if (editMode && serviceQuery.data && paymentCatalogQuery.data,
-        spareCatalogQuery.data) {
+    if (
+      (editMode && serviceQuery.data && paymentCatalogQuery.data,
+      spareCatalogQuery.data)
+    ) {
       const serviceTotal = serviceQuery.data.service?.services.reduce(
         (acc, cr) => acc + cr.quantity * cr.price,
         0,
@@ -388,7 +390,6 @@ const CreateService = () => {
         Customer
       </Divider>
 
-
       <CustomerSection form={form} />
 
       <Divider orientation="left" plain>
@@ -453,8 +454,7 @@ const CreateService = () => {
           </Button>
         </Space>
         <Space>
-
-          <PrintButtons serviceId={id} />
+          <PrintButtons primaryKey={id} invoiceSource="GARAGE_SERVICE" />
 
           <Button type="primary" onClick={saveForLater} htmlType="button">
             Save for later

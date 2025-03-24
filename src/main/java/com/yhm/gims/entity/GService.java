@@ -1,6 +1,7 @@
 package com.yhm.gims.entity;
 
 
+import com.yhm.gims.domain.Invoicable;
 import com.yhm.gims.domain.InvoicePdf;
 import com.yhm.gims.domain.InvoicePdfItem;
 import com.yhm.gims.domain.enumaration.Status;
@@ -22,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "services")
-public class GService extends BaseEntity {
+public class GService extends BaseEntity  {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)

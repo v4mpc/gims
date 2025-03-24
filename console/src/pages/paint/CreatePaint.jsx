@@ -9,6 +9,7 @@ import PaymentSection from "../../components/PaymentSection.jsx";
 import PaymentMethodSection from "../../components/PaymentMethodSection.jsx";
 import CollapseSection from "../../components/CollapseSection.jsx";
 import useService from "../../hooks/useService.jsx";
+import PrintButtons from "../../components/PrintButtons.jsx";
 
 const CreatePaint = () => {
   const navigate = useNavigate();
@@ -264,10 +265,7 @@ const CreatePaint = () => {
           </Button>
         </Space>
         <Space>
-          <Button type="dashed" onClick={finalize} htmlType="button">
-            Print invoice
-          </Button>
-
+          <PrintButtons primaryKey={id} invoiceSource="REPAIR" />
           <Button type="primary" onClick={saveForLater} htmlType="button">
             Save for later
           </Button>
