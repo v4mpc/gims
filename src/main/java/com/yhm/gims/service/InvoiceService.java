@@ -2,6 +2,7 @@ package com.yhm.gims.service;
 
 
 import com.yhm.gims.domain.InvoicePdf;
+import com.yhm.gims.domain.enumaration.InvoiceSource;
 import com.yhm.gims.entity.GService;
 import com.yhm.gims.exception.ResourceNotFoundException;
 import com.yhm.gims.repository.ServiceRepository;
@@ -22,10 +23,8 @@ import java.util.Map;
 public class InvoiceService {
 
     private final ServiceRepository serviceRepository;
-
-    public byte[] generateInvoice(Integer id) throws Exception {
-
-        GService service = serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + id));
+    public byte[] generateInvoice( Integer serviceId) throws Exception {
+        GService service = serviceRepository.findById(serviceId).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + serviceId));
         InvoicePdf invoice = service.generateInvoice();
         Map<String, Object> parameters = getStringObjectMap(invoice);
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(invoice.getItems());

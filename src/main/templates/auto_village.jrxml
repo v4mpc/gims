@@ -297,7 +297,7 @@ TIN: 154 - 545 - 646]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{invoiceNumber}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="97" y="159" width="232" height="15" uuid="9d7b2a91-60e3-42c8-8586-179cd1b78a9a"/>
 				<textFieldExpression><![CDATA[$P{location}]]></textFieldExpression>
 			</textField>

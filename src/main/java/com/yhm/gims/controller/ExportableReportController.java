@@ -3,6 +3,7 @@ package com.yhm.gims.controller;
 
 import com.yhm.gims.domain.InvoicePdf;
 import com.yhm.gims.domain.InvoicePdfItem;
+import com.yhm.gims.domain.enumaration.InvoiceSource;
 import com.yhm.gims.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ExportableReportController {
     private InvoiceService invoiceService;
 
     @GetMapping("invoice/{id}")
-    public ResponseEntity<byte[]> generateInvoice(@PathVariable int id) throws Exception {
+    public ResponseEntity<byte[]> generateInvoice( @PathVariable Integer id) throws Exception {
         byte[] pdfBytes = invoiceService.generateInvoice(id);
         // Set response headers
         HttpHeaders headers = new HttpHeaders();

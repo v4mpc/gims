@@ -26,7 +26,6 @@ import java.util.*;
 public class CustomReportService {
     private final CustomReportRepository customReportRepository;
 
-    private final EntityManager entityManager;
 
     private final JdbcTemplate jdbcTemplate;
 
