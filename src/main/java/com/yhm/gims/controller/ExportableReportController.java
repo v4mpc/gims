@@ -3,6 +3,7 @@ package com.yhm.gims.controller;
 
 import com.yhm.gims.domain.InvoicePdf;
 import com.yhm.gims.domain.InvoicePdfItem;
+import com.yhm.gims.domain.PrintableReport;
 import com.yhm.gims.domain.enumaration.InvoiceSource;
 import com.yhm.gims.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
@@ -29,15 +30,15 @@ public class ExportableReportController {
     private InvoiceService invoiceService;
 
     @GetMapping("invoice/{id}")
-    public ResponseEntity<byte[]> generateInvoice( @PathVariable Integer id) throws Exception {
-        byte[] pdfBytes = invoiceService.generateInvoice(id);
+    public ResponseEntity<byte[]> generateInvoice(@PathVariable Integer id) throws Exception {
+        PrintableReport printableReport = invoiceService.generateInvoice(id);
         // Set response headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("inline", "invoice.pdf");
+        headers.setContentDispositionFormData("inline", printableReport.getFileName());
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(pdfBytes);
+                .body(printableReport.getDataBytes());
     }
 }

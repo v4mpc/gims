@@ -2,6 +2,7 @@ package com.yhm.gims.service;
 
 
 import com.yhm.gims.domain.InvoicePdf;
+import com.yhm.gims.domain.PrintableReport;
 import com.yhm.gims.domain.enumaration.InvoiceSource;
 import com.yhm.gims.entity.GService;
 import com.yhm.gims.exception.ResourceNotFoundException;
@@ -23,7 +24,8 @@ import java.util.Map;
 public class InvoiceService {
 
     private final ServiceRepository serviceRepository;
-    public byte[] generateInvoice( Integer serviceId) throws Exception {
+
+    public PrintableReport generateInvoice(Integer serviceId) throws Exception {
         GService service = serviceRepository.findById(serviceId).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + serviceId));
         InvoicePdf invoice = service.generateInvoice();
         Map<String, Object> parameters = getStringObjectMap(invoice);
@@ -31,7 +33,12 @@ public class InvoiceService {
         ClassPathResource resource = new ClassPathResource("reports/auto_village.jasper");
         InputStream inputStream = resource.getInputStream();
         JasperPrint jasperPrint = JasperFillManager.fillReport(inputStream, parameters, dataSource);
-        return JasperExportManager.exportReportToPdf(jasperPrint);
+        String fileName = String.format("%s%s%s%s", invoice.getCustomerName(), "-", invoice.getInvoiceNumber(), ".pdf");
+
+        return PrintableReport.builder()
+                .dataBytes(JasperExportManager.exportReportToPdf(jasperPrint))
+                .fileName(fileName)
+                .build();
     }
 
     private static Map<String, Object> getStringObjectMap(InvoicePdf pdf) {

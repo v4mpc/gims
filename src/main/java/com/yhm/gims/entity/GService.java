@@ -111,7 +111,7 @@ public class GService extends BaseEntity {
                 .address(this.customerCar.getCustomer().getAddress())
                 .invoiceDate(formattedDate)
                 .percentageVatInDecimal(0F)
-                .invoiceNumber("AV/INV/" + this.getId())
+                .invoiceNumber("AV-INV-" + this.getId())
                 .items(items)
                 .subTotal(items.stream().map(InvoicePdfItem::getTotalPrice).reduce(0F, Float::sum))
                 .build();

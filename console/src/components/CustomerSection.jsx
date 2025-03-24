@@ -1,35 +1,35 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Select, Form, Flex, Input } from "antd";
-import {API_ROUTES, getLookupData, toCustomerCars} from "../utils.jsx";
+import { Select, Form, Flex, Input, Skeleton } from "antd";
+import { API_ROUTES, getLookupData, toCustomerCars } from "../utils.jsx";
 
 import { optionLabelFilter } from "../utils.jsx";
-import {useQuery} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const CustomerSection = ({ form }) => {
+  const customerQuery = useQuery({
+    queryKey: ["customerAll"],
+    placeholderData: [],
+    queryFn: () => getLookupData(API_ROUTES.customersAll),
+  });
 
-
-    const customerQuery = useQuery( {
-        queryKey: ["customerAll"],
-        placeholderData: [],
-        queryFn: () => getLookupData(API_ROUTES.customersAll),
-    })
-
-    const onSelectChange = (value) => {
-        const [filteredCustomer] = customers.filter(
-            (c) => Number(c.id) === Number(value),
-        );
-        form.setFieldsValue({
-            customerName: filteredCustomer.customerName,
-            customerPhone: filteredCustomer.customerPhone,
-            plateNumber: filteredCustomer.plateNumber,
-            make: filteredCustomer.make,
-            model: filteredCustomer.model,
-        });
-    };
+  const onSelectChange = (value) => {
+    const [filteredCustomer] = customers.filter(
+      (c) => Number(c.id) === Number(value),
+    );
+    form.setFieldsValue({
+      customerName: filteredCustomer.customerName,
+      customerPhone: filteredCustomer.customerPhone,
+      plateNumber: filteredCustomer.plateNumber,
+      make: filteredCustomer.make,
+      model: filteredCustomer.model,
+    });
+  };
 
 
   const customers = toCustomerCars(customerQuery.data);
-  return (
+  return form.loading ? (
+    <Skeleton active />
+  ) : (
     <Flex justify="space-between" wrap>
       <Form.Item
         label="Customer vehicle"
