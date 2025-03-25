@@ -38,7 +38,7 @@ public class ProductService {
 
     public Page<Product> getProducts(String searchTerm, String categoryId, Pageable pageable) {
 
-            return productRepository.findAll(Specification.anyOf(ProductSpecs.searchByName(searchTerm), ProductSpecs.searchByCode(searchTerm)).and(categoryId.equals("ALL") ? null : ProductSpecs.searchByCategory(Integer.parseInt(categoryId))), pageable);
+        return productRepository.findAll(Specification.anyOf(ProductSpecs.searchByName(searchTerm), ProductSpecs.searchByCode(searchTerm)).and(categoryId.equals("ALL") ? null : ProductSpecs.searchByCategory(Integer.parseInt(categoryId))), pageable);
 
     }
 
@@ -47,7 +47,13 @@ public class ProductService {
         return productRepository.findAll();
     }
 
+
     public void save(ProductDto productDto) {
+
+        HashSet<Integer> vehicleIds = new HashSet<>();
+        if (productDto.getVehicles() != null) {
+            vehicleIds = (HashSet<Integer>) productDto.getVehicles();
+        }
         Product product = Product.builder()
                 .code(productDto.getCode())
                 .name(productDto.getName())
@@ -58,7 +64,7 @@ public class ProductService {
                 .category(productDto.getCategory())
                 .unitOfMeasure(productDto.getUnitOfMeasure())
                 .active(productDto.getActive())
-                .vehicles(new HashSet<>(vehicleRepository.findAllById(productDto.getVehicles())))
+                .vehicles(new HashSet<>(vehicleRepository.findAllById(vehicleIds)))
                 .build();
 
         productRepository.save(product);

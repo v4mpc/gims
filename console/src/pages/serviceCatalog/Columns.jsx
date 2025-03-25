@@ -1,3 +1,5 @@
+import ThousandSeparator from "../../components/ThousandSeparator.jsx";
+
 const serviceCatalogColumns = [
     {
         title: "#",
@@ -15,6 +17,8 @@ const serviceCatalogColumns = [
         title: "Cost",
         key: "cost",
         dataIndex: "cost",
+        render:(_,record)=><ThousandSeparator value={record.cost}/>
+
     },
 
     {

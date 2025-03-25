@@ -1,6 +1,7 @@
 package com.yhm.gims.controller;
 
 
+import com.yhm.gims.domain.ApiResponse;
 import com.yhm.gims.dto.ServiceDto;
 import com.yhm.gims.entity.GService;
 import com.yhm.gims.service.ServiceService;
@@ -27,11 +28,12 @@ public class ServiceController {
     }
 
     @PostMapping
-    public ResponseEntity<GService> save(@Valid @RequestBody GService service) {
+    public ResponseEntity<ApiResponse<String>> save(@Valid @RequestBody GService service) {
         serviceService.save(service);
-        return ResponseEntity.ok(service);
-    }
+        ApiResponse<String> response = new ApiResponse<>(true, "Success", "Saved");
+        return ResponseEntity.ok(response);
 
+    }
 
 
     @PutMapping("{id}")
@@ -46,7 +48,6 @@ public class ServiceController {
         ServiceDto p = serviceService.get(id);
         return ResponseEntity.ok(p);
     }
-
 
 
     @GetMapping("/all")

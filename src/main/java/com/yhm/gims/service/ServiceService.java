@@ -70,7 +70,7 @@ public class ServiceService {
 
 
     @Transactional
-    public void save(GService service) {
+    public GService save(GService service) {
 
 
         if (service.getStatus().equals(Status.PAID)) {
@@ -88,7 +88,7 @@ public class ServiceService {
         for (ServicePayments servicePayment : service.getPayments()) {
             servicePayment.setService(service);
         }
-        serviceRepository.save(service);
+        return serviceRepository.save(service);
     }
 
 

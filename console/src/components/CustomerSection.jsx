@@ -35,7 +35,7 @@ const CustomerSection = ({ form, viewMode }) => {
           label="Customer vehicle"
           tooltip={{
             title:
-              "Vehicle name is in format PlateNumber-Make-Model-CustomerName",
+              "Vehicle name is in format PlateNumber/Make/Model/CustomerName",
             icon: <InfoCircleOutlined />,
           }}
           rules={[

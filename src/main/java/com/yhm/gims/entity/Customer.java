@@ -36,6 +36,10 @@ public class Customer extends BaseEntity {
     private List<CustomerCar> cars = new ArrayList<>();
 
 
+    public String getPhone() {
+        return String.format("%s%s", "0", phone);
+    }
+
 
     public void addCar(CustomerCar car) {
         cars.add(car);

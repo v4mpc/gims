@@ -257,66 +257,42 @@ const CreateService = () => {
 
     form.setFields([
       {
-        name: "initialPayment",
-        errors: [],
-      },
-
-      {
-        name: "initialPaymentDate",
-        errors: [],
-      },
-
-      {
-        name: "finalPaymentDate",
-        errors: [],
-      },
-
-      {
         name: "selectedService",
         errors: [],
       },
-      {
-        name: "paymentMethod",
-        errors: [],
-      },
+
     ]);
 
-    form.setFields(
-      spareFields.flatMap((f) => [
-        { name: `itemName_${f.key}`, errors: [] },
-        { name: `price_${f.key}`, errors: [] },
-        { name: `quantity_${f.key}`, errors: [] },
-        { name: `currentKm_${f.key}`, errors: [] },
-        { name: `nextKm_${f.key}`, errors: [] },
-      ]),
-    );
 
     setTimeout(() => {
       form
         .validateFields()
         .then((values) => {
           let status = "DRAFT";
-          const { grandTotal, initialPayment, finalPayment } = values;
-          if (initialPayment + finalPayment < grandTotal) {
+          const { totals } = values;
+          const [totalCost, totalPaid] = totals;
+          if (totalPaid < totalCost) {
             status = "PARTIALLY_PAID";
           }
-          if (initialPayment + finalPayment === 0) {
+          if (totalPaid === 0) {
             status = "UNPAID";
           }
 
-          const { servicesList, spareList } = toModelList(
-            form,
-            fields,
-            spareFields,
-          );
+          const { services } = values;
+          const _services = services.map((s) => ({
+            item: s.item,
+            price: s.price,
+            quantity: s.quantity,
+          }));
 
           if (!editMode) {
             const updatedValues = {
               ...values,
-              services: servicesList,
-              spares: spareList,
+              services: _services,
+              spares: [],
               status: status,
             };
+            console.log(updatedValues);
             const data = {
               values: updatedValues,
               urlPath: API_ROUTES.services,
@@ -326,8 +302,8 @@ const CreateService = () => {
           } else {
             const updatedValues = {
               ...values,
-              services: servicesList,
-              spares: spareList,
+              services: _services,
+              spares: [],
               status: status,
             };
             const data = {

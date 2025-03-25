@@ -33,10 +33,6 @@ public class ServicePayments extends BaseEntity {
     private PaymentCatalog paymentMethod;
 
 
-    @Column(name = "pay_via_insurance")
-    private Boolean payViaInsurance = false;
-
-
     private String insuranceName;
 
     @NotNull

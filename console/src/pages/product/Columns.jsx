@@ -1,3 +1,5 @@
+import ThousandSeparator from "../../components/ThousandSeparator.jsx";
+
 const productColumns = [
     {
         title: "#",
@@ -32,11 +34,14 @@ const productColumns = [
         title: "Buying price",
         key: "buy",
         dataIndex: "buyPrice",
+        render:(_,record)=><ThousandSeparator value={record.buyPrice}/>
     },
     {
         title: "Selling price",
         key: "sell",
         dataIndex: "salePrice",
+        render:(_,record)=><ThousandSeparator value={record.salePrice}/>
+
     },
     {
         title: "Action",

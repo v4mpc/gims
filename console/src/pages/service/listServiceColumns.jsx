@@ -30,6 +30,7 @@ const listServiceColumns = [
     title: "Customer Phone",
     key: "customerPhone",
     dataIndex: "customerPhone",
+
   },
 
   {
@@ -50,13 +51,13 @@ const listServiceColumns = [
     key: "amounts",
     dataIndex: "amounts",
     render: (_, record) => {
-      const totalPaid = record.service.initialPayment + record.service.finalPayment;
+      const totalPaid = record.service.payments.reduce((acc,curr)=>acc+curr.amount,0)
       const grandTotal = record.service.services.reduce(( (acc, cr) => acc + cr.quantity * cr.price),0)+record.service.spares.reduce(( (acc, cr) => acc + cr.quantity * cr.price),0);
       const remain =
         grandTotal - totalPaid >= 0 ? grandTotal - totalPaid : 0;
       return (
         <Flex vertical>
-          <Space>Total : {<ThousandSeparator value={grandTotal} />}</Space>
+          <Space>Total cost : {<ThousandSeparator value={grandTotal} />}</Space>
           <Space>Paid : {<ThousandSeparator value={totalPaid} />}</Space>
           <Space>Remaining : {<ThousandSeparator value={remain} />}</Space>
         </Flex>

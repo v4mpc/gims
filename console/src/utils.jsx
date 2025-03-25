@@ -93,7 +93,7 @@ export function toCustomerCars(customers) {
       plateNumber: car.plateNumber,
       make: car.make,
       model: car.model,
-      name: `${car.plateNumber}-${car.make}-${car.model}-${customer.name}`,
+      name: `${car.plateNumber}/${car.make}/${car.model}/${customer.name}`,
     }));
   });
 
@@ -255,29 +255,18 @@ export async function putItem(data) {
     };
   }
 
-  if (
-    Object.hasOwn(modifiedData, "initialPaymentDate") &&
-    data.values.initialPaymentDate != null
-  ) {
+  if (Object.hasOwn(modifiedData, "payments")) {
     Date.prototype.toISOString = function () {
       return dayjs(this).format(DATE_FORMAT);
     };
     modifiedData = {
       ...modifiedData,
-      initialPaymentDate: data.values.initialPaymentDate.format(DATE_FORMAT),
-    };
-  }
-
-  if (
-    Object.hasOwn(modifiedData, "finalPaymentDate") &&
-    data.values.finalPaymentDate != null
-  ) {
-    Date.prototype.toISOString = function () {
-      return dayjs(this).format(DATE_FORMAT);
-    };
-    modifiedData = {
-      ...modifiedData,
-      finalPaymentDate: data.values.finalPaymentDate.format(DATE_FORMAT),
+      // payments: data.values.finalPaymentDate.format(DATE_FORMAT),
+      payments: data.values.payments.map((p) => ({
+        ...p,
+        paymentDate: p.payment_date.format(DATE_FORMAT),
+        paymentMethod: { id: p.payment_method_id },
+      })),
     };
   }
 
@@ -295,13 +284,6 @@ export async function putItem(data) {
     };
   }
 
-  if (Object.hasOwn(modifiedData, "paymentMethod")) {
-    modifiedData = {
-      ...modifiedData,
-      paymentMethod: { id: modifiedData.paymentMethod },
-    };
-  }
-
   if (Object.hasOwn(modifiedData, "category")) {
     modifiedData = {
       ...modifiedData,
@@ -315,6 +297,7 @@ export async function putItem(data) {
   if (!resp.ok) {
     throw new Error("Network response was not ok");
   }
+  console.log(resp);
   return resp.json();
 }
 
