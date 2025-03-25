@@ -68,21 +68,6 @@ export function openNotification(key, type, title, description) {
   });
 }
 
-export function serviceGrandTotal(form, fields, sparefields) {
-  const grandTotal = sparefields.reduce((acc, curr) => {
-    const qty = form.getFieldValue(`quantity_${curr.key}`) ?? 0;
-    const price = form.getFieldValue(`price_${curr.key}`) ?? 0;
-    return acc + qty * price;
-  }, 0);
-
-  const sgrandTotal = fields.reduce((acc, curr) => {
-    const qty = form.getFieldValue(`squantity_${curr.key}`) ?? 0;
-    const price = form.getFieldValue(`sprice_${curr.key}`) ?? 0;
-    return acc + qty * price;
-  }, 0);
-
-  return sgrandTotal + grandTotal;
-}
 
 export function toCustomerCars(customers) {
   const listOfListOfcars = customers.map((customer) => {
@@ -100,69 +85,6 @@ export function toCustomerCars(customers) {
   return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
 }
 
-export function toFormList(services, spares, dbSpares) {
-  const formFields = services.map((s, index) => ({
-    key: index,
-    names: [
-      `sitemName_${index}`,
-      `sprice_${index}`,
-      `squantity_${index}`,
-      `stotal_${index}`,
-    ],
-  }));
-
-  const _serviceValues = services.flatMap((s, index) => ({
-    [`sitemName_${index}`]: s.item,
-    [`sprice_${index}`]: s.price,
-    [`squantity_${index}`]: s.quantity,
-    [`stotal_${index}`]: s.quantity * s.price,
-  }));
-
-  const serviceValues = _serviceValues.reduce((acc, obj) => {
-    return { ...acc, ...obj };
-  }, {});
-
-  const _spareValues = spares.map((s, index) => {
-    const [itemSoh] = dbSpares
-      .filter((fc) => fc.product.id === s.itemId)
-      .map((ms) => ms.stockOnhand);
-
-    return {
-      [`itemId_${index}`]: s.itemId,
-      [`itemName_${index}`]: s.item,
-      [`price_${index}`]: s.price,
-      [`unit_${index}`]: s.unit,
-      [`soh_${index}`]: itemSoh ?? 0,
-      [`quantity_${index}`]: s.quantity,
-      [`currentKm_${index}`]: s.currentKm,
-      [`nextKm_${index}`]: s.nextKm,
-      [`total_${index}`]: s.quantity * s.price,
-    };
-  });
-
-  const formSpareFields = spares.map((s, index) => ({
-    key: index,
-    names: [
-      `itemId_${index}`,
-      `itemName_${index}`,
-      `unit_${index}`,
-      `price_${index}`,
-      `soh_${index}`,
-      `quantity_${index}`,
-      `total_${index}`,
-      `currentKm_${index}`,
-      `nextKm_${index}`,
-    ],
-  }));
-
-  // console.log(_spareValues);
-
-  const spareValues = _spareValues.reduce((acc, obj) => {
-    return { ...acc, ...obj };
-  }, {});
-
-  return { formFields, formSpareFields, serviceValues, spareValues };
-}
 
 export function toModelList(form, fields, sparefields) {
   const servicesList = fields.map((f) => ({

@@ -11,7 +11,6 @@ import {
   toModelList,
   openNotification,
   putItem,
-  toFormList,
   updateTotalCost,
 } from "../../utils.jsx";
 
@@ -20,13 +19,11 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
-import dayjs from "dayjs";
 import PrintButtons from "../../components/PrintButtons.jsx";
 
 const CreateService = () => {
   const [form] = Form.useForm();
   const { pathname } = useLocation();
-  const [spares, setSpares] = useState([]);
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
   const { id } = useParams();
@@ -50,18 +47,11 @@ const CreateService = () => {
         enabled: editMode,
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
-      {
-        queryKey: ["spareAll"],
-        placeholderData: [],
-        queryFn: () =>
-          getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
-      },
     ],
   });
   const [
     paymentCatalogQuery,
     serviceQuery,
-    spareCatalogQuery,
   ] = results;
 
   useEffect(() => {
@@ -77,28 +67,10 @@ const CreateService = () => {
     if (
       editMode &&
       serviceQuery.data &&
-      paymentCatalogQuery.data &&
-      spareCatalogQuery.data
+      paymentCatalogQuery.data
     ) {
-      const { serviceValues, spareValues, formSpareFields, formFields } =
-        toFormList(
-          serviceQuery.data.service?.services ?? [],
-          serviceQuery.data.service?.spares ?? [],
-          spareCatalogQuery.data,
-        );
-      //
 
-      const selectedSpares = serviceQuery.data.service?.spares.map(
-        (s) => s.itemId,
-      );
 
-      setSpareFields(formSpareFields);
-
-      setSpares(
-        spareCatalogQuery.data.filter(
-          (s) => !selectedSpares?.includes(s.product.id),
-        ),
-      );
 
       form.setFieldsValue({
         customerName: serviceQuery.data.customerName,
@@ -115,7 +87,6 @@ const CreateService = () => {
     editMode,
     serviceQuery.data,
     paymentCatalogQuery.data,
-    spareCatalogQuery.data,
   ]);
 
   const { mutate: createItem, isLoading: isCreating } = useMutation({

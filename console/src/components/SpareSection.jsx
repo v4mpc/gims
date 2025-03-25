@@ -57,7 +57,6 @@ const SpareSection = ({
           const [spareObject] = spareCatalogQuery.data.filter(
             (fc) => fc.product.id === s.itemId,
           );
-
           return {
             id: s.itemId,
             itemId: s.itemId,
