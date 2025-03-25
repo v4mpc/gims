@@ -31,12 +31,9 @@ public class DashboardService {
     }
 
 
-
-
     public List<Paint> getPaints(YearMonth yearMonth) {
         return paintService.findByMonthAndYear(yearMonth.getMonthValue(), yearMonth.getYear());
     }
-
 
 
     public List<GService> getServices(YearMonth yearMonth) {
@@ -70,13 +67,13 @@ public class DashboardService {
         return sales.stream().map(s -> (s.getQuantity() * s.getSalePrice())).reduce(0F, Float::sum);
     }
 
-    public Float getPaintTotalSells(List<Paint> paints){
-        return paints.stream().map(p->(p.getInitialPayment()+p.getFinalPayment())).reduce(0F,Float::sum);
+    public Float getPaintTotalSells(List<Paint> paints) {
+        return paints.stream().map(p -> (p.getInitialPayment() + p.getFinalPayment())).reduce(0F, Float::sum);
     }
 
 
-    public Float getServiceTotalSells(List<GService> services){
-        return services.stream().map(p->(p.getInitialPayment()+p.getFinalPayment())).reduce(0F,Float::sum);
+    public Float getServiceTotalSells(List<GService> services) {
+        return services.stream().map(p -> (p.getPayments().stream().map(ServicePayments::getAmount).reduce(0F, Float::sum))).reduce(0F, Float::sum);
     }
 
     public Float getTotalExpenses(List<Expense> expenses) {
@@ -114,10 +111,9 @@ public class DashboardService {
     }
 
 
-
     public List<Float> getServiceTrend(List<GService> services, Integer daysInMonth, YearMonth yearMonth) {
         List<LocalDate> localDates = DateUtil.getLocalDateList(daysInMonth, yearMonth);
-        return localDates.stream().map((d) -> services.stream().filter(fp -> (fp.getCreatedAt().isEqual(d) && fp.getStatus().equals(Status.PAID))).map(sf -> sf.getInitialPayment() + sf.getFinalPayment()).reduce(0F, Float::sum)).toList();
+        return localDates.stream().map((d) -> services.stream().filter(fp -> (fp.getCreatedAt().isEqual(d) && fp.getStatus().equals(Status.PAID))).map(p -> (p.getPayments().stream().map(ServicePayments::getAmount).reduce(0F, Float::sum))).reduce(0F, Float::sum)).toList();
 
     }
 
@@ -129,8 +125,6 @@ public class DashboardService {
     }
 
 
-
-
     public DashboardDto getMetrics(YearMonth yearMonth) {
 
         List<Expense> expenses = getExpenses(yearMonth);
@@ -140,7 +134,7 @@ public class DashboardService {
         Float totalExpenses = getTotalExpenses(expenses);
         Float totalSalesProfit = getTotalProfit(sales);
         Float netProfit = totalSalesProfit - totalExpenses;
-        Float paintingSell=0F;
+        Float paintingSell = 0F;
 
         return DashboardDto.builder()
                 .totalSales(getTotalSales(sales))

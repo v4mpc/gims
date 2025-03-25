@@ -5,7 +5,7 @@ import {
     DashboardOutlined,
     DownloadOutlined,
     DropboxOutlined,
-    FileTextOutlined, FormatPainterOutlined,
+    FileTextOutlined, FormatPainterOutlined, IdcardOutlined,
     LogoutOutlined,
     SettingOutlined, ToolOutlined,
     UploadOutlined,
@@ -78,6 +78,16 @@ const items = [
     },
 
 
+    {
+        key: "customers",
+        icon: <IdcardOutlined />,
+        label: (
+            <Link to={`/customers?page=1&size=${DEFAULT_PAGE_SIZE}`}>
+                Customers
+            </Link>
+        ),
+    },
+
 
   {
     key: "expense",
@@ -148,14 +158,6 @@ const items = [
         ),
       },
 
-      {
-        key: "customers",
-        label: (
-          <Link to={`/settings/customers?page=1&size=${DEFAULT_PAGE_SIZE}`}>
-            ❁ Customers
-          </Link>
-        ),
-      },
 
       {
         key: "vehicles",

@@ -8,6 +8,7 @@ import com.yhm.gims.domain.enumaration.Status;
 import com.yhm.gims.dto.ServiceDto;
 import com.yhm.gims.entity.GService;
 import com.yhm.gims.entity.ServiceLineItem;
+import com.yhm.gims.entity.ServicePayments;
 import com.yhm.gims.entity.SpareLineItem;
 import com.yhm.gims.exception.ResourceNotFoundException;
 import com.yhm.gims.repository.CustomerCarRepository;
@@ -83,6 +84,10 @@ public class ServiceService {
         for (SpareLineItem spareLineItem : service.getSpares()) {
             spareLineItem.setService(service);
         }
+
+        for (ServicePayments servicePayment : service.getPayments()) {
+            servicePayment.setService(service);
+        }
         serviceRepository.save(service);
     }
 
@@ -98,7 +103,6 @@ public class ServiceService {
             stockOnhandService.update(e);
         }
     }
-
 
 
     public List<GService> findByMonthAndYear(YearMonth yearMonth) {
@@ -121,13 +125,6 @@ public class ServiceService {
 
 
         updateGService.setCustomerCar(GService.getCustomerCar());
-        updateGService.setInitialPaymentDate(GService.getInitialPaymentDate());
-        updateGService.setInitialPayment(GService.getInitialPayment());
-        updateGService.setFinalPaymentDate(GService.getFinalPaymentDate());
-        updateGService.setFinalPayment(GService.getFinalPayment());
-        updateGService.setPaymentMethod(GService.getPaymentMethod());
-        updateGService.setPayViaInsurance(GService.getPayViaInsurance());
-        updateGService.setInsuranceName(GService.getInsuranceName());
         updateGService.setStatus(GService.getStatus());
         updateGService.getServices().clear();
         for (ServiceLineItem p : GService.getServices()) {
@@ -137,6 +134,12 @@ public class ServiceService {
         for (SpareLineItem p : GService.getSpares()) {
             updateGService.addSpareLineItem(p);
         }
+
+        updateGService.getPayments().clear();
+        for (ServicePayments p : GService.getPayments()) {
+            updateGService.addPayments(p);
+        }
+
         serviceRepository.save(updateGService);
         return updateGService;
     }

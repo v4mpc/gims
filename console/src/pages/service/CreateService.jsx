@@ -221,6 +221,24 @@ const CreateService = () => {
   });
 
   const onValueChanged = (changed, all) => {
+    if (Object.hasOwn(changed, "payments")) {
+      form.setFieldsValue({
+        totals: form.getFieldValue("totals").map((total, key) =>
+          key === 1
+            ? {
+                ...total,
+                amount: form
+                  .getFieldValue("payments")
+                  .reduce(
+                    (acc, curr) => Number(acc) + Number(curr?.amount ?? 0),
+                    0,
+                  ),
+              }
+            : total,
+        ),
+      });
+    }
+
     form.setFieldsValue({
       grandTotal: serviceGrandTotal(form, fields, spareFields) ?? 0,
     });
@@ -387,7 +405,7 @@ const CreateService = () => {
       key="serviceForm"
       variant="outlined"
       form={form}
-      className={styles.customForm}
+      className={viewMode ? styles.customForm : ""}
       onValuesChange={onValueChanged}
       layout="vertical"
       autoComplete="off"
@@ -431,30 +449,10 @@ const CreateService = () => {
         spareCatalogQuery={spareCatalogQuery}
         viewMode={viewMode}
       />
-      <Divider orientation="left" plain>
-        Payments
-      </Divider>
-      <PaymentSection
-        saveOnlyValidations={saveOnlyValidations}
-        viewMode={viewMode}
-      />
 
-      <Divider orientation="left" plain>
-        Payment method
-      </Divider>
-
-      <PaymentMethodSection
-        onPaymentChanged={onPaymentChanged}
-        saveOnlyValidations={saveOnlyValidations}
-        selectedPayment={selectedPayment}
-        paymentCatalogQuery={paymentCatalogQuery}
-        onPayViaInsuranceChanged={onPayViaInsuranceChanged}
-        payViaInsurance={payViaInsurance}
-        viewMode={viewMode}
-      />
+      <PaymentSection viewMode={viewMode} />
 
       <Divider orientation="left" plain />
-
       <Flex justify="space-between">
         <Space>
           <Button

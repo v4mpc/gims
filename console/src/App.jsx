@@ -47,6 +47,7 @@ export default function App() {
             <Route path="stock-on-hand" element={<StockOnhand />} />
             <Route path="buy" element={<Buy />} />
             <Route path="sell" element={<Sell />} />
+              <Route path="customers" element={<Customer />} />
 
             <Route path="reports" element={<Reports />} />
 
@@ -61,7 +62,6 @@ export default function App() {
 
             <Route path="settings/units" element={<Unit />} />
             <Route path="settings/categories" element={<Category />} />
-            <Route path="settings/customers" element={<Customer />} />
             <Route path="settings/products" element={<Product />} />
             <Route
               path="settings/payment-catalog"
