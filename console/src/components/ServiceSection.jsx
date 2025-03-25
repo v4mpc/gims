@@ -10,16 +10,9 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const ServiceSection = ({
-  form,
-  saveOnlyValidations,
-  editMode,
-  fields,
-  setFields,
-  services,
-  setServices,
-  viewMode,
-}) => {
+const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
+  const form = Form.useFormInstance();
+  const [services, setServices] = useState([]);
   const results = useQueries({
     queries: [
       {
@@ -41,52 +34,47 @@ const ServiceSection = ({
     if (form.getFieldValue("selectedService") === undefined) {
       return;
     }
-
+    const serviceId = form.getFieldValue("selectedService");
     const [serviceObject] = serviceCatalogQuery.data.filter(
-      (s) => s.id === form.getFieldValue("selectedService"),
+      (s) => s.id === serviceId,
     );
-    const nextKey = fields.length;
-    setFields([
-      ...fields,
-      {
-        key: nextKey,
-        names: [
-          `sitemName_${nextKey}`,
-          `sprice_${nextKey}`,
-          `squantity_${nextKey}`,
-          `stotal_${nextKey}`,
-        ],
-      },
-    ]);
-    setServices((curr) => curr.filter((c) => c.id !== serviceObject.id));
+    const fields = form.getFieldValue("services") || [];
     form.setFieldsValue({
-      [`sitemName_${nextKey}`]: serviceObject.name,
-      [`sprice_${nextKey}`]: serviceObject.cost,
+      services: [
+        ...fields,
+        {
+          id: serviceObject.id,
+          item: serviceObject.name,
+          price: serviceObject.cost,
+          quantity: serviceObject.quantity,
+          total: serviceObject.price * serviceObject.quantity,
+        },
+      ],
     });
     form.resetFields(["selectedService"]);
+    setServices((prevState) => prevState.filter((s) => s.id !== serviceId));
   };
 
   const removeField = (key) => {
-    const itemName = form.getFieldValue(`sitemName_${key}`);
-    const [removedServiceObject] = serviceCatalogQuery.data.filter(
-      (s) => s.name === itemName,
+    console.log(key);
+    const fields = form.getFieldValue("services") || [];
+    const [selectedService] = fields.filter((f, index) => index === key);
+    const [foundService] = serviceCatalogQuery.data.filter(
+      (s) => s.id === selectedService.id,
     );
-    setFields(fields.filter((field) => field.key !== key));
-    setServices([...services, removedServiceObject]);
-  };
 
-  const onPriceChange = (e, key) => {
-    const quantity = form.getFieldValue(`squantity_${key}`) ?? 0;
-    form.setFieldsValue({
-      [`stotal_${key}`]: e * quantity,
-    });
-  };
+    console.log(foundService);
 
-  const onQuantityChange = (e, key) => {
-    const price = form.getFieldValue(`sprice_${key}`) ?? 0;
+    setServices((prevState) => [
+      ...prevState,
+      { id: foundService.id, name: foundService.name },
+    ]);
+
     form.setFieldsValue({
-      [`stotal_${key}`]: price * e,
+      services: fields.filter((_, index) => index !== key),
     });
+
+    console.log(form.getFieldValue("services"));
   };
 
   return (
@@ -132,75 +120,76 @@ const ServiceSection = ({
         </Space>
       )}
 
-      {fields.map((field, index) => (
-        <Space
-          key={field.key}
-          style={{ display: "flex", marginBottom: 5 }}
-          align="baseline"
-        >
-          <Form.Item
-            name={field.names[0]}
-            label={field.key === 0 ? "Item" : ""}
-          >
-            <Input disabled style={{ width: "250px" }} placeholder="Item" />
-          </Form.Item>
-          <Form.Item
-            name={field.names[1]}
-            label={field.key === 0 ? "Price" : ""}
-            rules={[
-              ...(saveOnlyValidations
-                ? []
-                : [{ required: true, message: "Missing price" }]),
-            ]}
-          >
-            <InputNumber
-              style={{ width: "150px" }}
-              formatter={thousanSeparatorformatter}
-              parser={thousanSeparatorparser}
-              min={1}
-              onChange={(value) => onPriceChange(value, field.key)}
-              placeholder="Price"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name={field.names[2]}
-            label={field.key === 0 ? "Quantity" : ""}
-            rules={[
-              ...(saveOnlyValidations
-                ? []
-                : [{ required: true, message: "Missing quantity" }]),
-            ]}
-          >
-            <InputNumber
-              onChange={(value) => onQuantityChange(value, field.key)}
-              formatter={thousanSeparatorformatter}
-              parser={thousanSeparatorparser}
-              placeholder="Quantity"
-              min={1}
-            />
-          </Form.Item>
-
-          <Space align={field.key === 0 ? undefined : "baseline"}>
-            <Form.Item
-              name={field.names[3]}
-              label={field.key === 0 ? "Total" : ""}
+      {/*    start*/}
+      <Form.List name="services">
+        {(fields, { add, remove }) =>
+          fields.map(({ key, name, ...restField }) => (
+            <Space
+              key={key}
+              style={{ display: "flex", marginBottom: 5 }}
+              align="baseline"
             >
-              <InputNumber
-                formatter={thousanSeparatorformatter}
-                parser={thousanSeparatorparser}
-                disabled
-                style={{ width: "200px" }}
-                placeholder="Total"
-              />
-            </Form.Item>
+              <Form.Item name={[name, "item"]} label={key === 0 ? "Item" : ""}>
+                <Input style={{ width: "250px" }} placeholder="Item" />
+              </Form.Item>
+              <Form.Item
+                name={[name, "price"]}
+                label={key === 0 ? "Price" : ""}
+                rules={[
+                  ...(saveOnlyValidations
+                    ? []
+                    : [{ required: true, message: "Missing price" }]),
+                ]}
+              >
+                <InputNumber
+                  style={{ width: "150px" }}
+                  formatter={thousanSeparatorformatter}
+                  parser={thousanSeparatorparser}
+                  min={1}
+                  placeholder="Price"
+                />
+              </Form.Item>
 
-            {viewMode || (
-              <MinusCircleOutlined onClick={() => removeField(field.key)} />
-            )}
-          </Space>
-        </Space>
-      ))}
+              <Form.Item
+                name={[name, "quantity"]}
+                label={key === 0 ? "Quantity" : ""}
+                rules={[
+                  ...(saveOnlyValidations
+                    ? []
+                    : [{ required: true, message: "Missing quantity" }]),
+                ]}
+              >
+                <InputNumber
+                  formatter={thousanSeparatorformatter}
+                  parser={thousanSeparatorparser}
+                  placeholder="Quantity"
+                  min={1}
+                />
+              </Form.Item>
+
+              <Space align={key === 0 ? undefined : "baseline"}>
+                <Form.Item
+                  name={[name, "total"]}
+                  label={key === 0 ? "Total" : ""}
+                >
+                  <InputNumber
+                    formatter={thousanSeparatorformatter}
+                    parser={thousanSeparatorparser}
+                    disabled
+                    style={{ width: "200px" }}
+                    placeholder="Total"
+                  />
+                </Form.Item>
+
+                {viewMode || (
+                  <MinusCircleOutlined onClick={() => removeField(key)} />
+                )}
+              </Space>
+            </Space>
+          ))
+        }
+      </Form.List>
+      {/*    end*/}
     </Flex>
   );
 };

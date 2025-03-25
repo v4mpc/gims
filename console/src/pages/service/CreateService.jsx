@@ -36,8 +36,6 @@ const CreateService = () => {
   const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
   const queryClient = useQueryClient();
   const [spareFields, setSpareFields] = useState([]);
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const [payViaInsurance, setPayViaInsurance] = useState(false);
   const editMode = id !== undefined;
   const viewMode = pathname.toLowerCase().endsWith("view") && id !== undefined;
 
@@ -143,8 +141,6 @@ const CreateService = () => {
       const [selectedPayment] = paymentCatalogQuery.data.filter(
         (pc) => pc.id === serviceQuery.data.service?.paymentMethod.id,
       );
-      setSelectedPayment(selectedPayment);
-      setPayViaInsurance(serviceQuery.data.service?.payViaInsurance);
       form.setFieldsValue({
         customerName: serviceQuery.data.customerName,
         customerPhone: serviceQuery.data.customerPhone,
@@ -240,23 +236,6 @@ const CreateService = () => {
       });
     }
 
-      // if (Object.hasOwn(changed, "services")) {
-      //     form.setFieldsValue({
-      //         totals: form.getFieldValue("totals").map((total, key) =>
-      //             key === 1
-      //                 ? {
-      //                     ...total,
-      //                     amount: form
-      //                         .getFieldValue("payments")
-      //                         .reduce(
-      //                             (acc, curr) => Number(acc) + Number(curr?.amount ?? 0),
-      //                             0,
-      //                         ),
-      //                 }
-      //                 : total,
-      //         ),
-      //     });
-      // }
 
 
 
@@ -432,13 +411,7 @@ const CreateService = () => {
       </Divider>
 
       <ServiceSection
-        form={form}
         saveOnlyValidations={saveOnlyValidations}
-        editMode={editMode}
-        fields={fields}
-        setFields={setFields}
-        services={services}
-        setServices={setServices}
         viewMode={viewMode}
       />
 
