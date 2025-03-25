@@ -34,11 +34,11 @@ function PaymentSection({ viewMode }) {
   const [totalPaid, setTotalPaid] = useState(0);
   const totalLabels = ["Total Cost", "Total Paid", "Remaining Amount"];
 
-  useEffect(() => {
-    form.setFieldsValue({
-      totals: [{ amount: 0 }, { amount: 0 }, { amount: 0 }],
-    });
-  }, [form]);
+  // useEffect(() => {
+  //   form.setFieldsValue({
+  //     totals: [{ amount: 0 }, { amount: 0 }, { amount: 0 }],
+  //   });
+  // }, [form]);
 
   const columns = [
     {

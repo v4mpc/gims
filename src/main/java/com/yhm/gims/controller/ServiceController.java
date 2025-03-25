@@ -30,16 +30,17 @@ public class ServiceController {
     @PostMapping
     public ResponseEntity<ApiResponse<String>> save(@Valid @RequestBody GService service) {
         serviceService.save(service);
-        ApiResponse<String> response = new ApiResponse<>(true, "Success", "Saved");
+        ApiResponse<String> response = new ApiResponse<>(true, "Success", "Created");
         return ResponseEntity.ok(response);
 
     }
 
 
     @PutMapping("{id}")
-    public ResponseEntity<GService> update(@PathVariable int id, @RequestBody GService service) {
-        GService p = serviceService.update(service, id);
-        return ResponseEntity.ok(p);
+    public ResponseEntity<ApiResponse<String>> update(@PathVariable int id, @RequestBody GService service) {
+        serviceService.update(service, id);
+        ApiResponse<String> response = new ApiResponse<>(true, "Success", "Updated");
+        return ResponseEntity.ok(response);
     }
 
 

@@ -68,7 +68,6 @@ export function openNotification(key, type, title, description) {
   });
 }
 
-
 export function toCustomerCars(customers) {
   const listOfListOfcars = customers.map((customer) => {
     return customer.cars.map((car) => ({
@@ -84,7 +83,6 @@ export function toCustomerCars(customers) {
 
   return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
 }
-
 
 export function toModelList(form, fields, sparefields) {
   const servicesList = fields.map((f) => ({
@@ -232,27 +230,25 @@ export function optionLabelFilter(input, option) {
 }
 
 export function updateTotalCost(form) {
-  return form.getFieldValue("totals").map((total, key) =>
+  const totals = form.getFieldValue("totals") ?? [];
+  const services = form.getFieldValue("services") ?? [];
+  const serviceTotal = services.reduce(
+    (acc, curr) =>
+      Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+    0,
+  );
+  const spares = form.getFieldValue("spares") ?? [];
+  const spareTotal =
+    spares.reduce(
+      (acc, curr) =>
+        Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+      0,
+    ) ?? 0;
+  return totals.map((total, key) =>
     key === 0
       ? {
           ...total,
-          amount:
-            form
-              .getFieldValue("services")
-              .reduce(
-                (acc, curr) =>
-                  Number(acc) +
-                  Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
-                0,
-              ) +
-            form
-              .getFieldValue("spares")
-              .reduce(
-                (acc, curr) =>
-                  Number(acc) +
-                  Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
-                0,
-              ),
+          amount: serviceTotal + spareTotal,
         }
       : total,
   );

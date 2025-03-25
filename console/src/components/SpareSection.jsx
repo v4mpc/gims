@@ -40,8 +40,6 @@ const SpareSection = ({
 
   useEffect(() => {
     if (editMode && serviceQuery.data) {
-      console.log(serviceQuery.data);
-      console.log(spareCatalogQuery.data);
       const selectedSpareIds = serviceQuery.data.service?.spares.map(
         (s) => s.itemId,
       );
@@ -53,6 +51,7 @@ const SpareSection = ({
       );
 
       form.setFieldsValue({
+        totals: updateTotalCost(form),
         spares: serviceQuery.data.service?.spares.map((s) => {
           const [spareObject] = spareCatalogQuery.data.filter(
             (fc) => fc.product.id === s.itemId,

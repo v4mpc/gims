@@ -36,7 +36,6 @@ const ServiceSection = ({
 
   useEffect(() => {
     if (editMode && serviceQuery.data) {
-
       const selectedServiceNames = serviceQuery.data.service?.services.map(
         (s) => s.item,
       );
@@ -47,6 +46,7 @@ const ServiceSection = ({
       );
 
       form.setFieldsValue({
+        totals: updateTotalCost(form),
         services: serviceQuery.data.service?.services.map((s) => ({
           id: s.id,
           item: s.item,

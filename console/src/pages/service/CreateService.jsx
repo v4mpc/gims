@@ -49,29 +49,20 @@ const CreateService = () => {
       },
     ],
   });
-  const [
-    paymentCatalogQuery,
-    serviceQuery,
-  ] = results;
+  const [paymentCatalogQuery, serviceQuery] = results;
 
   useEffect(() => {
     form.setFieldsValue({
       spares: [],
       payments: [],
       services: [],
+      totals: [{ amount: 0 }, { amount: 0 }, { amount: 0 }],
       status: "DRAFT",
     });
   }, []);
 
   useEffect(() => {
-    if (
-      editMode &&
-      serviceQuery.data &&
-      paymentCatalogQuery.data
-    ) {
-
-
-
+    if (editMode && serviceQuery.data && paymentCatalogQuery.data) {
       form.setFieldsValue({
         customerName: serviceQuery.data.customerName,
         customerPhone: serviceQuery.data.customerPhone,
@@ -81,13 +72,8 @@ const CreateService = () => {
         make: serviceQuery.data.service?.customerCar.make,
         status: serviceQuery.data.service?.status,
       });
-
     }
-  }, [
-    editMode,
-    serviceQuery.data,
-    paymentCatalogQuery.data,
-  ]);
+  }, [editMode, serviceQuery.data, paymentCatalogQuery.data]);
 
   const { mutate: createItem, isLoading: isCreating } = useMutation({
     mutationFn: putItem,
@@ -216,7 +202,6 @@ const CreateService = () => {
               spares: _spares,
               status: status,
             };
-            console.log(updatedValues);
             const data = {
               values: updatedValues,
               urlPath: API_ROUTES.services,
@@ -227,7 +212,7 @@ const CreateService = () => {
             const updatedValues = {
               ...values,
               services: _services,
-              spares: [],
+              spares: _spares,
               status: status,
             };
             const data = {
@@ -303,7 +288,7 @@ const CreateService = () => {
       disabled={viewMode}
     >
       <Flex justify="flex-end">
-        <StatusTag status={form?.getFieldValue("status")} />
+        <StatusTag status={serviceQuery.data.service?.status} />
       </Flex>
       <Divider orientation="left" plain>
         Customer
