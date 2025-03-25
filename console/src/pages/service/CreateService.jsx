@@ -221,6 +221,7 @@ const CreateService = () => {
   });
 
   const onValueChanged = (changed, all) => {
+      console.log(changed);
     if (Object.hasOwn(changed, "payments")) {
       form.setFieldsValue({
         totals: form.getFieldValue("totals").map((total, key) =>
@@ -238,6 +239,27 @@ const CreateService = () => {
         ),
       });
     }
+
+      // if (Object.hasOwn(changed, "services")) {
+      //     form.setFieldsValue({
+      //         totals: form.getFieldValue("totals").map((total, key) =>
+      //             key === 1
+      //                 ? {
+      //                     ...total,
+      //                     amount: form
+      //                         .getFieldValue("payments")
+      //                         .reduce(
+      //                             (acc, curr) => Number(acc) + Number(curr?.amount ?? 0),
+      //                             0,
+      //                         ),
+      //                 }
+      //                 : total,
+      //         ),
+      //     });
+      // }
+
+
+
 
     form.setFieldsValue({
       grandTotal: serviceGrandTotal(form, fields, spareFields) ?? 0,
@@ -383,22 +405,7 @@ const CreateService = () => {
     }, 0);
   };
 
-  const onPaymentChanged = (paymentId) => {
-    const [selectedPayment] = paymentCatalogQuery.data.filter(
-      (pc) => pc.id === paymentId,
-    );
-    setSelectedPayment(selectedPayment);
 
-    if (selectedPayment.accountNumber !== null) {
-      form.setFieldsValue({
-        accountNumber: selectedPayment.accountNumber,
-      });
-    }
-  };
-
-  const onPayViaInsuranceChanged = (e) => {
-    setPayViaInsurance(e.target.checked);
-  };
 
   return (
     <Form
