@@ -26,7 +26,6 @@ import PrintButtons from "../../components/PrintButtons.jsx";
 const CreateService = () => {
   const [form] = Form.useForm();
   const { pathname } = useLocation();
-  const [services, setServices] = useState([]);
   const [spares, setSpares] = useState([]);
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
@@ -34,7 +33,7 @@ const CreateService = () => {
   const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
   const queryClient = useQueryClient();
   const [spareFields, setSpareFields] = useState([]);
-  const editMode = id !== undefined;
+  const editMode = pathname.toLowerCase().endsWith("edit") && id !== undefined;
   const viewMode = pathname.toLowerCase().endsWith("view") && id !== undefined;
 
   const results = useQueries({
@@ -48,19 +47,11 @@ const CreateService = () => {
       {
         queryKey: ["singleService", id],
         placeholderData: [],
-
         enabled: editMode,
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
       {
-        queryKey: ["serviceAll"],
-        placeholderData: [],
-        queryFn: () => getLookupData(API_ROUTES.serviceCatalogsAll),
-      },
-
-      {
         queryKey: ["spareAll"],
-
         placeholderData: [],
         queryFn: () =>
           getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
@@ -70,14 +61,8 @@ const CreateService = () => {
   const [
     paymentCatalogQuery,
     serviceQuery,
-    serviceCatalogQuery,
     spareCatalogQuery,
   ] = results;
-
-  // useEffect(() => {
-  //   setServices(serviceCatalogQuery.data);
-  //   setSpares(spareCatalogQuery.data);
-  // }, [serviceCatalogQuery.data, spareCatalogQuery.data]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -95,16 +80,6 @@ const CreateService = () => {
       paymentCatalogQuery.data &&
       spareCatalogQuery.data
     ) {
-      const serviceTotal = serviceQuery.data?.service?.services.reduce(
-        (acc, cr) => acc + cr.quantity * cr.price,
-        0,
-      );
-
-      const spareTotal = serviceQuery.data.service?.spares.reduce(
-        (acc, cr) => acc + cr.quantity * cr.price,
-        0,
-      );
-
       const { serviceValues, spareValues, formSpareFields, formFields } =
         toFormList(
           serviceQuery.data.service?.services ?? [],
@@ -113,21 +88,11 @@ const CreateService = () => {
         );
       //
 
-      const selectedServices = serviceQuery.data.service?.services.map(
-        (s) => s.item,
-      );
-
       const selectedSpares = serviceQuery.data.service?.spares.map(
         (s) => s.itemId,
       );
 
-      setFields(formFields);
       setSpareFields(formSpareFields);
-      setServices(
-        serviceCatalogQuery.data.filter(
-          (s) => !selectedServices?.includes(s.name),
-        ),
-      );
 
       setSpares(
         spareCatalogQuery.data.filter(
@@ -145,8 +110,6 @@ const CreateService = () => {
         status: serviceQuery.data.service?.status,
       });
 
-      form.setFieldsValue(serviceValues);
-      form.setFieldsValue(spareValues);
     }
   }, [
     editMode,
@@ -366,7 +329,7 @@ const CreateService = () => {
       onValuesChange={onValueChanged}
       layout="vertical"
       autoComplete="off"
-      disabled={editMode}
+      disabled={viewMode}
     >
       <Flex justify="flex-end">
         <StatusTag status={form?.getFieldValue("status")} />
@@ -383,7 +346,9 @@ const CreateService = () => {
 
       <ServiceSection
         saveOnlyValidations={saveOnlyValidations}
+        serviceQuery={serviceQuery}
         viewMode={viewMode}
+        editMode={editMode}
       />
 
       <Divider orientation="left" plain>
@@ -395,6 +360,8 @@ const CreateService = () => {
       <SpareSection
         saveOnlyValidations={saveOnlyValidations}
         viewMode={viewMode}
+        serviceQuery={serviceQuery}
+        editMode={editMode}
       />
 
       <PaymentSection viewMode={viewMode} />

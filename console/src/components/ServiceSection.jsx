@@ -11,13 +11,17 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
+const ServiceSection = ({
+  saveOnlyValidations,
+  viewMode,
+  editMode,
+  serviceQuery,
+}) => {
   const form = Form.useFormInstance();
   const [services, setServices] = useState([]);
   const results = useQueries({
     queries: [
       {
-        staleTime: 1000 * 60 * 20,
         queryKey: ["serviceAll"],
         placeholderData: [],
         queryFn: () => getLookupData(API_ROUTES.serviceCatalogsAll),
@@ -26,10 +30,33 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
   });
 
   const [serviceCatalogQuery] = results;
-
   useEffect(() => {
     setServices(serviceCatalogQuery.data);
   }, [serviceCatalogQuery.data]);
+
+  useEffect(() => {
+    if (editMode && serviceQuery.data) {
+
+      const selectedServiceNames = serviceQuery.data.service?.services.map(
+        (s) => s.item,
+      );
+      setServices(
+        serviceCatalogQuery.data.filter(
+          (s) => !selectedServiceNames?.includes(s.name),
+        ),
+      );
+
+      form.setFieldsValue({
+        services: serviceQuery.data.service?.services.map((s) => ({
+          id: s.id,
+          item: s.item,
+          price: s.price,
+          quantity: s.quantity,
+          total: s.quantity * s.price,
+        })),
+      });
+    }
+  }, [editMode, form, serviceCatalogQuery.data, serviceQuery.data]);
 
   const addField = () => {
     if (form.getFieldValue("selectedService") === undefined) {
@@ -56,11 +83,10 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
   };
 
   const removeField = (key) => {
-    console.log(key);
     const fields = form.getFieldValue("services") || [];
     const [selectedService] = fields.filter((f, index) => index === key);
     const [foundService] = serviceCatalogQuery.data.filter(
-      (s) => s.id === selectedService.id,
+      (s) => s.name === selectedService.item,
     );
     setServices((prevState) => [
       ...prevState,
@@ -129,7 +155,7 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
               align="baseline"
             >
               <Form.Item name={[name, "item"]} label={key === 0 ? "Item" : ""}>
-                <Input style={{ width: "250px" }} placeholder="Item" />
+                <Input style={{ width: "250px" }} disabled />
               </Form.Item>
               <Form.Item
                 name={[name, "price"]}

@@ -56,7 +56,7 @@ export default function App() {
             <Route path="paint/create" element={<CreatePaint key="create-paint" />} />
 
             <Route path="service" element={<ListService />} />
-            <Route path="service/:id" element={<CreateService key="edit-service" />} />
+            <Route path="service/:id/edit" element={<CreateService key="edit-service" />} />
             <Route path="service/:id/view" element={<CreateService key="view-service" />} />
             <Route path="service/create" element={<CreateService key="create-service" />} />
 

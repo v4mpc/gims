@@ -12,7 +12,12 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const SpareSection = ({ saveOnlyValidations, viewMode }) => {
+const SpareSection = ({
+  saveOnlyValidations,
+  viewMode,
+  editMode,
+  serviceQuery,
+}) => {
   const form = Form.useFormInstance();
   const [spares, setSpares] = useState([]);
   const results = useQueries({
@@ -32,6 +37,43 @@ const SpareSection = ({ saveOnlyValidations, viewMode }) => {
   useEffect(() => {
     setSpares(spareCatalogQuery.data);
   }, [spareCatalogQuery.data]);
+
+  useEffect(() => {
+    if (editMode && serviceQuery.data) {
+      console.log(serviceQuery.data);
+      console.log(spareCatalogQuery.data);
+      const selectedSpareIds = serviceQuery.data.service?.spares.map(
+        (s) => s.itemId,
+      );
+
+      setSpares(
+        spareCatalogQuery.data.filter(
+          (s) => !selectedSpareIds?.includes(s.product.id),
+        ),
+      );
+
+      form.setFieldsValue({
+        spares: serviceQuery.data.service?.spares.map((s) => {
+          const [spareObject] = spareCatalogQuery.data.filter(
+            (fc) => fc.product.id === s.itemId,
+          );
+
+          return {
+            id: s.itemId,
+            itemId: s.itemId,
+            item: s.item,
+            price: s.price,
+            quantity: s.quantity,
+            total: s.quantity * s.price,
+            unit: s.unit,
+            soh: spareObject.stockOnhand,
+            currentKm: s.currentKm,
+            nextKm: s.nextKm,
+          };
+        }),
+      });
+    }
+  }, [editMode, form, spareCatalogQuery.data, serviceQuery.data]);
 
   const addField = () => {
     if (form.getFieldValue("selectedSpare") === undefined) {
@@ -169,24 +211,26 @@ const SpareSection = ({ saveOnlyValidations, viewMode }) => {
                 label={key === 0 ? "Quantity" : ""}
                 rules={[
                   ...(saveOnlyValidations
-                    ? [{ required: true, message: "Missing quantity" },
+                    ? [
+                        { required: true, message: "Missing quantity" },
 
-                          {
-                              validator: async (_, value) => {
-                                  const [spare] = form
-                                      .getFieldValue("spares")
-                                      .filter((value, index) => index === key);
+                        {
+                          validator: async (_, value) => {
+                            const [spare] = form
+                              .getFieldValue("spares")
+                              .filter((value, index) => index === key);
 
-                                  if (value > spare.soh) {
-                                      return Promise.reject(
-                                          new Error(
-                                              "Quantity should be less or equal to Stock",
-                                          ),
-                                      );
-                                  }
-                                  return Promise.resolve();
-                              },
-                          },]
+                            if (value > spare.soh) {
+                              return Promise.reject(
+                                new Error(
+                                  "Quantity should be less or equal to Stock",
+                                ),
+                              );
+                            }
+                            return Promise.resolve();
+                          },
+                        },
+                      ]
                     : [
                         { required: true, message: "Missing quantity" },
 

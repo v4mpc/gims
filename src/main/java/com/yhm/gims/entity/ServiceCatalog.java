@@ -15,6 +15,7 @@ import lombok.*;
 public class ServiceCatalog extends BaseEntity {
 
     @NotNull
+    @Column(unique = true)
     private String name;
 
     @NotNull

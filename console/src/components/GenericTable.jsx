@@ -89,29 +89,37 @@ export default function GenericTable({
         ),
       };
     } else if (obj.key === "paint") {
-        return {
-            ...obj,
-            render: (_, record) => (
-                <Button
-                    type="primary"
-                    onClick={() =>navigateToLink(`${record.paint.id}`)}
-                >
-                    Edit
-                </Button>
-            ),
-        };
-    }else if(obj.key==="service"){
-        return {
-            ...obj,
-            render: (_, record) => (
-                <Button
-                    type="primary"
-                    onClick={() =>navigateToLink(`${record.service.id}/view`)}
-                >
-                    {record.service.status==="PAID"?"View":"Edit"}
-                </Button>
-            ),
-        };
+      return {
+        ...obj,
+        render: (_, record) => (
+          <Button
+            type="primary"
+            onClick={() => navigateToLink(`${record.paint.id}`)}
+          >
+            Edit
+          </Button>
+        ),
+      };
+    } else if (obj.key === "service") {
+      return {
+        ...obj,
+        render: (_, record) => (
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => navigateToLink(`${record.service.id}/view`)}
+            >
+              View
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => navigateToLink(`${record.service.id}/edit`)}
+            >
+              Edit
+            </Button>
+          </Space>
+        ),
+      };
     }
 
     return obj;
@@ -211,7 +219,7 @@ export default function GenericTable({
         )}
 
         {createLink != null && (
-          <Button type="primary" onClick={()=>navigate(createLink)}>
+          <Button type="primary" onClick={() => navigate(createLink)}>
             Add
           </Button>
         )}
