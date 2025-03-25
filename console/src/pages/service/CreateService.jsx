@@ -1,11 +1,4 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Form,
-  Space,
-  Tooltip,
-} from "antd";
+import { Button, Divider, Flex, Form, Space, Tooltip } from "antd";
 
 import ServiceSection from "../../components/ServiceSection.jsx";
 import SpareSection from "../../components/SpareSection.jsx";
@@ -265,18 +258,28 @@ const CreateService = () => {
             status = "UNPAID";
           }
 
-          const { services } = values;
+          const { services, spares } = values;
           const _services = services.map((s) => ({
             item: s.item,
             price: s.price,
             quantity: s.quantity,
           }));
 
+          const _spares = spares.map((s) => ({
+            itemId: s.itemId,
+            item: s.item,
+            price: s.price,
+            unit: s.unit,
+            quantity: s.quantity,
+            currentKm: s.currentKm,
+            nextKm: s.nextKm,
+          }));
+
           if (!editMode) {
             const updatedValues = {
               ...values,
               services: _services,
-              spares: [],
+              spares: _spares,
               status: status,
             };
             console.log(updatedValues);

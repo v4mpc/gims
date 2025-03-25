@@ -12,10 +12,7 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const SpareSection = ({
-  saveOnlyValidations,
-  viewMode,
-}) => {
+const SpareSection = ({ saveOnlyValidations, viewMode }) => {
   const form = Form.useFormInstance();
   const [spares, setSpares] = useState([]);
   const results = useQueries({
@@ -95,10 +92,6 @@ const SpareSection = ({
     });
   };
 
-
-
-
-
   return (
     <Flex vertical>
       {viewMode || (
@@ -176,24 +169,36 @@ const SpareSection = ({
                 label={key === 0 ? "Quantity" : ""}
                 rules={[
                   ...(saveOnlyValidations
-                    ? []
+                    ? [{ required: true, message: "Missing quantity" },
+
+                          {
+                              validator: async (_, value) => {
+                                  const [spare] = form
+                                      .getFieldValue("spares")
+                                      .filter((value, index) => index === key);
+
+                                  if (value > spare.soh) {
+                                      return Promise.reject(
+                                          new Error(
+                                              "Quantity should be less or equal to Stock",
+                                          ),
+                                      );
+                                  }
+                                  return Promise.resolve();
+                              },
+                          },]
                     : [
                         { required: true, message: "Missing quantity" },
 
                         {
                           validator: async (_, value) => {
-                            console.log(
-                              value,
-                              form.getFieldValue(`soh_${key}`),
-                            );
-                            if (value > form.getFieldValue(`soh_${key}`)) {
-                              console.log(
-                                value,
-                                form.getFieldValue(`soh_${key}`),
-                              );
+                            const [spare] = form
+                              .getFieldValue("spares")
+                              .filter((value, index) => index === key);
+                            if (value > spare.soh) {
                               return Promise.reject(
                                 new Error(
-                                  "Quantity should be less or equal to SOH",
+                                  "Quantity should be less or equal to Stock",
                                 ),
                               );
                             }

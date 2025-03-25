@@ -136,7 +136,7 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
                 label={key === 0 ? "Price" : ""}
                 rules={[
                   ...(saveOnlyValidations
-                    ? []
+                    ? [{ required: true, message: "Missing price" }]
                     : [{ required: true, message: "Missing price" }]),
                 ]}
               >
@@ -154,7 +154,7 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
                 label={key === 0 ? "Quantity" : ""}
                 rules={[
                   ...(saveOnlyValidations
-                    ? []
+                    ? [{ required: true, message: "Missing quantity" }]
                     : [{ required: true, message: "Missing quantity" }]),
                 ]}
               >
