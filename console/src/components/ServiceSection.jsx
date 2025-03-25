@@ -5,6 +5,7 @@ import {
   optionLabelFilter,
   thousanSeparatorformatter,
   thousanSeparatorparser,
+  updateTotalCost,
 } from "../utils.jsx";
 import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -47,7 +48,7 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
           item: serviceObject.name,
           price: serviceObject.cost,
           quantity: serviceObject.quantity,
-          total: serviceObject.price * serviceObject.quantity,
+          total: Number(serviceObject.price) * Number(serviceObject.quantity),
         },
       ],
     });
@@ -62,9 +63,6 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
     const [foundService] = serviceCatalogQuery.data.filter(
       (s) => s.id === selectedService.id,
     );
-
-    console.log(foundService);
-
     setServices((prevState) => [
       ...prevState,
       { id: foundService.id, name: foundService.name },
@@ -73,8 +71,10 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
     form.setFieldsValue({
       services: fields.filter((_, index) => index !== key),
     });
-
-    console.log(form.getFieldValue("services"));
+    //update quantity here
+    form.setFieldsValue({
+      totals: updateTotalCost(form),
+    });
   };
 
   return (

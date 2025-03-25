@@ -15,6 +15,7 @@ import {
   putItem,
   serviceGrandTotal,
   toFormList,
+  updateTotalCost,
 } from "../../utils.jsx";
 
 import styles from "../../components/CustomForm.module.css";
@@ -217,7 +218,7 @@ const CreateService = () => {
   });
 
   const onValueChanged = (changed, all) => {
-      console.log(changed);
+    console.log(changed);
     if (Object.hasOwn(changed, "payments")) {
       form.setFieldsValue({
         totals: form.getFieldValue("totals").map((total, key) =>
@@ -236,9 +237,15 @@ const CreateService = () => {
       });
     }
 
-
-
-
+    if (Object.hasOwn(changed, "services")) {
+      form.setFieldsValue({
+        totals: updateTotalCost(form),
+        services: all.services.map((s) => ({
+          ...s,
+          total: Number(s.quantity) * Number(s.price),
+        })),
+      });
+    }
 
     form.setFieldsValue({
       grandTotal: serviceGrandTotal(form, fields, spareFields) ?? 0,
@@ -383,8 +390,6 @@ const CreateService = () => {
         });
     }, 0);
   };
-
-
 
   return (
     <Form

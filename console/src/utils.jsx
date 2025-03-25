@@ -322,6 +322,24 @@ export function optionLabelFilter(input, option) {
   return option.label.toLowerCase().includes(input.toLowerCase());
 }
 
+export function updateTotalCost(form) {
+  return form.getFieldValue("totals").map((total, key) =>
+    key === 0
+      ? {
+          ...total,
+          amount: form
+            .getFieldValue("services")
+            .reduce(
+              (acc, curr) =>
+                Number(acc) +
+                Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+              0,
+            ),
+        }
+      : total,
+  );
+}
+
 export function filterOption(input, option) {
   return (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 }
