@@ -90,7 +90,7 @@ export default function Product() {
           </Form.Item>
 
           <Form.Item
-            label="Sale price"
+            label="Sell price"
             rules={[
               {
                 required: true,

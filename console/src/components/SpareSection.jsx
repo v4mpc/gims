@@ -1,94 +1,103 @@
 import { Button, Flex, Form, Input, InputNumber, Select, Space } from "antd";
 import {
   API_ROUTES,
+  generateSpareName,
   getLookupData,
   optionLabelFilter,
   thousanSeparatorformatter,
   thousanSeparatorparser,
+  updateTotalCost,
 } from "../utils.jsx";
 import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
 const SpareSection = ({
-  form,
   saveOnlyValidations,
-  sparefields,
-  setSparefields,
-  spares,
-  setSpares,
-  spareCatalogQuery,
   viewMode,
 }) => {
+  const form = Form.useFormInstance();
+  const [spares, setSpares] = useState([]);
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["spareAll"],
+
+        placeholderData: [],
+        queryFn: () =>
+          getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
+      },
+    ],
+  });
+
+  const [spareCatalogQuery] = results;
+
+  useEffect(() => {
+    setSpares(spareCatalogQuery.data);
+  }, [spareCatalogQuery.data]);
+
   const addField = () => {
     if (form.getFieldValue("selectedSpare") === undefined) {
       return;
     }
 
+    const spareId = form.getFieldValue("selectedSpare");
     const [spareObject] = spareCatalogQuery.data.filter(
-      (s) => s.product.id === form.getFieldValue("selectedSpare"),
+      (s) => s.product.id === spareId,
     );
-    const nextKey = sparefields.length;
-    setSparefields([
-      ...sparefields,
-      {
-        key: nextKey,
-        names: [
-          `itemId_${nextKey}`,
-          `itemName_${nextKey}`,
-          `unit_${nextKey}`,
-          `price_${nextKey}`,
-          `soh_${nextKey}`,
-          `quantity_${nextKey}`,
-          `total_${nextKey}`,
-          `currentKm_${nextKey}`,
-          `nextKm_${nextKey}`,
-        ],
-      },
-    ]);
-    setSpares((curr) =>
-      curr.filter((c) => c.product.id !== spareObject.product.id),
-    );
+
+    const fields = form.getFieldValue("spares") || [];
     form.setFieldsValue({
-      [`itemId_${nextKey}`]: spareObject.product.id,
-      [`itemName_${nextKey}`]: `${spareObject.product.code}-${spareObject.product.name}-${spareObject.product.category.name}`,
-      [`price_${nextKey}`]: spareObject.product.salePrice,
-      [`soh_${nextKey}`]: spareObject.stockOnhand,
-      [`unit_${nextKey}`]: spareObject.product.unitOfMeasure.code,
+      spares: [
+        ...fields,
+        {
+          id: spareObject.product.id,
+          itemId: spareObject.product.id,
+          item: generateSpareName(spareObject.product),
+          price: spareObject.product.salePrice,
+          unit: spareObject.product.unitOfMeasure.code,
+          soh: spareObject.stockOnhand,
+          total: 0,
+          currentKm: 0,
+          nextKm: 0,
+        },
+      ],
     });
+
     form.resetFields(["selectedSpare"]);
+    setSpares((prevState) => prevState.filter((s) => s.product.id !== spareId));
   };
 
   const isOilByKey = (key) => {
-    const itemId = form.getFieldValue(`itemId_${key}`);
+    const [spare] = form
+      .getFieldValue(`spares`)
+      .filter((value, index) => index === key);
     const [spareObject] = spareCatalogQuery.data.filter(
-      (s) => s.product.id === itemId,
+      (s) => s.product.id === spare.id,
     );
     return spareObject.product.isOil;
   };
 
   const removeField = (key) => {
-    const itemId = form.getFieldValue(`itemId_${key}`);
-    const [removedSpareObject] = spareCatalogQuery.data.filter(
-      (s) => s.product.id === itemId,
+    const fields = form.getFieldValue("spares") || [];
+    const [selectedSpares] = fields.filter((f, index) => index === key);
+    const [foundSpare] = spareCatalogQuery.data.filter(
+      (s) => s.product.id === selectedSpares.id,
     );
-    setSparefields(sparefields.filter((field) => field.key !== key));
-    setSpares([...spares, removedSpareObject]);
-  };
+    setSpares((prevState) => [...prevState, foundSpare]);
 
-  const onPriceChange = (e, key) => {
-    const quantity = form.getFieldValue(`quantity_${key}`) ?? 0;
     form.setFieldsValue({
-      [`total_${key}`]: e * quantity,
+      spares: fields.filter((_, index) => index !== key),
+    });
+    //update quantity here
+    form.setFieldsValue({
+      totals: updateTotalCost(form),
     });
   };
 
-  const onQuantityChange = (e, key) => {
-    const price = form.getFieldValue(`price_${key}`) ?? 0;
-    form.setFieldsValue({
-      [`total_${key}`]: price * e,
-    });
-  };
+
+
+
 
   return (
     <Flex vertical>
@@ -101,7 +110,7 @@ const SpareSection = ({
                 .filter((fc) => fc.stockOnhand > 0)
                 .map((c) => ({
                   value: c.product.id,
-                  label: `${c.product.code}-${c.product.name}-${c.product.category.name}`,
+                  label: generateSpareName(c.product),
                 }))}
               style={{ width: "450px" }}
               showSearch
@@ -116,155 +125,157 @@ const SpareSection = ({
         </Space>
       )}
 
-      {sparefields.map((field, index) => (
-        <Space
-          key={field.key}
-          style={{ display: "flex", marginBottom: 5 }}
-          align="baseline"
-        >
-          <Form.Item name={field.names[0]} hidden={true}>
-            <InputNumber disabled />
-          </Form.Item>
-
-          <Form.Item
-            name={field.names[1]}
-            label={field.key === 0 ? "Item" : ""}
-          >
-            <Input disabled style={{ width: "450px" }} placeholder="Item" />
-          </Form.Item>
-
-          <Form.Item
-            name={field.names[2]}
-            label={field.key === 0 ? "Unit" : ""}
-          >
-            <Input disabled style={{ width: "50px" }} />
-          </Form.Item>
-          <Form.Item
-            name={field.names[3]}
-            label={field.key === 0 ? "Price" : ""}
-            rules={[
-              ...(saveOnlyValidations
-                ? []
-                : [{ required: true, message: "Missing price" }]),
-            ]}
-          >
-            <InputNumber
-              style={{ width: "100px" }}
-              formatter={thousanSeparatorformatter}
-              parser={thousanSeparatorparser}
-              min={1}
-              onChange={(value) => onPriceChange(value, field.key)}
-              placeholder="Price"
-            />
-          </Form.Item>
-
-          <Form.Item name={field.names[4]} label={field.key === 0 ? "SOH" : ""}>
-            <InputNumber
-              formatter={thousanSeparatorformatter}
-              parser={thousanSeparatorparser}
-              placeholder="SOH"
-              disabled={true}
-              min={1}
-            />
-          </Form.Item>
-
-          <Form.Item
-            name={field.names[5]}
-            label={field.key === 0 ? "Quantity" : ""}
-            rules={[
-              ...(saveOnlyValidations
-                ? []
-                : [
-                    { required: true, message: "Missing quantity" },
-
-                    {
-                      validator: async (_, value) => {
-                        console.log(
-                          value,
-                          form.getFieldValue(`soh_${field.key}`),
-                        );
-                        if (value > form.getFieldValue(`soh_${field.key}`)) {
-                          console.log(
-                            value,
-                            form.getFieldValue(`soh_${field.key}`),
-                          );
-                          return Promise.reject(
-                            new Error(
-                              "Quantity should be less or equal to SOH",
-                            ),
-                          );
-                        }
-                        return Promise.resolve();
-                      },
-                    },
-                  ]),
-            ]}
-          >
-            <InputNumber
-              onChange={(value) => onQuantityChange(value, field.key)}
-              formatter={thousanSeparatorformatter}
-              parser={thousanSeparatorparser}
-              placeholder="Quantity"
-              min={1}
-            />
-          </Form.Item>
-
-          <Space align={field.key === 0 ? undefined : "baseline"}>
-            <Form.Item
-              name={field.names[6]}
-              label={field.key === 0 ? "Total" : ""}
+      <Form.List name="spares">
+        {(fields, { add, remove }) =>
+          fields.map(({ key, name, ...restField }) => (
+            <Space
+              key={key}
+              style={{ display: "flex", marginBottom: 5 }}
+              align="baseline"
             >
-              <InputNumber
-                formatter={thousanSeparatorformatter}
-                parser={thousanSeparatorparser}
-                disabled
-                style={{ width: "100px" }}
-                placeholder="Total"
-              />
-            </Form.Item>
+              <Form.Item name={[name, "itemId"]} hidden={true}>
+                <InputNumber disabled />
+              </Form.Item>
 
-            {isOilByKey(field.key) && (
-              <>
+              <Form.Item name={[name, "item"]} label={key === 0 ? "Item" : ""}>
+                <Input disabled style={{ width: "450px" }} placeholder="Item" />
+              </Form.Item>
+
+              <Form.Item name={[name, "unit"]} label={key === 0 ? "Unit" : ""}>
+                <Input disabled style={{ width: "50px" }} />
+              </Form.Item>
+              <Form.Item
+                name={[name, "price"]}
+                label={key === 0 ? "Price" : ""}
+                rules={[
+                  ...(saveOnlyValidations
+                    ? []
+                    : [{ required: true, message: "Missing price" }]),
+                ]}
+              >
+                <InputNumber
+                  style={{ width: "100px" }}
+                  formatter={thousanSeparatorformatter}
+                  parser={thousanSeparatorparser}
+                  min={1}
+                  placeholder="Price"
+                />
+              </Form.Item>
+
+              <Form.Item name={[name, "soh"]} label={key === 0 ? "Stock" : ""}>
+                <InputNumber
+                  formatter={thousanSeparatorformatter}
+                  parser={thousanSeparatorparser}
+                  disabled={true}
+                  min={1}
+                />
+              </Form.Item>
+
+              <Form.Item
+                name={[name, "quantity"]}
+                label={key === 0 ? "Quantity" : ""}
+                rules={[
+                  ...(saveOnlyValidations
+                    ? []
+                    : [
+                        { required: true, message: "Missing quantity" },
+
+                        {
+                          validator: async (_, value) => {
+                            console.log(
+                              value,
+                              form.getFieldValue(`soh_${key}`),
+                            );
+                            if (value > form.getFieldValue(`soh_${key}`)) {
+                              console.log(
+                                value,
+                                form.getFieldValue(`soh_${key}`),
+                              );
+                              return Promise.reject(
+                                new Error(
+                                  "Quantity should be less or equal to SOH",
+                                ),
+                              );
+                            }
+                            return Promise.resolve();
+                          },
+                        },
+                      ]),
+                ]}
+              >
+                <InputNumber
+                  formatter={thousanSeparatorformatter}
+                  parser={thousanSeparatorparser}
+                  placeholder="Quantity"
+                  min={1}
+                />
+              </Form.Item>
+
+              <Space align={key === 0 ? undefined : "baseline"}>
                 <Form.Item
-                  name={field.names[7]}
-                  rules={[
-                    ...(saveOnlyValidations
-                      ? []
-                      : [{ required: true, message: "Missing current Kms" }]),
-                  ]}
-                  label={field.key === 0 ? "Current Kms" : ""}
+                  name={[name, "total"]}
+                  label={key === 0 ? "Total" : ""}
                 >
                   <InputNumber
                     formatter={thousanSeparatorformatter}
                     parser={thousanSeparatorparser}
-                    style={{ width: "150px" }}
-                    placeholder="Current Kms"
+                    disabled
+                    style={{ width: "100px" }}
+                    placeholder="Total"
                   />
                 </Form.Item>
 
-                <Form.Item
-                  name={field.names[8]}
-                  label={field.key === 0 ? "Next Kms" : ""}
-                  rules={[
-                    ...(saveOnlyValidations
-                      ? []
-                      : [{ required: true, message: "Missing next Kms" }]),
-                  ]}
-                >
-                  <InputNumber
-                    formatter={thousanSeparatorformatter}
-                    parser={thousanSeparatorparser}
-                    style={{ width: "150px" }}
-                    placeholder="Next Kms"
-                  />
-                </Form.Item>
-              </>
-            )}
+                {isOilByKey(key) && (
+                  <>
+                    <Form.Item
+                      name={[name, "currentKm"]}
+                      rules={[
+                        ...(saveOnlyValidations
+                          ? []
+                          : [
+                              {
+                                required: true,
+                                message: "Missing current Kms",
+                              },
+                            ]),
+                      ]}
+                      label={key === 0 ? "Current Kms" : ""}
+                    >
+                      <InputNumber
+                        formatter={thousanSeparatorformatter}
+                        parser={thousanSeparatorparser}
+                        style={{ width: "150px" }}
+                        placeholder="Current Kms"
+                      />
+                    </Form.Item>
 
-              {viewMode||<MinusCircleOutlined onClick={() => removeField(field.key)} />}
-          </Space>
-        </Space>
-      ))}
+                    <Form.Item
+                      name={[name, "nextKm"]}
+                      label={key === 0 ? "Next Kms" : ""}
+                      rules={[
+                        ...(saveOnlyValidations
+                          ? []
+                          : [{ required: true, message: "Missing next Kms" }]),
+                      ]}
+                    >
+                      <InputNumber
+                        formatter={thousanSeparatorformatter}
+                        parser={thousanSeparatorparser}
+                        style={{ width: "150px" }}
+                        placeholder="Next Kms"
+                      />
+                    </Form.Item>
+                  </>
+                )}
+
+                {viewMode || (
+                  <MinusCircleOutlined onClick={() => removeField(key)} />
+                )}
+              </Space>
+            </Space>
+          ))
+        }
+      </Form.List>
     </Flex>
   );
 };

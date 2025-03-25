@@ -184,6 +184,10 @@ export function toModelList(form, fields, sparefields) {
   return { servicesList, spareList };
 }
 
+export function generateSpareName(product) {
+  return `${product.isOil ? "💧" : "⚙️"}${product.code}/${product.name}/${product.category.name}`;
+}
+
 const getItemParams = (tableParams, searchQuery, searchCategory) => ({
   size: tableParams.pagination?.pageSize,
   page: tableParams.pagination?.current - 1,
@@ -310,14 +314,23 @@ export function updateTotalCost(form) {
     key === 0
       ? {
           ...total,
-          amount: form
-            .getFieldValue("services")
-            .reduce(
-              (acc, curr) =>
-                Number(acc) +
-                Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
-              0,
-            ),
+          amount:
+            form
+              .getFieldValue("services")
+              .reduce(
+                (acc, curr) =>
+                  Number(acc) +
+                  Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+                0,
+              ) +
+            form
+              .getFieldValue("spares")
+              .reduce(
+                (acc, curr) =>
+                  Number(acc) +
+                  Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+                0,
+              ),
         }
       : total,
   );

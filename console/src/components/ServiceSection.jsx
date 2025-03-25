@@ -47,8 +47,7 @@ const ServiceSection = ({ saveOnlyValidations, viewMode }) => {
           id: serviceObject.id,
           item: serviceObject.name,
           price: serviceObject.cost,
-          quantity: serviceObject.quantity,
-          total: Number(serviceObject.price) * Number(serviceObject.quantity),
+          total: 0,
         },
       ],
     });

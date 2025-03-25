@@ -1,19 +1,23 @@
-import { Button, Divider, Dropdown, Flex, Form, Skeleton, Space } from "antd";
+import {
+  Button,
+  Divider,
+  Flex,
+  Form,
+  Space,
+  Tooltip,
+} from "antd";
 
 import ServiceSection from "../../components/ServiceSection.jsx";
 import SpareSection from "../../components/SpareSection.jsx";
 import CustomerSection from "../../components/CustomerSection.jsx";
-import PaymentMethodSection from "../../components/PaymentMethodSection.jsx";
 import PaymentSection from "../../components/PaymentSection.jsx";
 import {
   API_ROUTES,
-  DATE_FORMAT,
   DEFAULT_PAGE_SIZE,
   getLookupData,
   toModelList,
   openNotification,
   putItem,
-  serviceGrandTotal,
   toFormList,
   updateTotalCost,
 } from "../../utils.jsx";
@@ -77,16 +81,16 @@ const CreateService = () => {
     spareCatalogQuery,
   ] = results;
 
-  useEffect(() => {
-    setServices(serviceCatalogQuery.data);
-    setSpares(spareCatalogQuery.data);
-  }, [serviceCatalogQuery.data, spareCatalogQuery.data]);
+  // useEffect(() => {
+  //   setServices(serviceCatalogQuery.data);
+  //   setSpares(spareCatalogQuery.data);
+  // }, [serviceCatalogQuery.data, spareCatalogQuery.data]);
 
   useEffect(() => {
     form.setFieldsValue({
-      initialPayment: 0,
-      finalPayment: 0,
-      grandTotal: 0,
+      spares: [],
+      payments: [],
+      services: [],
       status: "DRAFT",
     });
   }, []);
@@ -138,10 +142,6 @@ const CreateService = () => {
         ),
       );
 
-      const grandTotal = serviceTotal + spareTotal;
-      const [selectedPayment] = paymentCatalogQuery.data.filter(
-        (pc) => pc.id === serviceQuery.data.service?.paymentMethod.id,
-      );
       form.setFieldsValue({
         customerName: serviceQuery.data.customerName,
         customerPhone: serviceQuery.data.customerPhone,
@@ -149,24 +149,7 @@ const CreateService = () => {
         plateNumber: serviceQuery.data.service?.customerCar.plateNumber,
         model: serviceQuery.data.service?.customerCar.model,
         make: serviceQuery.data.service?.customerCar.make,
-        initialPayment: serviceQuery.data.service?.initialPayment,
-        initialPaymentDate:
-          serviceQuery.data.service?.initialPaymentDate !== null
-            ? dayjs(serviceQuery.data.service?.initialPaymentDate, DATE_FORMAT)
-            : null,
-        finalPaymentDate:
-          serviceQuery.data.service?.finalPaymentDate !== null
-            ? dayjs(serviceQuery.data.service?.finalPaymentDate, DATE_FORMAT)
-            : null,
-        finalPayment: serviceQuery.data.service?.finalPayment,
-
-        paymentMethod: serviceQuery.data.service?.paymentMethod.id,
         status: serviceQuery.data.service?.status,
-        grandTotal: grandTotal,
-        insuranceName: serviceQuery.data.service?.insuranceName,
-        payViaInsurance: serviceQuery.data.service?.payViaInsurance,
-        accountNumber: serviceQuery.data.service?.paymentMethod.accountNumber,
-        accountName: serviceQuery.data.service?.paymentMethod.accountName,
       });
 
       form.setFieldsValue(serviceValues);
@@ -247,9 +230,15 @@ const CreateService = () => {
       });
     }
 
-    form.setFieldsValue({
-      grandTotal: serviceGrandTotal(form, fields, spareFields) ?? 0,
-    });
+    if (Object.hasOwn(changed, "spares")) {
+      form.setFieldsValue({
+        totals: updateTotalCost(form),
+        spares: all.spares.map((s) => ({
+          ...s,
+          total: Number(s.quantity) * Number(s.price),
+        })),
+      });
+    }
   };
 
   const saveForLater = () => {
@@ -260,9 +249,7 @@ const CreateService = () => {
         name: "selectedService",
         errors: [],
       },
-
     ]);
-
 
     setTimeout(() => {
       form
@@ -397,17 +384,13 @@ const CreateService = () => {
       />
 
       <Divider orientation="left" plain>
-        Spare
+        <Tooltip title="Spare is SpareCode/SpareName/SpareCategory">
+          <span>Spares</span>
+        </Tooltip>
       </Divider>
 
       <SpareSection
-        form={form}
         saveOnlyValidations={saveOnlyValidations}
-        setSparefields={setSpareFields}
-        sparefields={spareFields}
-        spares={spares}
-        setSpares={setSpares}
-        spareCatalogQuery={spareCatalogQuery}
         viewMode={viewMode}
       />
 
