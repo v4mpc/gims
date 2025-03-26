@@ -221,7 +221,6 @@ export async function putItem(data) {
   if (!resp.ok) {
     throw new Error("Network response was not ok");
   }
-  console.log(resp);
   return resp.json();
 }
 

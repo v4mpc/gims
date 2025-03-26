@@ -4,10 +4,7 @@ import ServiceSection from "../../components/ServiceSection.jsx";
 import SpareSection from "../../components/SpareSection.jsx";
 import CustomerSection from "../../components/CustomerSection.jsx";
 import PaymentSection from "../../components/PaymentSection.jsx";
-import {
-  DEFAULT_PAGE_SIZE,
-  updateTotalCost,
-} from "../../utils.jsx";
+import { DEFAULT_PAGE_SIZE, updateTotalCost } from "../../utils.jsx";
 
 import styles from "../../components/CustomForm.module.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -16,7 +13,7 @@ import PrintButtons from "../../components/PrintButtons.jsx";
 import { useFormPatch } from "../../hooks/useFormPatch.jsx";
 import PaymentSummary from "../../components/PaymentSummary.jsx";
 import { useState } from "react";
-import {useSaveServiceForm} from "../../hooks/useSaveServiceForm.jsx";
+import { useSaveServiceForm } from "../../hooks/useSaveServiceForm.jsx";
 
 const CreateService = () => {
   const [form] = Form.useForm();
@@ -36,7 +33,7 @@ const CreateService = () => {
     setServices,
   );
 
-  const { saveOnlyValidations, saveForLater, finalize } = useSaveServiceForm(
+  const { saveOnlyValidations, saveForLater, editPrint } = useSaveServiceForm(
     form,
     id,
     editMode,
@@ -96,7 +93,9 @@ const CreateService = () => {
       <Flex justify="space-between">
         <StatusTag status={serviceQuery.data.service?.status} />
         <h3>Service details</h3>
-        <Button type="dashed">Print</Button>
+        <Button type="dashed" onClick={editPrint}>
+          Print
+        </Button>
       </Flex>
       <Divider orientation="left" plain>
         Customer
