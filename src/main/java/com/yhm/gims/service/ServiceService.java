@@ -73,7 +73,7 @@ public class ServiceService {
     public GService save(GService service) {
 
 
-        if (service.getStatus().equals(Status.PAID)) {
+        if (service.getStatus().equals(Status.FINALIZED)) {
             updateStock(service.getSpares());
         }
 
@@ -115,11 +115,11 @@ public class ServiceService {
         GService updateGService = serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + id));
 
 
-        if (updateGService.getStatus().equals(Status.PAID)) {
+        if (updateGService.getStatus().equals(Status.FINALIZED)) {
             throw new RuntimeException("Can not update PAID status");
         }
 
-        if (GService.getStatus().equals(Status.PAID)) {
+        if (GService.getStatus().equals(Status.FINALIZED)) {
             updateStock(GService.getSpares());
         }
 

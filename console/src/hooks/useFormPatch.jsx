@@ -3,7 +3,15 @@ import { API_ROUTES, getLookupData, updateTotalCost } from "../utils.jsx";
 import dayjs from "dayjs";
 import { useQueries } from "@tanstack/react-query";
 
-export function useFormPatch(editMode, viewMode, form, id,setSpares,setServices) {
+// This hook only work is to update form values from api
+export function useFormPatch(
+  editMode,
+  viewMode,
+  form,
+  id,
+  setSpares,
+  setServices,
+) {
   const results = useQueries({
     queries: [
       {
@@ -12,21 +20,21 @@ export function useFormPatch(editMode, viewMode, form, id,setSpares,setServices)
         enabled: editMode || viewMode,
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
-        {
-            queryKey: ["spareAll"],
-            placeholderData: [],
-            queryFn: () =>
-                getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
-        },
+      {
+        queryKey: ["spareAll"],
+        placeholderData: [],
+        queryFn: () =>
+          getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
+      },
 
-        {
-            queryKey: ["serviceAll"],
-            placeholderData: [],
-            queryFn: () => getLookupData(API_ROUTES.serviceCatalogsAll),
-        },
+      {
+        queryKey: ["serviceAll"],
+        placeholderData: [],
+        queryFn: () => getLookupData(API_ROUTES.serviceCatalogsAll),
+      },
     ],
   });
-  const [serviceQuery,spareCatalogQuery,serviceCatalogQuery] = results;
+  const [serviceQuery, spareCatalogQuery, serviceCatalogQuery] = results;
 
   useEffect(() => {
     form.setFieldsValue({
@@ -43,23 +51,21 @@ export function useFormPatch(editMode, viewMode, form, id,setSpares,setServices)
       (s) => s.item,
     );
 
-      setServices(
-        serviceCatalogQuery.data.filter(
-          (s) => !selectedServiceNames?.includes(s.name),
-        ),
-      );
+    setServices(
+      serviceCatalogQuery.data.filter(
+        (s) => !selectedServiceNames?.includes(s.name),
+      ),
+    );
 
-      const selectedSpareIds = serviceQuery.data.service?.spares.map(
-          (s) => s.itemId,
-      );
+    const selectedSpareIds = serviceQuery.data.service?.spares.map(
+      (s) => s.itemId,
+    );
 
-      setSpares(
-          spareCatalogQuery.data.filter(
-              (s) => !selectedSpareIds?.includes(s.product.id),
-          ),
-      );
-
-
+    setSpares(
+      spareCatalogQuery.data.filter(
+        (s) => !selectedSpareIds?.includes(s.product.id),
+      ),
+    );
 
     if ((editMode || viewMode) && serviceQuery.data) {
       form.setFieldsValue({
@@ -108,4 +114,6 @@ export function useFormPatch(editMode, viewMode, form, id,setSpares,setServices)
       });
     }
   }, [editMode, viewMode, form, serviceQuery.data]);
+
+  return { serviceQuery };
 }

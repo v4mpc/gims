@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Form, Space } from "antd";
+import { Button, Divider, Flex, Form, Dropdown, Space } from "antd";
 
 import ServiceSection from "../../components/ServiceSection.jsx";
 import SpareSection from "../../components/SpareSection.jsx";
@@ -7,7 +7,6 @@ import PaymentSection from "../../components/PaymentSection.jsx";
 import {
   API_ROUTES,
   DEFAULT_PAGE_SIZE,
-  getLookupData,
   toModelList,
   openNotification,
   putItem,
@@ -21,7 +20,9 @@ import { StatusTag } from "../../components/StatusTag.jsx";
 import PrintButtons from "../../components/PrintButtons.jsx";
 import { useFormPatch } from "../../hooks/useFormPatch.jsx";
 import PaymentSummary from "../../components/PaymentSummary.jsx";
-import {useState} from "react";
+import { useState } from "react";
+import { DownOutlined } from "@ant-design/icons";
+import useSaveServiceForm from "../../hooks/useSaveServiceForm.jsx";
 
 const CreateService = () => {
   const [form] = Form.useForm();
@@ -29,66 +30,25 @@ const CreateService = () => {
   const [services, setServices] = useState([]);
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [fields, setFields] = useState([]);
   const { id } = useParams();
-  const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
-  const queryClient = useQueryClient();
-  const [spareFields, setSpareFields] = useState([]);
   const editMode = pathname.toLowerCase().endsWith("edit") && id !== undefined;
   const viewMode = pathname.toLowerCase().endsWith("view") && id !== undefined;
-  useFormPatch(editMode, viewMode, form, id, setSpares, setServices);
+  const { serviceQuery } = useFormPatch(
+    editMode,
+    viewMode,
+    form,
+    id,
+    setSpares,
+    setServices,
+  );
 
-  const results = useQueries({
-    queries: [
-      {
-        queryKey: ["singleService", id],
-        placeholderData: [],
-        enabled: editMode || viewMode,
-        queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
-      },
-    ],
-  });
-  const [serviceQuery] = results;
-  const { mutate: createItem, isLoading: isCreating } = useMutation({
-    mutationFn: putItem,
-    onSuccess: () => {
-      form?.resetFields();
-      navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`);
-      openNotification(
-        "post-success",
-        "success",
-        "Success",
-        "Record save successfully",
-      );
-      queryClient.invalidateQueries("services");
-    },
-    onError: (error) => {
-      console.log("there was an error " + error);
-    },
-  });
-
-  const { mutate: updateItem, isLoading: isEditing } = useMutation({
-    mutationFn: putItem,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["singleService", id] });
-      queryClient.invalidateQueries("services");
-
-      form?.resetFields();
-      navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`);
-      openNotification(
-        "post-success",
-        "success",
-        "Success",
-        "Record updated successfully",
-      );
-    },
-    onError: (error) => {
-      console.log("there was an error " + error);
-    },
-  });
+  const { saveOnlyValidations, saveForLater, finalize } = useSaveServiceForm(
+    form,
+    id,
+    editMode,
+  );
 
   const onValueChanged = (changed, all) => {
-    console.log(changed);
     if (Object.hasOwn(changed, "payments")) {
       form.setFieldsValue({
         totals: updateTotalCost(form),
@@ -116,126 +76,17 @@ const CreateService = () => {
     }
   };
 
-  const saveForLater = () => {
-    setSaveOnlyValidation(true);
-    form.setFields([
-      {
-        name: "selectedService",
-        errors: [],
-      },
-    ]);
+  const items = [
+    {
+      label: "Finalize",
+      key: 1,
+    },
 
-    setTimeout(() => {
-      form
-        .validateFields()
-        .then((values) => {
-          let status = "DRAFT";
-          const { totals } = values;
-          const [totalCost, totalPaid] = totals;
-          if (totalPaid < totalCost) {
-            status = "PARTIALLY_PAID";
-          }
-          if (totalPaid === 0) {
-            status = "UNPAID";
-          }
-
-          const { services, spares } = values;
-          const _services = services.map((s) => ({
-            item: s.item,
-            price: s.price,
-            quantity: s.quantity,
-          }));
-
-          const _spares = spares.map((s) => ({
-            itemId: s.itemId,
-            item: s.item,
-            price: s.price,
-            unit: s.unit,
-            quantity: s.quantity,
-            currentKm: s.currentKm,
-            nextKm: s.nextKm,
-          }));
-
-          if (!editMode) {
-            const updatedValues = {
-              ...values,
-              services: _services,
-              spares: _spares,
-              status: status,
-            };
-            const data = {
-              values: updatedValues,
-              urlPath: API_ROUTES.services,
-              method: "POST",
-            };
-            createItem(data);
-          } else {
-            const updatedValues = {
-              ...values,
-              services: _services,
-              spares: _spares,
-              status: status,
-            };
-            const data = {
-              values: updatedValues,
-              urlPath: `${API_ROUTES.services}/${id}`,
-              method: "PUT",
-            };
-            updateItem(data);
-          }
-        })
-        .catch((errorInfo) => {
-          console.error("Validation failed:", errorInfo);
-        });
-    }, 0);
-  };
-
-  const finalize = () => {
-    setSaveOnlyValidation(false);
-    setTimeout(() => {
-      form
-        .validateFields()
-        .then((values) => {
-          const { servicesList, spareList } = toModelList(
-            form,
-            fields,
-            spareFields,
-          );
-          if (!editMode) {
-            const updatedValues = {
-              ...values,
-              services: servicesList,
-              spares: spareList,
-              status: "PAID",
-            };
-            const data = {
-              values: updatedValues,
-              urlPath: API_ROUTES.services,
-              method: "POST",
-            };
-
-            createItem(data);
-          } else {
-            const updatedValues = {
-              ...values,
-              services: servicesList,
-              spares: spareList,
-              status: "PAID",
-            };
-            const data = {
-              values: updatedValues,
-              urlPath: `${API_ROUTES.services}/${id}`,
-              method: "PUT",
-            };
-            updateItem(data);
-          }
-          console.log("Form values:", values);
-        })
-        .catch((errorInfo) => {
-          console.error("Validation failed:", errorInfo);
-        });
-    }, 0);
-  };
+    {
+      label: "Discard",
+      key: 2,
+    },
+  ];
 
   return (
     <Form
@@ -248,8 +99,10 @@ const CreateService = () => {
       autoComplete="off"
       disabled={viewMode}
     >
-      <Flex justify="flex-end">
+      <Flex justify="space-between">
         <StatusTag status={serviceQuery.data.service?.status} />
+        <h3>Service details</h3>
+        <Button type="dashed">Print</Button>
       </Flex>
       <Divider orientation="left" plain>
         Customer
@@ -285,9 +138,8 @@ const CreateService = () => {
               navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`)
             }
           >
-            Cancel
+            Close
           </Button>
-
         </Space>
         <Space>
           {viewMode && (
@@ -304,9 +156,18 @@ const CreateService = () => {
                 Save for later
               </Button>
 
-              <Button type="primary" onClick={finalize}>
-                Finalize
-              </Button>
+              {/*<Button type="primary" onClick={finalize}>*/}
+              {/*  Finalize*/}
+              {/*</Button>*/}
+
+              {/*<Dropdown.Button*/}
+              {/*  type="primary"*/}
+              {/*  icon={<DownOutlined />}*/}
+              {/*  menu={{ items }}*/}
+              {/*  onClick={() => 1}*/}
+              {/*>*/}
+              {/*  Save*/}
+              {/*</Dropdown.Button>*/}
             </>
           )}
         </Space>

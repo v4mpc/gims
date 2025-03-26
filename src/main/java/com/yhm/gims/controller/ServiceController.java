@@ -28,9 +28,9 @@ public class ServiceController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<String>> save(@Valid @RequestBody GService service) {
-        serviceService.save(service);
-        ApiResponse<String> response = new ApiResponse<>(true, "Success", "Created");
+    public ResponseEntity<ApiResponse<Integer>> save(@Valid @RequestBody GService service) {
+        GService gService = serviceService.save(service);
+        ApiResponse<Integer> response = new ApiResponse<>(true, "Success", gService.getId());
         return ResponseEntity.ok(response);
 
     }
