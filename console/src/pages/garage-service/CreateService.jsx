@@ -118,7 +118,6 @@ const CreateService = () => {
 
   const saveForLater = () => {
     setSaveOnlyValidation(true);
-
     form.setFields([
       {
         name: "selectedService",

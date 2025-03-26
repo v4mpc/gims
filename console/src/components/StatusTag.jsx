@@ -1,26 +1,17 @@
-import {Tag} from "antd";
+import { Tag } from "antd";
 
-
-export function StatusTag ({status}){
-    const renderStatusTag = () => {
-        switch (status) {
-            case "DRAFT":
-                return <Tag color="warning">DRAFT</Tag>;
-            case "PAID":
-                return <Tag color="success">PAID</Tag>;
-
-            case "PARTIALLY_PAID":
-                return <Tag color="warning">PARTIALLY_PAID</Tag>
-            case "UNPAID":
-                return <Tag color="error">UNPAID</Tag>;
-            default:
-                return <Tag color="error">UNKNOWN</Tag>;
-        }
+export function StatusTag({ status }) {
+  const renderStatusTag = () => {
+    switch (status) {
+      case "DRAFT":
+        return <Tag color="warning">DRAFT</Tag>;
+      case "FINALIZED":
+        return <Tag color="success">FINALIZED</Tag>;
+      case "PARTIALLY_PAID":
+        return <Tag color="error">DISCARDED</Tag>;
+      default:
+        return <Tag color="error">UNKNOWN</Tag>;
     }
-    return (
-        <div>
-            {renderStatusTag()}
-        </div>
-    );
-
+  };
+  return <div>{renderStatusTag()}</div>;
 }
