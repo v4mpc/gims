@@ -15,56 +15,24 @@ import {
   Input,
   Divider,
   Table,
+  Empty,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import styles from "./CustomForm.module.css";
 
 import PropTypes from "prop-types";
 import { useQueries } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 PaymentSection.propTypes = {
-  saveOnlyValidations: PropTypes.bool,
   viewMode: PropTypes.bool,
+  editMode: PropTypes.bool,
 };
 
 function PaymentSection({ viewMode }) {
   const form = Form.useFormInstance();
   const [notDisabledInsurances, setNotDisabledInsurances] = useState([]);
-  const [totalPaid, setTotalPaid] = useState(0);
-  const totalLabels = ["Total Cost", "Total Paid", "Remaining Amount"];
-
-  // useEffect(() => {
-  //   form.setFieldsValue({
-  //     totals: [{ amount: 0 }, { amount: 0 }, { amount: 0 }],
-  //   });
-  // }, [form]);
-
-  const columns = [
-    {
-      dataIndex: "label",
-      rowScope: "row",
-      width: "40%",
-      render: (_, { key }) => totalLabels[key],
-    },
-    {
-      dataIndex: "amount",
-      key: "amount",
-      render: (_, { name }) => (
-        <Form.Item name={[name, "amount"]} noStyle>
-          <InputNumber
-            variant="borderless"
-            style={{ width: "100%" }}
-            formatter={thousanSeparatorformatter}
-            className={styles.totalInput}
-            suffix="TZS"
-            disabled
-
-          />
-        </Form.Item>
-      ),
-    },
-  ];
+  const availablePayments = form.getFieldValue("payments") ?? [];
 
   const results = useQueries({
     queries: [
@@ -120,6 +88,8 @@ function PaymentSection({ viewMode }) {
       <Divider orientation="left" plain>
         Payments
       </Divider>
+
+      {availablePayments.length === 0 && viewMode && <Empty />}
 
       <Form.List name="payments">
         {(fields, { add, remove }) => (
@@ -216,39 +186,25 @@ function PaymentSection({ viewMode }) {
                     disabled={!notDisabledInsurances.includes(key)}
                   />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                {viewMode || (
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                )}
               </Space>
             ))}
 
-            <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => add()}
-                block
-                icon={<PlusOutlined />}
-              >
-                Add payment
-              </Button>
-            </Form.Item>
+            {viewMode || (
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add payment
+                </Button>
+              </Form.Item>
+            )}
           </>
-        )}
-      </Form.List>
-
-      <Divider orientation="left" plain>
-        TOTAL
-      </Divider>
-
-      <Form.List name="totals">
-        {(fields) => (
-          <Table
-            bordered
-            style={{ width: "40%" }}
-            columns={columns}
-            showHeader={false}
-            dataSource={fields.map((field) => ({ ...field, key: field.key }))}
-            pagination={false}
-            size="middle"
-          />
         )}
       </Form.List>
     </>

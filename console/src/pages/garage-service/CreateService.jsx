@@ -1,4 +1,4 @@
-import { Button, Divider, Flex, Form, Space, Tooltip } from "antd";
+import { Button, Divider, Flex, Form, Space } from "antd";
 
 import ServiceSection from "../../components/ServiceSection.jsx";
 import SpareSection from "../../components/SpareSection.jsx";
@@ -16,13 +16,17 @@ import {
 
 import styles from "../../components/CustomForm.module.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
 import PrintButtons from "../../components/PrintButtons.jsx";
+import { useFormPatch } from "../../hooks/useFormPatch.jsx";
+import PaymentSummary from "../../components/PaymentSummary.jsx";
+import {useState} from "react";
 
 const CreateService = () => {
   const [form] = Form.useForm();
+  const [spares, setSpares] = useState([]);
+  const [services, setServices] = useState([]);
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [fields, setFields] = useState([]);
@@ -32,49 +36,19 @@ const CreateService = () => {
   const [spareFields, setSpareFields] = useState([]);
   const editMode = pathname.toLowerCase().endsWith("edit") && id !== undefined;
   const viewMode = pathname.toLowerCase().endsWith("view") && id !== undefined;
+  useFormPatch(editMode, viewMode, form, id, setSpares, setServices);
 
   const results = useQueries({
     queries: [
       {
-        queryKey: ["paymentCatalogAll"],
-        placeholderData: [],
-        queryFn: () => getLookupData(API_ROUTES.paymentCatalogAll),
-      },
-
-      {
         queryKey: ["singleService", id],
         placeholderData: [],
-        enabled: editMode,
+        enabled: editMode || viewMode,
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
     ],
   });
-  const [paymentCatalogQuery, serviceQuery] = results;
-
-  useEffect(() => {
-    form.setFieldsValue({
-      spares: [],
-      payments: [],
-      services: [],
-      totals: [{ amount: 0 }, { amount: 0 }, { amount: 0 }],
-      status: "DRAFT",
-    });
-  }, []);
-
-  useEffect(() => {
-    if (editMode && serviceQuery.data && paymentCatalogQuery.data) {
-      form.setFieldsValue({
-        customerName: serviceQuery.data.customerName,
-        customerPhone: serviceQuery.data.customerPhone,
-        customerCar: serviceQuery.data.service?.customerCar.id,
-        plateNumber: serviceQuery.data.service?.customerCar.plateNumber,
-        model: serviceQuery.data.service?.customerCar.model,
-        make: serviceQuery.data.service?.customerCar.make,
-        status: serviceQuery.data.service?.status,
-      });
-    }
-  }, [editMode, serviceQuery.data, paymentCatalogQuery.data]);
-
+  const [serviceQuery] = results;
   const { mutate: createItem, isLoading: isCreating } = useMutation({
     mutationFn: putItem,
     onSuccess: () => {
@@ -117,19 +91,7 @@ const CreateService = () => {
     console.log(changed);
     if (Object.hasOwn(changed, "payments")) {
       form.setFieldsValue({
-        totals: form.getFieldValue("totals").map((total, key) =>
-          key === 1
-            ? {
-                ...total,
-                amount: form
-                  .getFieldValue("payments")
-                  .reduce(
-                    (acc, curr) => Number(acc) + Number(curr?.amount ?? 0),
-                    0,
-                  ),
-              }
-            : total,
-        ),
+        totals: updateTotalCost(form),
       });
     }
 
@@ -296,31 +258,22 @@ const CreateService = () => {
 
       <CustomerSection form={form} viewMode={viewMode} />
 
-      <Divider orientation="left" plain>
-        Services
-      </Divider>
-
       <ServiceSection
         saveOnlyValidations={saveOnlyValidations}
-        serviceQuery={serviceQuery}
         viewMode={viewMode}
-        editMode={editMode}
+        services={services}
+        setServices={setServices}
       />
-
-      <Divider orientation="left" plain>
-        <Tooltip title="Spare is SpareCode/SpareName/SpareCategory">
-          <span>Spares</span>
-        </Tooltip>
-      </Divider>
 
       <SpareSection
         saveOnlyValidations={saveOnlyValidations}
         viewMode={viewMode}
-        serviceQuery={serviceQuery}
-        editMode={editMode}
+        spares={spares}
+        setSpares={setSpares}
       />
 
       <PaymentSection viewMode={viewMode} />
+      <PaymentSummary />
 
       <Divider orientation="left" plain />
       <Flex justify="space-between">
@@ -336,16 +289,11 @@ const CreateService = () => {
             Cancel
           </Button>
 
-          {viewMode || (
-            <Button htmlType="button" onClick={form.resetFields}>
-              Reset
-            </Button>
-          )}
         </Space>
         <Space>
           {viewMode && (
             <PrintButtons
-              primaryKey={id}
+              primaryKey={Number(id)}
               printable={["TAX", "PROFORMA"]}
               invoiceSource="GARAGE_SERVICE"
             />

@@ -1,4 +1,14 @@
-import { Button, Flex, Form, Input, InputNumber, Select, Space } from "antd";
+import {
+  Button,
+  Divider,
+  Empty,
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Space,
+} from "antd";
 import {
   API_ROUTES,
   getLookupData,
@@ -9,16 +19,16 @@ import {
 } from "../utils.jsx";
 import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const ServiceSection = ({
   saveOnlyValidations,
   viewMode,
-  editMode,
-  serviceQuery,
+  services,
+  setServices,
 }) => {
   const form = Form.useFormInstance();
-  const [services, setServices] = useState([]);
+  const availableServices = form.getFieldValue("services") ?? [];
   const results = useQueries({
     queries: [
       {
@@ -33,30 +43,6 @@ const ServiceSection = ({
   useEffect(() => {
     setServices(serviceCatalogQuery.data);
   }, [serviceCatalogQuery.data]);
-
-  useEffect(() => {
-    if (editMode && serviceQuery.data) {
-      const selectedServiceNames = serviceQuery.data.service?.services.map(
-        (s) => s.item,
-      );
-      setServices(
-        serviceCatalogQuery.data.filter(
-          (s) => !selectedServiceNames?.includes(s.name),
-        ),
-      );
-
-      form.setFieldsValue({
-        totals: updateTotalCost(form),
-        services: serviceQuery.data.service?.services.map((s) => ({
-          id: s.id,
-          item: s.item,
-          price: s.price,
-          quantity: s.quantity,
-          total: s.quantity * s.price,
-        })),
-      });
-    }
-  }, [editMode, form, serviceCatalogQuery.data, serviceQuery.data]);
 
   const addField = () => {
     if (form.getFieldValue("selectedService") === undefined) {
@@ -104,6 +90,10 @@ const ServiceSection = ({
 
   return (
     <Flex vertical>
+      <Divider orientation="left" plain>
+        Services
+      </Divider>
+
       {viewMode || (
         <Space style={{ marginBottom: "10px" }} align="baseline">
           <Form.Item
@@ -145,7 +135,8 @@ const ServiceSection = ({
         </Space>
       )}
 
-      {/*    start*/}
+      {availableServices.length === 0 && viewMode && <Empty />}
+
       <Form.List name="services">
         {(fields, { add, remove }) =>
           fields.map(({ key, name, ...restField }) => (

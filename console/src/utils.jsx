@@ -230,8 +230,16 @@ export function optionLabelFilter(input, option) {
 }
 
 export function updateTotalCost(form) {
+
   const totals = form.getFieldValue("totals") ?? [];
   const services = form.getFieldValue("services") ?? [];
+  const payments = form.getFieldValue("payments") ?? [];
+  const paymentTotal =
+    payments.reduce(
+      (acc, curr) => Number(acc) + Number(curr?.amount ?? 0),
+      0,
+    ) ?? 0;
+
   const serviceTotal = services.reduce(
     (acc, curr) =>
       Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
@@ -244,14 +252,27 @@ export function updateTotalCost(form) {
         Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
       0,
     ) ?? 0;
-  return totals.map((total, key) =>
-    key === 0
-      ? {
-          ...total,
-          amount: serviceTotal + spareTotal,
-        }
-      : total,
-  );
+
+  return totals.map((total, key) => {
+    if (key === 0) {
+      return {
+        ...total,
+        amount: serviceTotal + spareTotal,
+      };
+    } else if (key === 1) {
+      return {
+        ...total,
+        amount: paymentTotal,
+      };
+    } else if (key === 2) {
+      return {
+        ...total,
+        amount: Math.max(serviceTotal + spareTotal - paymentTotal, 0),
+      };
+    } else {
+      console.error("Total key out of bound" + key);
+    }
+  });
 }
 
 export function filterOption(input, option) {

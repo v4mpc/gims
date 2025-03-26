@@ -1,4 +1,15 @@
-import { Button, Flex, Form, Input, InputNumber, Select, Space } from "antd";
+import {
+  Button,
+  Divider,
+  Empty,
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Space,
+  Tooltip,
+} from "antd";
 import {
   API_ROUTES,
   generateSpareName,
@@ -12,19 +23,13 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const SpareSection = ({
-  saveOnlyValidations,
-  viewMode,
-  editMode,
-  serviceQuery,
-}) => {
+const SpareSection = ({ saveOnlyValidations, viewMode, spares, setSpares }) => {
   const form = Form.useFormInstance();
-  const [spares, setSpares] = useState([]);
+  const availableSpares = form.getFieldValue("spares") ?? [];
   const results = useQueries({
     queries: [
       {
         queryKey: ["spareAll"],
-
         placeholderData: [],
         queryFn: () =>
           getLookupData(`${API_ROUTES.stockOnhandAll}?nonZeroSoh=false`),
@@ -37,41 +42,6 @@ const SpareSection = ({
   useEffect(() => {
     setSpares(spareCatalogQuery.data);
   }, [spareCatalogQuery.data]);
-
-  useEffect(() => {
-    if (editMode && serviceQuery.data) {
-      const selectedSpareIds = serviceQuery.data.service?.spares.map(
-        (s) => s.itemId,
-      );
-
-      setSpares(
-        spareCatalogQuery.data.filter(
-          (s) => !selectedSpareIds?.includes(s.product.id),
-        ),
-      );
-
-      form.setFieldsValue({
-        totals: updateTotalCost(form),
-        spares: serviceQuery.data.service?.spares.map((s) => {
-          const [spareObject] = spareCatalogQuery.data.filter(
-            (fc) => fc.product.id === s.itemId,
-          );
-          return {
-            id: s.itemId,
-            itemId: s.itemId,
-            item: s.item,
-            price: s.price,
-            quantity: s.quantity,
-            total: s.quantity * s.price,
-            unit: s.unit,
-            soh: spareObject.stockOnhand,
-            currentKm: s.currentKm,
-            nextKm: s.nextKm,
-          };
-        }),
-      });
-    }
-  }, [editMode, form, spareCatalogQuery.data, serviceQuery.data]);
 
   const addField = () => {
     if (form.getFieldValue("selectedSpare") === undefined) {
@@ -134,6 +104,12 @@ const SpareSection = ({
 
   return (
     <Flex vertical>
+      <Divider orientation="left" plain>
+        <Tooltip title="Spare is SpareCode/SpareName/SpareCategory">
+          <span>Spares</span>
+        </Tooltip>
+      </Divider>
+
       {viewMode || (
         <Space style={{ marginBottom: "10px" }} align="baseline">
           <Form.Item name="selectedSpare">
@@ -157,6 +133,8 @@ const SpareSection = ({
           </Button>
         </Space>
       )}
+
+      {availableSpares.length === 0 && viewMode && <Empty />}
 
       <Form.List name="spares">
         {(fields, { add, remove }) =>

@@ -27,6 +27,7 @@ export default function GenericTable({
   showAddButton = true,
   createLink = null,
   children,
+  rowKey = "id",
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const formModeRef = useRef("CREATE");
@@ -64,7 +65,11 @@ export default function GenericTable({
       return {
         ...obj,
         render: (_, record) => (
-          <Button type="primary" onClick={() => handleSetItem(record)}>
+          <Button
+            key={obj.key}
+            type="primary"
+            onClick={() => handleSetItem(record)}
+          >
             Edit
           </Button>
         ),
@@ -74,6 +79,7 @@ export default function GenericTable({
         ...obj,
         render: (_, record) => (
           <Button
+            key={obj.key}
             type="primary"
             onClick={() =>
               handleSetItem({
@@ -93,6 +99,7 @@ export default function GenericTable({
         ...obj,
         render: (_, record) => (
           <Button
+            key={obj.key}
             type="primary"
             onClick={() => navigateToLink(`${record.paint.id}`)}
           >
@@ -106,12 +113,14 @@ export default function GenericTable({
         render: (_, record) => (
           <Space>
             <Button
+              key={`view${record.service.id}`}
               type="primary"
               onClick={() => navigateToLink(`${record.service.id}/view`)}
             >
               View
             </Button>
             <Button
+              key={`edit${record.service.id}`}
               type="primary"
               onClick={() => navigateToLink(`${record.service.id}/edit`)}
             >
@@ -213,13 +222,21 @@ export default function GenericTable({
         </Space>
 
         {showAddButton && (
-          <Button type="primary" onClick={() => handleCreateClicked()}>
+          <Button
+            key="create-button"
+            type="primary"
+            onClick={() => handleCreateClicked()}
+          >
             Add
           </Button>
         )}
 
         {createLink != null && (
-          <Button type="primary" onClick={() => navigate(createLink)}>
+          <Button
+            key="create-link"
+            type="primary"
+            onClick={() => navigate(createLink)}
+          >
             Add
           </Button>
         )}
@@ -236,7 +253,7 @@ export default function GenericTable({
         }}
         loading={results.isLoading}
         scroll={{ x: "max-content" }}
-        rowKey="id"
+        rowKey={rowKey}
       />
       {open && (
         <GenericTableModal
