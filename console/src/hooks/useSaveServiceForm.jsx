@@ -1,11 +1,50 @@
 import { useState } from "react";
-import { API_ROUTES, toModelList } from "../utils.jsx";
+import {
+  API_ROUTES,
+  DEFAULT_PAGE_SIZE,
+  openNotification,
+} from "../utils.jsx";
 import { useServiceMutation } from "./useServiceMutation.jsx";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
-export default function useSaveServiceForm(form, id,editMode) {
+export  function useSaveServiceForm(form, id, editMode) {
   const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
-  const { mutation: createItem } = useServiceMutation({});
-  const { mutation: updateItem } = useServiceMutation({});
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  function createItemSuccessCallBack() {
+    form?.resetFields();
+    navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`);
+    openNotification(
+      "post-success",
+      "success",
+      "Success",
+      "Record save successfully",
+    );
+    queryClient.invalidateQueries("services");
+  }
+
+  function updateItemSuccessCallBack() {
+    queryClient.invalidateQueries({ queryKey: ["singleService", id] });
+    queryClient.invalidateQueries("services");
+
+    form?.resetFields();
+    navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`);
+    openNotification(
+      "post-success",
+      "success",
+      "Success",
+      "Record updated successfully",
+    );
+  }
+
+  const { mutation: createItem } = useServiceMutation({
+    successCallBack: createItemSuccessCallBack,
+  });
+  const { mutation: updateItem } = useServiceMutation({
+    successCallBack: updateItemSuccessCallBack,
+  });
 
   const saveForLater = () => {
     setSaveOnlyValidation(true);
@@ -81,52 +120,52 @@ export default function useSaveServiceForm(form, id,editMode) {
     }, 0);
   };
 
-  const finalize = () => {
-    setSaveOnlyValidation(false);
-    setTimeout(() => {
-      form
-        .validateFields()
-        .then((values) => {
-          const { servicesList, spareList } = toModelList(
-            form,
-            fields,
-            spareFields,
-          );
-          if (!editMode) {
-            const updatedValues = {
-              ...values,
-              services: servicesList,
-              spares: spareList,
-              status: "PAID",
-            };
-            const data = {
-              values: updatedValues,
-              urlPath: API_ROUTES.services,
-              method: "POST",
-            };
+  // const finalize = () => {
+  //   setSaveOnlyValidation(false);
+  //   setTimeout(() => {
+  //     form
+  //       .validateFields()
+  //       .then((values) => {
+  //         const { servicesList, spareList } = toModelList(
+  //           form,
+  //           fields,
+  //           spareFields,
+  //         );
+  //         if (!editMode) {
+  //           const updatedValues = {
+  //             ...values,
+  //             services: servicesList,
+  //             spares: spareList,
+  //             status: "PAID",
+  //           };
+  //           const data = {
+  //             values: updatedValues,
+  //             urlPath: API_ROUTES.services,
+  //             method: "POST",
+  //           };
+  //
+  //           createItem(data);
+  //         } else {
+  //           const updatedValues = {
+  //             ...values,
+  //             services: servicesList,
+  //             spares: spareList,
+  //             status: "PAID",
+  //           };
+  //           const data = {
+  //             values: updatedValues,
+  //             urlPath: `${API_ROUTES.services}/${id}`,
+  //             method: "PUT",
+  //           };
+  //           updateItem(data);
+  //         }
+  //         console.log("Form values:", values);
+  //       })
+  //       .catch((errorInfo) => {
+  //         console.error("Validation failed:", errorInfo);
+  //       });
+  //   }, 0);
+  // };
 
-            createItem(data);
-          } else {
-            const updatedValues = {
-              ...values,
-              services: servicesList,
-              spares: spareList,
-              status: "PAID",
-            };
-            const data = {
-              values: updatedValues,
-              urlPath: `${API_ROUTES.services}/${id}`,
-              method: "PUT",
-            };
-            updateItem(data);
-          }
-          console.log("Form values:", values);
-        })
-        .catch((errorInfo) => {
-          console.error("Validation failed:", errorInfo);
-        });
-    }, 0);
-  };
-
-  return { saveOnlyValidations, saveForLater, finalize };
+  return { saveOnlyValidations, saveForLater };
 }

@@ -1,28 +1,22 @@
-import { Button, Divider, Flex, Form, Dropdown, Space } from "antd";
+import { Button, Divider, Flex, Form, Space } from "antd";
 
 import ServiceSection from "../../components/ServiceSection.jsx";
 import SpareSection from "../../components/SpareSection.jsx";
 import CustomerSection from "../../components/CustomerSection.jsx";
 import PaymentSection from "../../components/PaymentSection.jsx";
 import {
-  API_ROUTES,
   DEFAULT_PAGE_SIZE,
-  toModelList,
-  openNotification,
-  putItem,
   updateTotalCost,
 } from "../../utils.jsx";
 
 import styles from "../../components/CustomForm.module.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { StatusTag } from "../../components/StatusTag.jsx";
 import PrintButtons from "../../components/PrintButtons.jsx";
 import { useFormPatch } from "../../hooks/useFormPatch.jsx";
 import PaymentSummary from "../../components/PaymentSummary.jsx";
 import { useState } from "react";
-import { DownOutlined } from "@ant-design/icons";
-import useSaveServiceForm from "../../hooks/useSaveServiceForm.jsx";
+import {useSaveServiceForm} from "../../hooks/useSaveServiceForm.jsx";
 
 const CreateService = () => {
   const [form] = Form.useForm();
