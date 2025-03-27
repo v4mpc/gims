@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   API_ROUTES,
   BASE_URL,
-  DEFAULT_PAGE_SIZE,
   openNotification,
 } from "../utils.jsx";
 import { useServiceMutation } from "./useServiceMutation.jsx";
@@ -10,13 +9,12 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 export function useSaveServiceForm(form, id, editMode) {
-  const [saveOnlyValidations, setSaveOnlyValidation] = useState(true);
+  const [saveOnlyValidations] = useState(true);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  function createItemSuccessCallBack() {
-    form?.resetFields();
-    navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`);
+  function createItemSuccessCallBack(jsonResponse) {
+    navigate(`/service/${jsonResponse.data}/edit`);
     openNotification(
       "post-success",
       "success",
@@ -41,11 +39,9 @@ export function useSaveServiceForm(form, id, editMode) {
     );
   }
 
-  function updateItemSuccessCallBack(jsonResponse) {
+  function updateItemSuccessCallBack() {
     queryClient.invalidateQueries({ queryKey: ["singleService", id] });
     queryClient.invalidateQueries("services");
-    form?.resetFields();
-    navigate(`/service?page=1&size=${DEFAULT_PAGE_SIZE}`);
     openNotification(
       "post-success",
       "success",
@@ -57,6 +53,10 @@ export function useSaveServiceForm(form, id, editMode) {
   const { mutate: createItem } = useServiceMutation({
     successCallBack: createItemSuccessCallBack,
   });
+
+  // const { mutate: createFinalize } = useServiceMutation({
+  //   successCallBack: createItemSuccessCallBack,
+  // });
 
   const { mutate: editPrintMutation } = useServiceMutation({
     successCallBack: editPrintSuccessCallBack,
@@ -71,7 +71,6 @@ export function useSaveServiceForm(form, id, editMode) {
   });
 
   function createPayload(values, url, httpMethod) {
-    const status = "DRAFT";
     const { services, spares } = values;
     const _services = services.map((s) => ({
       item: s.item,
@@ -93,7 +92,6 @@ export function useSaveServiceForm(form, id, editMode) {
       ...values,
       services: _services,
       spares: _spares,
-      status: status,
     };
     return {
       values: updatedValues,
@@ -102,29 +100,20 @@ export function useSaveServiceForm(form, id, editMode) {
     };
   }
 
-  const editPrint = async () => {
-    const errors = [];
-
+  const saveAndPrint = async () => {
     try {
       const values = await form.validateFields();
       if (
         (!values.services || values.services.length === 0) &&
         (!values.spares || values.spares.length === 0)
       ) {
-        form.setFields([
-          {
-            name: "services",
-            errors: ["At least one service/spare is required"],
-          },
-        ]);
+        openNotification(
+          "service-form-error",
+          "error",
+          "Error",
+          "At least one service/spare is required",
+        );
         throw new Error("Validation errors found");
-      } else {
-        form.setFields([
-          {
-            name: "services",
-            errors: [],
-          },
-        ]);
       }
 
       if (!editMode) {
@@ -136,6 +125,9 @@ export function useSaveServiceForm(form, id, editMode) {
           `${API_ROUTES.services}/${id}`,
           "PUT",
         );
+
+        console.log(values)
+
         editPrintMutation(data);
       }
     } catch (e) {
@@ -144,7 +136,6 @@ export function useSaveServiceForm(form, id, editMode) {
   };
 
   const saveForLater = async () => {
-    setSaveOnlyValidation(true);
     form.setFields([
       {
         name: "selectedService",
@@ -170,52 +161,89 @@ export function useSaveServiceForm(form, id, editMode) {
     }
   };
 
-  // const finalize = () => {
-  //   setSaveOnlyValidation(false);
-  //   setTimeout(() => {
-  //     form
-  //       .validateFields()
-  //       .then((values) => {
-  //         const { servicesList, spareList } = toModelList(
-  //           form,
-  //           fields,
-  //           spareFields,
-  //         );
-  //         if (!editMode) {
-  //           const updatedValues = {
-  //             ...values,
-  //             services: servicesList,
-  //             spares: spareList,
-  //             status: "PAID",
-  //           };
-  //           const data = {
-  //             values: updatedValues,
-  //             urlPath: API_ROUTES.services,
-  //             method: "POST",
-  //           };
-  //
-  //           createItem(data);
-  //         } else {
-  //           const updatedValues = {
-  //             ...values,
-  //             services: servicesList,
-  //             spares: spareList,
-  //             status: "PAID",
-  //           };
-  //           const data = {
-  //             values: updatedValues,
-  //             urlPath: `${API_ROUTES.services}/${id}`,
-  //             method: "PUT",
-  //           };
-  //           updateItem(data);
-  //         }
-  //         console.log("Form values:", values);
-  //       })
-  //       .catch((errorInfo) => {
-  //         console.error("Validation failed:", errorInfo);
-  //       });
-  //   }, 0);
-  // };
+  const finalize = async () => {
+    try {
+      const values = await form.validateFields();
+      if (
+        (!values.services || values.services.length === 0) &&
+        (!values.spares || values.spares.length === 0)
+      ) {
+        form.setFields([
+          {
+            name: "services",
+            errors: ["At least one service/spare is required"],
+          },
+        ]);
+        throw new Error("service/spare atleast one Validation errors found");
+      } else {
+        form.setFields([
+          {
+            name: "services",
+            errors: [],
+          },
+        ]);
+      }
 
-  return { saveOnlyValidations, saveForLater, editPrint };
+      const serviceTotal = values.services.reduce(
+        (acc, curr) =>
+          Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+        0,
+      );
+      const spareTotal =
+        values.spares.reduce(
+          (acc, curr) =>
+            Number(acc) +
+            Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+          0,
+        ) ?? 0;
+
+      if (
+        !values.payments ||
+        values.payments.length === 0 ||
+        (values.payments &&
+          values.payments.length > 0 &&
+          values.payments.reduce((acc, curr) => acc + curr.amount, 0) <
+            spareTotal + serviceTotal)
+      ) {
+        form.setFields([
+          {
+            name: "payments",
+            errors: [
+              "To Finalize, Payments must be greater or equal to Service and Spare cost",
+            ],
+          },
+        ]);
+        throw new Error("payments Validation errors found");
+      } else {
+        form.setFields([
+          {
+            name: "payments",
+            errors: [],
+          },
+        ]);
+      }
+
+      if (!editMode) {
+        const data = createPayload(
+          values,
+          API_ROUTES.services,
+          "POST",
+          "FINALIZED",
+        );
+        createItem(data);
+      } else {
+        const data = createPayload(
+          values,
+          `${API_ROUTES.services}/${id}`,
+          "PUT",
+          "FINALIZED",
+        );
+        updateItem(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return { saveOnlyValidations, saveForLater, editPrint: saveAndPrint, finalize };
 }

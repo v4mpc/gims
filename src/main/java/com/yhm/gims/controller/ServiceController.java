@@ -37,8 +37,8 @@ public class ServiceController {
 
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponse<Integer>> update(@PathVariable Integer id, @RequestBody GService service) {
-        serviceService.update(service, id);
+    public ResponseEntity<ApiResponse<Integer>> update(@PathVariable Integer id, @RequestParam(defaultValue = "false") Boolean shouldUpdateStock, @RequestBody GService service) {
+        serviceService.update(service, id, shouldUpdateStock);
         ApiResponse<Integer> response = new ApiResponse<>(true, "Success", id);
         return ResponseEntity.ok(response);
     }

@@ -1,23 +1,20 @@
 import { useEffect } from "react";
-import { API_ROUTES, getLookupData, updateTotalCost } from "../utils.jsx";
+import { API_ROUTES, getLookupData} from "../utils.jsx";
 import dayjs from "dayjs";
 import { useQueries } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 // This hook only work is to update form values from api
-export function useFormPatch(
-  editMode,
-  viewMode,
-  form,
-  id,
-  setSpares,
-  setServices,
-) {
+export function useFormPatch(form, id, setSpares, setServices) {
+  const { pathname } = useLocation();
   const results = useQueries({
     queries: [
       {
         queryKey: ["singleService", id],
         placeholderData: [],
-        enabled: editMode || viewMode,
+        enabled:
+          (pathname.toLowerCase().endsWith("edit") && id !== undefined) ||
+          (pathname.toLowerCase().endsWith("view") && id !== undefined),
         queryFn: () => getLookupData(`${API_ROUTES.services}/${id}`),
       },
       {
@@ -35,6 +32,12 @@ export function useFormPatch(
     ],
   });
   const [serviceQuery, spareCatalogQuery, serviceCatalogQuery] = results;
+
+  const editMode = pathname.toLowerCase().endsWith("edit") && id !== undefined;
+  const viewMode =
+    pathname.toLowerCase().endsWith("edit") &&
+    id !== undefined &&
+    serviceQuery.data.service?.status==="FINALIZED";
 
   useEffect(() => {
     form.setFieldsValue({
@@ -68,6 +71,7 @@ export function useFormPatch(
     );
 
     if ((editMode || viewMode) && serviceQuery.data) {
+console.log(serviceQuery.data)
       form.setFieldsValue({
         customerName: serviceQuery.data.customerName,
         customerPhone: serviceQuery.data.customerPhone,
@@ -100,7 +104,6 @@ export function useFormPatch(
           quantity: s.quantity,
           total: s.quantity * s.price,
         })),
-        totals: updateTotalCost(form),
         payments: serviceQuery.data.service?.payments.map((p) => {
           return {
             payment_date: dayjs(p.paymentDate),
@@ -115,5 +118,5 @@ export function useFormPatch(
     }
   }, [editMode, viewMode, form, serviceQuery.data]);
 
-  return { serviceQuery };
+  return { serviceQuery, editMode, viewMode };
 }

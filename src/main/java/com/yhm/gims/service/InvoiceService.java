@@ -43,7 +43,7 @@ public class InvoiceService {
     private static Map<String, Object> getStringObjectMap(InvoicePdf pdf) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("logoPath", "reports/av_logo.jpeg");
-        parameters.put("pageTitle", "TAX INVOICE");
+        parameters.put("pageTitle", pdf.getTitle());
         parameters.put("total", pdf.getTotal());
         parameters.put("vat", pdf.getVat());
         parameters.put("subTotal", pdf.getSubTotal());

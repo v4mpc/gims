@@ -191,9 +191,7 @@ const ServiceSection = ({
                 </Space>
               </Space>
             ))}
-              <div style={{ color: 'red' }}>
-                  <Form.ErrorList errors={errors} />
-              </div>
+
           </>
         )}
       </Form.List>

@@ -1,5 +1,6 @@
 package com.yhm.gims.domain;
 
+import com.yhm.gims.domain.enumaration.Status;
 import com.yhm.gims.entity.GService;
 import com.yhm.gims.entity.ServiceLineItem;
 import com.yhm.gims.entity.SpareLineItem;
@@ -42,9 +43,15 @@ public class GarageServiceInvoice extends BaseInvoice {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDate = formatter.format(today);
 
+        String title = "PROFORMA INVOICE";
+        if (service.getStatus().equals(Status.FINALIZED)) {
+            title = "TAX INVOICE";
+        }
+
         return InvoicePdf.builder()
                 .customerName(service.getCustomerCar().getCustomer().getName())
                 .address(service.getCustomerCar().getCustomer().getAddress())
+                .title(title)
                 .invoiceDate(formattedDate)
                 .percentageVatInDecimal(0F)
                 .invoiceNumber("AV-INV-" + service.getId())
@@ -52,7 +59,6 @@ public class GarageServiceInvoice extends BaseInvoice {
                 .subTotal(items.stream().map(InvoicePdfItem::getTotalPrice).reduce(0F, Float::sum))
                 .build();
     }
-
 
 
 }

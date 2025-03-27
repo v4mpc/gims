@@ -7,37 +7,30 @@ import PaymentSection from "../../components/PaymentSection.jsx";
 import { DEFAULT_PAGE_SIZE, updateTotalCost } from "../../utils.jsx";
 
 import styles from "../../components/CustomForm.module.css";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { StatusTag } from "../../components/StatusTag.jsx";
-import PrintButtons from "../../components/PrintButtons.jsx";
 import { useFormPatch } from "../../hooks/useFormPatch.jsx";
 import PaymentSummary from "../../components/PaymentSummary.jsx";
 import { useState } from "react";
 import { useSaveServiceForm } from "../../hooks/useSaveServiceForm.jsx";
+import {DownloadOutlined} from "@ant-design/icons";
 
 const CreateService = () => {
   const [form] = Form.useForm();
   const [spares, setSpares] = useState([]);
   const [services, setServices] = useState([]);
-  const { pathname } = useLocation();
+
   const navigate = useNavigate();
   const { id } = useParams();
-  const editMode = pathname.toLowerCase().endsWith("edit") && id !== undefined;
-  const viewMode = pathname.toLowerCase().endsWith("view") && id !== undefined;
-  const { serviceQuery } = useFormPatch(
-    editMode,
-    viewMode,
+  const { serviceQuery,editMode,viewMode } = useFormPatch(
     form,
     id,
     setSpares,
     setServices,
   );
 
-  const { saveOnlyValidations, saveForLater, editPrint } = useSaveServiceForm(
-    form,
-    id,
-    editMode,
-  );
+  const { saveOnlyValidations, saveForLater, editPrint, finalize } =
+    useSaveServiceForm(form, id, editMode);
 
   const onValueChanged = (changed, all) => {
     if (Object.hasOwn(changed, "payments")) {
@@ -93,15 +86,15 @@ const CreateService = () => {
       <Flex justify="space-between">
         <StatusTag status={serviceQuery.data.service?.status} />
         <h3>Service details</h3>
-        <Button type="dashed" onClick={editPrint}>
-          Print
+        <Button type="dashed" disabled={false} icon={<DownloadOutlined />} onClick={editPrint}>
+          Download invoice
         </Button>
       </Flex>
       <Divider orientation="left" plain>
         Customer
       </Divider>
 
-      <CustomerSection form={form} viewMode={viewMode} />
+      <CustomerSection form={form} />
 
       <ServiceSection
         saveOnlyValidations={saveOnlyValidations}
@@ -135,13 +128,7 @@ const CreateService = () => {
           </Button>
         </Space>
         <Space>
-          {viewMode && (
-            <PrintButtons
-              primaryKey={Number(id)}
-              printable={["TAX", "PROFORMA"]}
-              invoiceSource="GARAGE_SERVICE"
-            />
-          )}
+
 
           {viewMode || (
             <>
@@ -149,18 +136,9 @@ const CreateService = () => {
                 Save for later
               </Button>
 
-              {/*<Button type="primary" onClick={finalize}>*/}
-              {/*  Finalize*/}
-              {/*</Button>*/}
-
-              {/*<Dropdown.Button*/}
-              {/*  type="primary"*/}
-              {/*  icon={<DownOutlined />}*/}
-              {/*  menu={{ items }}*/}
-              {/*  onClick={() => 1}*/}
-              {/*>*/}
-              {/*  Save*/}
-              {/*</Dropdown.Button>*/}
+              <Button type="primary" onClick={finalize}>
+                Finalize
+              </Button>
             </>
           )}
         </Space>

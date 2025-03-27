@@ -69,7 +69,7 @@ export function openNotification(key, type, title, description) {
 }
 
 export function toCustomerCars(customers) {
-  const listOfListOfcars = customers.map((customer) => {
+  const cars = customers.map((customer) => {
     return customer.cars.map((car) => ({
       id: car.id,
       customerName: customer.name,
@@ -81,28 +81,9 @@ export function toCustomerCars(customers) {
     }));
   });
 
-  return listOfListOfcars.reduce((acc, curr) => acc.concat(curr), []);
+  return cars.reduce((acc, curr) => acc.concat(curr), []);
 }
 
-export function toModelList(form, fields, sparefields) {
-  const servicesList = fields.map((f) => ({
-    item: form.getFieldValue(`sitemName_${f.key}`),
-    price: form.getFieldValue(`sprice_${f.key}`),
-    quantity: form.getFieldValue(`squantity_${f.key}`),
-  }));
-
-  const spareList = sparefields.map((f) => ({
-    itemId: form.getFieldValue(`itemId_${f.key}`),
-    item: form.getFieldValue(`itemName_${f.key}`),
-    price: form.getFieldValue(`price_${f.key}`),
-    unit: form.getFieldValue(`unit_${f.key}`),
-    quantity: form.getFieldValue(`quantity_${f.key}`),
-    currentKm: form.getFieldValue(`currentKm_${f.key}`),
-    nextKm: form.getFieldValue(`nextKm_${f.key}`),
-  }));
-
-  return { servicesList, spareList };
-}
 
 export function generateSpareName(product) {
   return `${product.isOil ? "💧" : "⚙️"}${product.code}/${product.name}/${product.category.name}`;

@@ -92,7 +92,7 @@ function PaymentSection({ viewMode }) {
       {availablePayments.length === 0 && viewMode && <Empty />}
 
       <Form.List name="payments">
-        {(fields, { add, remove }) => (
+        {(fields, { add, remove }, { errors }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
               <Space
@@ -193,16 +193,21 @@ function PaymentSection({ viewMode }) {
             ))}
 
             {viewMode || (
-              <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add()}
-                  block
-                  icon={<PlusOutlined />}
-                >
-                  Add payment
-                </Button>
-              </Form.Item>
+              <>
+                <div style={{ color: "red" }}>
+                  <Form.ErrorList errors={errors} />
+                </div>
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add payment
+                  </Button>
+                </Form.Item>
+              </>
             )}
           </>
         )}

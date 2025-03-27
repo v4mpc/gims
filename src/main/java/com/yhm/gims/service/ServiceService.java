@@ -111,15 +111,11 @@ public class ServiceService {
 
 
     @Transactional
-    public GService update(GService GService, int id) {
+    public GService update(GService GService, int id, Boolean shouldUpdateStock) {
         GService updateGService = serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + id));
 
 
-        if (updateGService.getStatus().equals(Status.FINALIZED)) {
-            throw new RuntimeException("Can not update PAID status");
-        }
-
-        if (GService.getStatus().equals(Status.FINALIZED)) {
+        if (shouldUpdateStock) {
             updateStock(GService.getSpares());
         }
 

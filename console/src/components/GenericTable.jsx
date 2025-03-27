@@ -112,19 +112,19 @@ export default function GenericTable({
         ...obj,
         render: (_, record) => (
           <Space>
-            <Button
-              key={`view${record.service.id}`}
-              type="primary"
-              onClick={() => navigateToLink(`${record.service.id}/view`)}
-            >
-              View
-            </Button>
+            {/*<Button*/}
+            {/*  key={`view${record.service.id}`}*/}
+            {/*  type="primary"*/}
+            {/*  onClick={() => navigateToLink(`${record.service.id}/view`)}*/}
+            {/*>*/}
+            {/*  View*/}
+            {/*</Button>*/}
             <Button
               key={`edit${record.service.id}`}
               type="primary"
               onClick={() => navigateToLink(`${record.service.id}/edit`)}
             >
-              Edit
+              View details
             </Button>
           </Space>
         ),

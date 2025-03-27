@@ -1,11 +1,11 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Select, Form, Flex, Input, Skeleton } from "antd";
+import { Select, Form, Flex, Input} from "antd";
 import { API_ROUTES, getLookupData, toCustomerCars } from "../utils.jsx";
 
 import { optionLabelFilter } from "../utils.jsx";
 import { useQuery } from "@tanstack/react-query";
 
-const CustomerSection = ({ form, viewMode }) => {
+const CustomerSection = ({ form}) => {
   const customerQuery = useQuery({
     queryKey: ["customerAll"],
     placeholderData: [],
@@ -19,6 +19,7 @@ const CustomerSection = ({ form, viewMode }) => {
     form.setFieldsValue({
       customerName: filteredCustomer.customerName,
       customerPhone: filteredCustomer.customerPhone,
+      customerCar: filteredCustomer.id,
       plateNumber: filteredCustomer.plateNumber,
       make: filteredCustomer.make,
       model: filteredCustomer.model,
@@ -26,11 +27,8 @@ const CustomerSection = ({ form, viewMode }) => {
   };
 
   const customers = toCustomerCars(customerQuery.data);
-  return form.loading ? (
-    <Skeleton active />
-  ) : (
+  return (
     <Flex justify="space-between" wrap>
-      {viewMode || (
         <Form.Item
           label="Customer vehicle"
           tooltip={{
@@ -59,7 +57,7 @@ const CustomerSection = ({ form, viewMode }) => {
             }))}
           ></Select>
         </Form.Item>
-      )}
+
       <Form.Item name="customerName" label="Customer name">
         <Input disabled={true} />
       </Form.Item>
