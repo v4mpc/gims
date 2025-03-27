@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  API_ROUTES,
-  BASE_URL,
-  openNotification,
-} from "../utils.jsx";
+import { API_ROUTES, BASE_URL, openNotification } from "../utils.jsx";
 import { useServiceMutation } from "./useServiceMutation.jsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +66,7 @@ export function useSaveServiceForm(form, id, editMode) {
     successCallBack: updateItemSuccessCallBack,
   });
 
-  function createPayload(values, url, httpMethod) {
+  function createPayload(values, url, httpMethod, status = "DRAFT") {
     const { services, spares } = values;
     const _services = services.map((s) => ({
       item: s.item,
@@ -92,6 +88,7 @@ export function useSaveServiceForm(form, id, editMode) {
       ...values,
       services: _services,
       spares: _spares,
+      status: status,
     };
     return {
       values: updatedValues,
@@ -124,9 +121,10 @@ export function useSaveServiceForm(form, id, editMode) {
           values,
           `${API_ROUTES.services}/${id}`,
           "PUT",
+          values.status,
         );
 
-        console.log(values)
+        console.log(values);
 
         editPrintMutation(data);
       }
@@ -245,5 +243,10 @@ export function useSaveServiceForm(form, id, editMode) {
     }
   };
 
-  return { saveOnlyValidations, saveForLater, editPrint: saveAndPrint, finalize };
+  return {
+    saveOnlyValidations,
+    saveForLater,
+    editPrint: saveAndPrint,
+    finalize,
+  };
 }

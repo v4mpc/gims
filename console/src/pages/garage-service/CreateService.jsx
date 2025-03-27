@@ -19,6 +19,7 @@ const CreateService = () => {
   const [form] = Form.useForm();
   const [spares, setSpares] = useState([]);
   const [services, setServices] = useState([]);
+    const [isEdited, setIsEdited] = useState(false);
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -32,12 +33,18 @@ const CreateService = () => {
   const { saveOnlyValidations, saveForLater, editPrint, finalize } =
     useSaveServiceForm(form, id, editMode);
 
+
+
+
+
   const onValueChanged = (changed, all) => {
+
     if (Object.hasOwn(changed, "payments")) {
       form.setFieldsValue({
         totals: updateTotalCost(form),
       });
     }
+
 
     if (Object.hasOwn(changed, "services")) {
       form.setFieldsValue({
