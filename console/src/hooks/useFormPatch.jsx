@@ -71,7 +71,6 @@ export function useFormPatch(form, id, setSpares, setServices) {
     );
 
     if ((editMode || viewMode) && serviceQuery.data) {
-console.log(serviceQuery.data)
       form.setFieldsValue({
         customerName: serviceQuery.data.customerName,
         customerPhone: serviceQuery.data.customerPhone,

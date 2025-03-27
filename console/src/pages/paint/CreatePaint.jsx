@@ -1,284 +1,194 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Divider, Flex, Form, Space } from "antd";
-import { API_ROUTES, DEFAULT_PAGE_SIZE } from "../../utils.jsx";
+import { DEFAULT_PAGE_SIZE, updateTotalCost } from "../../utils.jsx";
 
 import { StatusTag } from "../../components/StatusTag.jsx";
 import CustomerSection from "../../components/CustomerSection.jsx";
-import ListSection from "../../components/ListSection.jsx";
+import PaintSection from "../../components/PaintSection.jsx";
 import PaymentSection from "../../components/PaymentSection.jsx";
-import PaymentMethodSection from "../../components/PaymentMethodSection.jsx";
 import CollapseSection from "../../components/CollapseSection.jsx";
-import useService from "../../hooks/useService.jsx";
-import PrintButtons from "../../components/PrintButtons.jsx";
+import styles from "../../components/CustomForm.module.css";
+import { usePaintFormPatch } from "../../hooks/usePaintFormPatch.jsx";
+import { DownloadOutlined } from "@ant-design/icons";
+import PaymentSummary from "../../components/PaymentSummary.jsx";
 
 const CreatePaint = () => {
   const navigate = useNavigate();
-  const {
-    form,
-    paymentCatalogQuery,
-    setSelectedPayment,
-    setSaveOnlyValidation,
-    setPayViaInsurance,
-    editMode,
-    createItem,
-    editValues,
-    updateItem,
-    payViaInsurance,
-    saveOnlyValidations,
-    selectedPayment,
-    id,
-  } = useService();
-  const onPriceChange = (e, key) => {
-    const _paints = form.getFieldValue("paints");
+  const [form] = Form.useForm();
+  const { id } = useParams();
+  const { paintQuery, editMode, viewMode } = usePaintFormPatch(form, id);
 
-    if (_paints[key].quantity) {
+  const onValuesChanged = (changed, all) => {
+    if (Object.hasOwn(changed, "paints")) {
       form.setFieldsValue({
-        paints: _paints.map((s, index) =>
-          index === key
-            ? {
-                ...s,
-                total: e * _paints[key].quantity,
-              }
-            : s,
-        ),
+        totals: updateTotalCost(form),
+        services: all.services.map((s) => ({
+          ...s,
+          total: Number(s.quantity) * Number(s.price),
+        })),
       });
     }
   };
 
-  const onQuantityChange = (e, key) => {
-    const _paints = form.getFieldValue("paints");
-    if (_paints[key].price) {
-      form.setFieldsValue({
-        paints: _paints.map((s, index) =>
-          index === key
-            ? {
-                ...s,
-                total: e * _paints[key].price,
-              }
-            : s,
-        ),
-      });
-    }
-  };
-
-  const onPaymentChanged = (paymentId) => {
-    const [selectedPayment] = paymentCatalogQuery.data.filter(
-      (pc) => pc.id === paymentId,
-    );
-    setSelectedPayment(selectedPayment);
-
-    if (selectedPayment.accountNumber !== null) {
-      form.setFieldsValue({
-        accountNumber: selectedPayment.accountNumber,
-      });
-    }
-  };
-
-  const onPayViaInsuranceChanged = (e) => {
-    setPayViaInsurance(e.target.checked);
-  };
-
-  const onValuesChanged = (changedValues, allValues) => {
-    if (allValues.estimateAmount != null) {
-      form.setFieldsValue({
-        //   TODO; there some errors in calculating netprofit
-        netProfit: allValues.estimateAmount - allValues.grandTotal,
-      });
-    }
-
-    if (Object.hasOwn(changedValues, "paints")) {
-      const totalQuantity = allValues.paints.reduce(
-        (accumulator, currentValue) => {
-          return (
-            accumulator +
-            (currentValue?.quantity ?? 0) * (currentValue?.price ?? 0)
-          );
-        },
-        0,
-      );
-      form.setFieldsValue({
-        grandTotal: isNaN(totalQuantity) ? 0 : totalQuantity,
-      });
-    }
-  };
-
-  const saveForLater = () => {
-    setSaveOnlyValidation(true);
-
-    form.setFields([
-      {
-        name: "paints",
-        errors: [], // Clear any existing errors
-      },
-      {
-        name: "initialPayment",
-        errors: [],
-      },
-
-      {
-        name: "initialPaymentDate",
-        errors: [],
-      },
-
-      {
-        name: "finalPaymentDate",
-        errors: [],
-      },
-    ]);
-
-    const fields = form.getFieldValue("paints") || [];
-    // TODO understand flatmap
-    form.setFields(
-      fields.flatMap((_, index) => [
-        { name: ["paints", index, "item"], errors: [] },
-        { name: ["paints", index, "price"], errors: [] },
-        { name: ["paints", index, "quantity"], errors: [] },
-      ]),
-    );
-
-    setTimeout(() => {
-      form
-        .validateFields()
-        .then((values) => {
-          let status = "DRAFT";
-          const { estimateAmount, initialPayment, finalPayment } = values;
-          if (initialPayment + finalPayment < estimateAmount) {
-            status = "PARTIALLY_PAID";
-          }
-          if (initialPayment + finalPayment === 0) {
-            status = "UNPAID";
-          }
-
-          if (!editMode) {
-            const updatedValues = { ...values, status: status };
-            const data = {
-              values: updatedValues,
-              urlPath: API_ROUTES.paints,
-              method: "POST",
-            };
-            createItem(data);
-          } else {
-            const updatedValues = { ...values, status: status };
-            const data = {
-              values: updatedValues,
-              urlPath: `${API_ROUTES.paints}/${id}`,
-              method: "PUT",
-            };
-            updateItem(data);
-          }
-        })
-        .catch((errorInfo) => {
-          console.error("Validation failed:", errorInfo);
-        });
-    }, 0);
-  };
-
-  const finalize = async () => {
-    setSaveOnlyValidation(false);
-
-    setTimeout(() => {
-      form
-        .validateFields()
-        .then((values) => {
-          if (!editMode) {
-            const updatedValues = { ...values, status: "PAID" };
-            const data = {
-              values: updatedValues,
-              urlPath: API_ROUTES.paints,
-              method: "POST",
-            };
-            createItem(data);
-          } else {
-            const updatedValues = { ...values, status: "PAID" };
-            const data = {
-              values: updatedValues,
-              urlPath: `${API_ROUTES.paints}/${id}`,
-              method: "PUT",
-            };
-            updateItem(data);
-          }
-
-          console.log("Form values:", values);
-        })
-        .catch((errorInfo) => {
-          console.error("Validation failed:", errorInfo);
-        });
-    }, 0);
-  };
+  // const saveForLater = () => {
+  //   setSaveOnlyValidation(true);
+  //
+  //   form.setFields([
+  //     {
+  //       name: "paints",
+  //       errors: [], // Clear any existing errors
+  //     },
+  //     {
+  //       name: "initialPayment",
+  //       errors: [],
+  //     },
+  //
+  //     {
+  //       name: "initialPaymentDate",
+  //       errors: [],
+  //     },
+  //
+  //     {
+  //       name: "finalPaymentDate",
+  //       errors: [],
+  //     },
+  //   ]);
+  //
+  //   const fields = form.getFieldValue("paints") || [];
+  //   // TODO understand flatmap
+  //   form.setFields(
+  //     fields.flatMap((_, index) => [
+  //       { name: ["paints", index, "item"], errors: [] },
+  //       { name: ["paints", index, "price"], errors: [] },
+  //       { name: ["paints", index, "quantity"], errors: [] },
+  //     ]),
+  //   );
+  //
+  //   setTimeout(() => {
+  //     form
+  //       .validateFields()
+  //       .then((values) => {
+  //         let status = "DRAFT";
+  //         const { estimateAmount, initialPayment, finalPayment } = values;
+  //         if (initialPayment + finalPayment < estimateAmount) {
+  //           status = "PARTIALLY_PAID";
+  //         }
+  //         if (initialPayment + finalPayment === 0) {
+  //           status = "UNPAID";
+  //         }
+  //
+  //         if (!editMode) {
+  //           const updatedValues = { ...values, status: status };
+  //           const data = {
+  //             values: updatedValues,
+  //             urlPath: API_ROUTES.paints,
+  //             method: "POST",
+  //           };
+  //           createItem(data);
+  //         } else {
+  //           const updatedValues = { ...values, status: status };
+  //           const data = {
+  //             values: updatedValues,
+  //             urlPath: `${API_ROUTES.paints}/${id}`,
+  //             method: "PUT",
+  //           };
+  //           updateItem(data);
+  //         }
+  //       })
+  //       .catch((errorInfo) => {
+  //         console.error("Validation failed:", errorInfo);
+  //       });
+  //   }, 0);
+  // };
+  //
+  // const finalize = async () => {
+  //   setSaveOnlyValidation(false);
+  //
+  //   setTimeout(() => {
+  //     form
+  //       .validateFields()
+  //       .then((values) => {
+  //         if (!editMode) {
+  //           const updatedValues = { ...values, status: "PAID" };
+  //           const data = {
+  //             values: updatedValues,
+  //             urlPath: API_ROUTES.paints,
+  //             method: "POST",
+  //           };
+  //           createItem(data);
+  //         } else {
+  //           const updatedValues = { ...values, status: "PAID" };
+  //           const data = {
+  //             values: updatedValues,
+  //             urlPath: `${API_ROUTES.paints}/${id}`,
+  //             method: "PUT",
+  //           };
+  //           updateItem(data);
+  //         }
+  //
+  //         console.log("Form values:", values);
+  //       })
+  //       .catch((errorInfo) => {
+  //         console.error("Validation failed:", errorInfo);
+  //       });
+  //   }, 0);
+  // };
 
   return (
     <Form
-      key="serviceForm"
+      key="paintForm"
       variant="outlined"
       form={form}
       layout="vertical"
-      initialValues={editValues}
+      className={viewMode ? styles.customForm : ""}
       autoComplete="off"
       onValuesChange={onValuesChanged}
+      disabled={viewMode}
     >
-      <Flex justify="flex-end">
-        <StatusTag status={form.getFieldValue("status")} />
+      <Flex justify="space-between">
+        <StatusTag status={paintQuery.data.paint?.status} />
+        <h3>Paint details</h3>
+        <Button type="dashed" disabled={false} icon={<DownloadOutlined />}>
+          Download invoice
+        </Button>
       </Flex>
       <Divider orientation="left" plain>
-        Customer car
+        Customer
       </Divider>
+
       <CustomerSection form={form} />
+
       <Divider orientation="left" plain>
         Items
       </Divider>
-
-      <ListSection
-        saveOnlyValidations={saveOnlyValidations}
-        onPriceChange={onPriceChange}
-        onQuantityChange={onQuantityChange}
-      />
-
+      <PaintSection />
       <CollapseSection />
-      <Divider orientation="left" plain>
-        Payments
-      </Divider>
-      <PaymentSection saveOnlyValidations={saveOnlyValidations} />
-      <Divider orientation="left" plain>
-        Payment method
-      </Divider>
-
-      <PaymentMethodSection
-        onPaymentChanged={onPaymentChanged}
-        selectedPayment={selectedPayment}
-        paymentCatalogQuery={paymentCatalogQuery}
-        onPayViaInsuranceChanged={onPayViaInsuranceChanged}
-        payViaInsurance={payViaInsurance}
-      />
+      <PaymentSection viewMode={viewMode} />
+      <PaymentSummary />
       <Divider orientation="left" plain />
+        <Flex justify="space-between">
+      <Space>
+        <Button
+          disabled={false}
+          color="danger"
+          variant="solid"
+          onClick={() => navigate(`/paint?page=1&size=${DEFAULT_PAGE_SIZE}`)}
+        >
+          Close
+        </Button>
+      </Space>
+      <Space>
+        {viewMode || (
+          <>
+            <Button type="primary" htmlType="button">
+              Save for later
+            </Button>
 
-      <Flex justify="space-between">
-        <Space>
-          <Button
-            htmlType="button"
-            onClick={() => navigate(`/paint?page=1&size=${DEFAULT_PAGE_SIZE}`)}
-          >
-            Cancel
-          </Button>
-
-          <Button htmlType="button" onClick={form.resetFields}>
-            Reset
-          </Button>
-        </Space>
-        <Space>
-          <PrintButtons
-            primaryKey={id}
-            printable={["TAX", "PROFORMA"]}
-            invoiceSource="PAINT"
-          />
-          <Button type="primary" onClick={saveForLater} htmlType="button">
-            Save for later
-          </Button>
-
-          <Button type="primary" htmlType="button" onClick={finalize}>
-            Finalize
-          </Button>
-        </Space>
-      </Flex>
+            <Button type="primary">Finalize</Button>
+          </>
+        )}
+      </Space>
+    </Flex>
     </Form>
   );
 };

@@ -22,7 +22,6 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 
 const ServiceSection = ({
-  saveOnlyValidations,
   viewMode,
   services,
   setServices,
@@ -118,10 +117,7 @@ const ServiceSection = ({
 
       {availableServices.length === 0 && viewMode && <Empty />}
 
-      <Form.List
-        name="services"
-
-      >
+      <Form.List name="services">
         {(fields, { add, remove }, { errors }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
@@ -139,11 +135,7 @@ const ServiceSection = ({
                 <Form.Item
                   name={[name, "price"]}
                   label={key === 0 ? "Price" : ""}
-                  rules={[
-                    ...(saveOnlyValidations
-                      ? [{ required: true, message: "Missing price" }]
-                      : [{ required: true, message: "Missing price" }]),
-                  ]}
+                  rules={[{ required: true, message: "Missing price" }]}
                 >
                   <InputNumber
                     style={{ width: "150px" }}
@@ -157,11 +149,7 @@ const ServiceSection = ({
                 <Form.Item
                   name={[name, "quantity"]}
                   label={key === 0 ? "Quantity" : ""}
-                  rules={[
-                    ...(saveOnlyValidations
-                      ? [{ required: true, message: "Missing quantity" }]
-                      : [{ required: true, message: "Missing quantity" }]),
-                  ]}
+                  rules={[{ required: true, message: "Missing quantity" }]}
                 >
                   <InputNumber
                     formatter={thousanSeparatorformatter}
@@ -191,7 +179,6 @@ const ServiceSection = ({
                 </Space>
               </Space>
             ))}
-
           </>
         )}
       </Form.List>

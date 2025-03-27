@@ -19,8 +19,6 @@ const CreateService = () => {
   const [form] = Form.useForm();
   const [spares, setSpares] = useState([]);
   const [services, setServices] = useState([]);
-    const [isEdited, setIsEdited] = useState(false);
-
   const navigate = useNavigate();
   const { id } = useParams();
   const { serviceQuery,editMode,viewMode } = useFormPatch(
@@ -30,7 +28,7 @@ const CreateService = () => {
     setServices,
   );
 
-  const { saveOnlyValidations, saveForLater, editPrint, finalize } =
+  const {saveForLater, editPrint, finalize } =
     useSaveServiceForm(form, id, editMode);
 
 
@@ -67,18 +65,6 @@ const CreateService = () => {
     }
   };
 
-  const items = [
-    {
-      label: "Finalize",
-      key: 1,
-    },
-
-    {
-      label: "Discard",
-      key: 2,
-    },
-  ];
-
   return (
     <Form
       key="serviceForm"
@@ -104,14 +90,12 @@ const CreateService = () => {
       <CustomerSection form={form} />
 
       <ServiceSection
-        saveOnlyValidations={saveOnlyValidations}
         viewMode={viewMode}
         services={services}
         setServices={setServices}
       />
 
       <SpareSection
-        saveOnlyValidations={saveOnlyValidations}
         viewMode={viewMode}
         spares={spares}
         setSpares={setSpares}

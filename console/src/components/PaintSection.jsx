@@ -5,24 +5,20 @@ import {
 import {Button, Flex, Form, Input, InputNumber, Space} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
-const ListSection = ({saveOnlyValidations,onPriceChange,onQuantityChange}) => {
+const PaintSection = () => {
   return (
     <Form.List
       name="paints"
       rules={[
-        ...(saveOnlyValidations
-          ? []
-          : [
-              {
-                validator: async (_, names) => {
+          {
+              validator: async (_, names) => {
                   if (!names || names.length < 1) {
-                    return Promise.reject(
-                      new Error("At least 1 Item required"),
-                    );
+                      return Promise.reject(
+                          new Error("At least 1 Item required"),
+                      );
                   }
-                },
               },
-            ]),
+          },
       ]}
     >
       {(fields, { add, remove }, { errors }) => (
@@ -42,11 +38,7 @@ const ListSection = ({saveOnlyValidations,onPriceChange,onQuantityChange}) => {
                 name={[name, "item"]}
                 label={key === 0 ? "Item" : ""}
                 min={1}
-                rules={[
-                  ...(saveOnlyValidations
-                    ? []
-                    : [{ required: true, message: "Missing item" }]),
-                ]}
+                rules={[{ required: true, message: "Missing item" }]}
               >
                 <Input style={{ width: "250px" }} placeholder="Item" />
               </Form.Item>
@@ -55,18 +47,13 @@ const ListSection = ({saveOnlyValidations,onPriceChange,onQuantityChange}) => {
                 name={[name, "price"]}
                 label={key === 0 ? "Price" : ""}
                 min={1}
-                rules={[
-                  ...(saveOnlyValidations
-                    ? []
-                    : [{ required: true, message: "Missing Price" }]),
-                ]}
+                rules={[{ required: true, message: "Missing Price" }]}
               >
                 <InputNumber
                   style={{ width: "150px" }}
                   formatter={thousanSeparatorformatter}
                   parser={thousanSeparatorparser}
                   min={1}
-                  onChange={(value) => onPriceChange(value, key)}
                   placeholder="Price"
                 />
               </Form.Item>
@@ -75,18 +62,13 @@ const ListSection = ({saveOnlyValidations,onPriceChange,onQuantityChange}) => {
                 {...restField}
                 name={[name, "quantity"]}
                 label={key === 0 ? "Quantity" : ""}
-                rules={[
-                  ...(saveOnlyValidations
-                    ? []
-                    : [{ required: true, message: "Missing quantity" }]),
-                ]}
+                rules={[{ required: true, message: "Missing quantity" }]}
               >
                 <InputNumber
                   formatter={thousanSeparatorformatter}
                   parser={thousanSeparatorparser}
                   placeholder="Quantity"
                   min={1}
-                  onChange={(value) => onQuantityChange(value, key)}
                 />
               </Form.Item>
 
@@ -122,4 +104,4 @@ const ListSection = ({saveOnlyValidations,onPriceChange,onQuantityChange}) => {
   );
 };
 
-export default ListSection;
+export default PaintSection;

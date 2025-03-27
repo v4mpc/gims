@@ -23,7 +23,7 @@ import { useQueries } from "@tanstack/react-query";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
-const SpareSection = ({ saveOnlyValidations, viewMode, spares, setSpares }) => {
+const SpareSection = ({ viewMode, spares, setSpares }) => {
   const form = Form.useFormInstance();
   const availableSpares = form.getFieldValue("spares") ?? [];
   const results = useQueries({
@@ -158,11 +158,7 @@ const SpareSection = ({ saveOnlyValidations, viewMode, spares, setSpares }) => {
               <Form.Item
                 name={[name, "price"]}
                 label={key === 0 ? "Price" : ""}
-                rules={[
-                  ...(saveOnlyValidations
-                    ? []
-                    : [{ required: true, message: "Missing price" }]),
-                ]}
+                rules={[{ required: true, message: "Missing price" }]}
               >
                 <InputNumber
                   style={{ width: "100px" }}
@@ -186,46 +182,24 @@ const SpareSection = ({ saveOnlyValidations, viewMode, spares, setSpares }) => {
                 name={[name, "quantity"]}
                 label={key === 0 ? "Quantity" : ""}
                 rules={[
-                  ...(saveOnlyValidations
-                    ? [
-                        { required: true, message: "Missing quantity" },
+                  { required: true, message: "Missing quantity" },
 
-                        {
-                          validator: async (_, value) => {
-                            const [spare] = form
-                              .getFieldValue("spares")
-                              .filter((value, index) => index === key);
+                  {
+                    validator: async (_, value) => {
+                      const [spare] = form
+                        .getFieldValue("spares")
+                        .filter((value, index) => index === key);
 
-                            if (value > spare.soh) {
-                              return Promise.reject(
-                                new Error(
-                                  "Quantity should be less or equal to Stock",
-                                ),
-                              );
-                            }
-                            return Promise.resolve();
-                          },
-                        },
-                      ]
-                    : [
-                        { required: true, message: "Missing quantity" },
-
-                        {
-                          validator: async (_, value) => {
-                            const [spare] = form
-                              .getFieldValue("spares")
-                              .filter((value, index) => index === key);
-                            if (value > spare.soh) {
-                              return Promise.reject(
-                                new Error(
-                                  "Quantity should be less or equal to Stock",
-                                ),
-                              );
-                            }
-                            return Promise.resolve();
-                          },
-                        },
-                      ]),
+                      if (value > spare.soh) {
+                        return Promise.reject(
+                          new Error(
+                            "Quantity should be less or equal to Stock",
+                          ),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
                 ]}
               >
                 <InputNumber
@@ -255,14 +229,10 @@ const SpareSection = ({ saveOnlyValidations, viewMode, spares, setSpares }) => {
                     <Form.Item
                       name={[name, "currentKm"]}
                       rules={[
-                        ...(saveOnlyValidations
-                          ? []
-                          : [
-                              {
-                                required: true,
-                                message: "Missing current Kms",
-                              },
-                            ]),
+                        {
+                          required: true,
+                          message: "Missing current Kms",
+                        },
                       ]}
                       label={key === 0 ? "Current Kms" : ""}
                     >
@@ -277,11 +247,7 @@ const SpareSection = ({ saveOnlyValidations, viewMode, spares, setSpares }) => {
                     <Form.Item
                       name={[name, "nextKm"]}
                       label={key === 0 ? "Next Kms" : ""}
-                      rules={[
-                        ...(saveOnlyValidations
-                          ? []
-                          : [{ required: true, message: "Missing next Kms" }]),
-                      ]}
+                      rules={[{ required: true, message: "Missing next Kms" }]}
                     >
                       <InputNumber
                         formatter={thousanSeparatorformatter}

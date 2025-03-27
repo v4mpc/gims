@@ -5,7 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 export function useSaveServiceForm(form, id, editMode) {
-  const [saveOnlyValidations] = useState(true);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -244,7 +243,6 @@ export function useSaveServiceForm(form, id, editMode) {
   };
 
   return {
-    saveOnlyValidations,
     saveForLater,
     editPrint: saveAndPrint,
     finalize,
