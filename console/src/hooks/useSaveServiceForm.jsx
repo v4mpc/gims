@@ -37,6 +37,14 @@ export function useSaveServiceForm(form, id, editMode) {
     );
   }
 
+
+    function editPaintPrintSuccessCallBack(jsonResponse) {
+        window.open(
+            `${BASE_URL}/${API_ROUTES.exportInvoice}/PAINT/${jsonResponse.data}`,
+            "_blank",
+        );
+    }
+
   function createPrintSuccessCallBack(jsonResponse) {
     navigate(`/service/${jsonResponse.data}/edit`);
     window.open(
@@ -44,6 +52,15 @@ export function useSaveServiceForm(form, id, editMode) {
       "_blank",
     );
   }
+
+
+    function createPaintPrintSuccessCallBack(jsonResponse) {
+        navigate(`/paint/${jsonResponse.data}/edit`);
+        window.open(
+            `${BASE_URL}/${API_ROUTES.exportInvoice}/PAINT/${jsonResponse.data}`,
+            "_blank",
+        );
+    }
 
   function updateItemSuccessCallBack() {
     queryClient.invalidateQueries({ queryKey: ["singleService", id] });
@@ -75,17 +92,22 @@ export function useSaveServiceForm(form, id, editMode) {
     successCallBack: createPaintItemSuccessCallBack,
   });
 
-  // const { mutate: createFinalize } = useServiceMutation({
-  //   successCallBack: createItemSuccessCallBack,
-  // });
-
   const { mutate: editPrintMutation } = useServiceMutation({
     successCallBack: editPrintSuccessCallBack,
   });
 
+
+    const { mutate: editPaintPrintMutation } = useServiceMutation({
+        successCallBack: editPaintPrintSuccessCallBack,
+    });
+
   const { mutate: createPrintMutation } = useServiceMutation({
     successCallBack: createPrintSuccessCallBack,
   });
+
+    const { mutate: createPaintPrintMutation } = useServiceMutation({
+        successCallBack: createPaintPrintSuccessCallBack,
+    });
 
   const { mutate: updateItem } = useServiceMutation({
     successCallBack: updateItemSuccessCallBack,
@@ -138,36 +160,84 @@ export function useSaveServiceForm(form, id, editMode) {
     };
   }
 
-  const saveAndPrint = async () => {
+
+
+
+
+
+    const saveAndPrint = async () => {
+        try {
+            const values = await form.validateFields();
+            if (
+                (!values.services || values.services.length === 0) &&
+                (!values.spares || values.spares.length === 0)
+            ) {
+                openNotification(
+                    "service-form-error",
+                    "error",
+                    "Error",
+                    "At least one service/spare is required",
+                );
+                throw new Error("Validation errors found");
+            }
+
+            if (!editMode) {
+                const data = createPayload(values, API_ROUTES.services, "POST");
+                createPrintMutation(data);
+            } else {
+                const data = createPayload(
+                    values,
+                    `${API_ROUTES.services}/${id}`,
+                    "PUT",
+                    values.status,
+                );
+
+                console.log(values);
+
+                editPrintMutation(data);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+
+
+
+  const savePaintAndPrint = async () => {
     try {
       const values = await form.validateFields();
-      if (
-        (!values.services || values.services.length === 0) &&
-        (!values.spares || values.spares.length === 0)
-      ) {
-        openNotification(
-          "service-form-error",
-          "error",
-          "Error",
-          "At least one service/spare is required",
-        );
-        throw new Error("Validation errors found");
-      }
+        if (!values.paints || values.paints.length === 0) {
+            form.setFields([
+                {
+                    name: "paints",
+                    errors: ["At least one item  is required"],
+                },
+            ]);
+            throw new Error("paint atleast one Validation errors found");
+        } else {
+            form.setFields([
+                {
+                    name: "paints",
+                    errors: [],
+                },
+            ]);
+        }
 
       if (!editMode) {
-        const data = createPayload(values, API_ROUTES.services, "POST");
-        createPrintMutation(data);
+        const data = createPaintPayload(values, API_ROUTES.paints, "POST");
+        createPaintPrintMutation(data);
       } else {
-        const data = createPayload(
+        const data = createPaintPayload(
           values,
-          `${API_ROUTES.services}/${id}`,
+          `${API_ROUTES.paints}/${id}`,
           "PUT",
           values.status,
         );
 
-        console.log(values);
 
-        editPrintMutation(data);
+
+        editPaintPrintMutation(data);
       }
     } catch (e) {
       console.error(e);
@@ -402,5 +472,6 @@ export function useSaveServiceForm(form, id, editMode) {
     finalize,
     savePaintForLater,
     finalizePaint,
+      savePaintAndPrint
   };
 }

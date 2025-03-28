@@ -237,7 +237,7 @@ const AppLayout = () => {
             textAlign: "center",
           }}
         >
-          Garage MIS ©{new Date().getFullYear()} Created by ymahundi
+          Garage MIS ©{new Date().getFullYear()} Created by Yona Mahundi
         </Footer>
       </Layout>
     </Layout>

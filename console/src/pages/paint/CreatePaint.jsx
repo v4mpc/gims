@@ -37,7 +37,7 @@ const CreatePaint = () => {
   const paintForTotal = Form.useWatch("paints", form) ?? [];
   const includeEstimateAmount = Form.useWatch("includeEstimateAmount", form);
   const estimateAmount = Form.useWatch("estimateAmount", form) ?? 0;
-  const { savePaintForLater, finalizePaint } = useSaveServiceForm(
+  const { savePaintForLater, finalizePaint,savePaintAndPrint } = useSaveServiceForm(
     form,
     id,
     editMode,
@@ -168,7 +168,7 @@ const CreatePaint = () => {
       <Flex justify="space-between">
         <StatusTag status={paintQuery.data.paint?.status} />
         <h3>Paint details</h3>
-        <Button type="dashed" disabled={false} icon={<DownloadOutlined />}>
+        <Button type="dashed" disabled={false} onClick={savePaintAndPrint} icon={<DownloadOutlined />}>
           Download invoice
         </Button>
       </Flex>

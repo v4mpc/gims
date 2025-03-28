@@ -2,14 +2,12 @@ import {
   thousanSeparatorformatter,
   thousanSeparatorparser,
 } from "../utils.jsx";
-import {Button, Flex, Form, Input, InputNumber, Space} from "antd";
-import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
+import { Button, Flex, Form, Input, InputNumber, Space } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
-const PaintSection = ({viewMode}) => {
+const PaintSection = ({ viewMode }) => {
   return (
-    <Form.List
-      name="paints"
-    >
+    <Form.List name="paints">
       {(fields, { add, remove }, { errors }) => (
         <>
           {fields.map(({ key, name, ...restField }) => (
@@ -77,14 +75,22 @@ const PaintSection = ({viewMode}) => {
                   />
                 </Form.Item>
 
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                {viewMode || (
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                )}
               </Space>
             </Flex>
           ))}
           <Form.Item>
-              {viewMode||   <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                  Add Item
-              </Button>}
+            {viewMode || (
+              <Button
+                type="dashed"
+                onClick={() => add()}
+                icon={<PlusOutlined />}
+              >
+                Add Item
+              </Button>
+            )}
             <Form.ErrorList errors={errors} />
           </Form.Item>
         </>
