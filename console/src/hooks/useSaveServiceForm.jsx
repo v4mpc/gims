@@ -2,6 +2,7 @@ import { API_ROUTES, BASE_URL, openNotification } from "../utils.jsx";
 import { useServiceMutation } from "./useServiceMutation.jsx";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import createPaint from "../pages/paint/CreatePaint.jsx";
 
 export function useSaveServiceForm(form, id, editMode) {
   const navigate = useNavigate();
@@ -55,17 +56,16 @@ export function useSaveServiceForm(form, id, editMode) {
     );
   }
 
-
-    function updatePaintItemSuccessCallBack() {
-        queryClient.invalidateQueries({ queryKey: ["singlePaint", id] });
-        queryClient.invalidateQueries("paints");
-        openNotification(
-            "post-success",
-            "success",
-            "Success",
-            "Record updated successfully",
-        );
-    }
+  function updatePaintItemSuccessCallBack() {
+    queryClient.invalidateQueries({ queryKey: ["singlePaint", id] });
+    queryClient.invalidateQueries("paints");
+    openNotification(
+      "post-success",
+      "success",
+      "Success",
+      "Record updated successfully",
+    );
+  }
 
   const { mutate: createItem } = useServiceMutation({
     successCallBack: createItemSuccessCallBack,
@@ -91,10 +91,9 @@ export function useSaveServiceForm(form, id, editMode) {
     successCallBack: updateItemSuccessCallBack,
   });
 
-
-    const { mutate: updatePaintItem } = useServiceMutation({
-        successCallBack: updatePaintItemSuccessCallBack,
-    });
+  const { mutate: updatePaintItem } = useServiceMutation({
+    successCallBack: updatePaintItemSuccessCallBack,
+  });
 
   function createPayload(values, url, httpMethod, status = "DRAFT") {
     const { services, spares } = values;
@@ -182,7 +181,11 @@ export function useSaveServiceForm(form, id, editMode) {
         const data = createPaintPayload(values, API_ROUTES.paints, "POST");
         createPaintItem(data);
       } else {
-        const data = createPaintPayload(values, `${API_ROUTES.paints}/${id}`, "PUT");
+        const data = createPaintPayload(
+          values,
+          `${API_ROUTES.paints}/${id}`,
+          "PUT",
+        );
         updatePaintItem(data);
       }
     } catch (e) {
@@ -210,6 +213,99 @@ export function useSaveServiceForm(form, id, editMode) {
           "PUT",
         );
         updateItem(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const finalizePaint = async () => {
+    try {
+      const values = await form.validateFields();
+      if (!values.paints || values.paints.length === 0) {
+        form.setFields([
+          {
+            name: "paints",
+            errors: ["At least one item  is required"],
+          },
+        ]);
+        throw new Error("paint atleast one Validation errors found");
+      } else {
+        form.setFields([
+          {
+            name: "paints",
+            errors: [],
+          },
+        ]);
+      }
+
+      const paintTotal = values.paints.reduce(
+        (acc, curr) =>
+          Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+        0,
+      );
+
+      if (
+        !values.payments ||
+        values.payments.length === 0 ||
+        (values.payments &&
+          values.payments.length > 0 &&
+          values.payments.reduce((acc, curr) => acc + curr.amount, 0) <
+            paintTotal &&
+          !values.includeEstimateAmount)
+      ) {
+        form.setFields([
+          {
+            name: "payments",
+            errors: [
+              "To Finalize, Payments must be greater or equal to Total cost",
+            ],
+          },
+        ]);
+        throw new Error("payments Validation errors found");
+      } else if (
+        !values.payments ||
+        values.payments.length === 0 ||
+        (values.payments &&
+          values.payments.length > 0 &&
+          values.includeEstimateAmount &&
+          values.payments.reduce((acc, curr) => acc + curr.amount, 0) <
+            (values.estimateAmount ?? 0))
+      ) {
+        form.setFields([
+          {
+            name: "payments",
+            errors: [
+              "To Finalize, Payments must be greater or equal to Estimate cost",
+            ],
+          },
+        ]);
+        throw new Error("payments Validation errors found");
+      } else {
+        form.setFields([
+          {
+            name: "payments",
+            errors: [],
+          },
+        ]);
+      }
+
+      if (!editMode) {
+        const data = createPaintPayload(
+          values,
+          API_ROUTES.paints,
+          "POST",
+          "FINALIZED",
+        );
+        createPaintItem(data);
+      } else {
+        const data = createPaintPayload(
+          values,
+          `${API_ROUTES.paints}/${id}`,
+          "PUT",
+          "FINALIZED",
+        );
+        updatePaintItem(data);
       }
     } catch (e) {
       console.error(e);
@@ -305,5 +401,6 @@ export function useSaveServiceForm(form, id, editMode) {
     editPrint: saveAndPrint,
     finalize,
     savePaintForLater,
+    finalizePaint,
   };
 }

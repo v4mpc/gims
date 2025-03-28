@@ -26,7 +26,7 @@ export function usePaintFormPatch(form, id) {
   const viewMode =
     pathname.toLowerCase().endsWith("edit") &&
     id !== undefined &&
-    paintQuery.data.service?.status === "FINALIZED";
+    paintQuery.data.paint?.status === "FINALIZED";
 
   useEffect(() => {
     form.setFieldsValue({

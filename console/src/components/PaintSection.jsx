@@ -5,7 +5,7 @@ import {
 import {Button, Flex, Form, Input, InputNumber, Space} from "antd";
 import {MinusCircleOutlined, PlusOutlined} from "@ant-design/icons";
 
-const PaintSection = () => {
+const PaintSection = ({viewMode}) => {
   return (
     <Form.List
       name="paints"
@@ -82,9 +82,9 @@ const PaintSection = () => {
             </Flex>
           ))}
           <Form.Item>
-            <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-              Add Item
-            </Button>
+              {viewMode||   <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
+                  Add Item
+              </Button>}
             <Form.ErrorList errors={errors} />
           </Form.Item>
         </>

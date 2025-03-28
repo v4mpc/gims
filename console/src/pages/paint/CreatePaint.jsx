@@ -27,7 +27,7 @@ import { DownloadOutlined } from "@ant-design/icons";
 import PaymentSummary from "../../components/PaymentSummary.jsx";
 import ThousandSeparator from "../../components/ThousandSeparator.jsx";
 import { useSaveServiceForm } from "../../hooks/useSaveServiceForm.jsx";
-import {useState} from "react";
+import { useState } from "react";
 
 const CreatePaint = () => {
   const navigate = useNavigate();
@@ -39,7 +39,11 @@ const CreatePaint = () => {
   const paintForTotal = Form.useWatch("paints", form) ?? [];
   const includeEstimateAmount = Form.useWatch("includeEstimateAmount", form);
   const estimateAmount = Form.useWatch("estimateAmount", form) ?? 0;
-  const { savePaintForLater } = useSaveServiceForm(form, id, editMode);
+  const { savePaintForLater, finalizePaint } = useSaveServiceForm(
+    form,
+    id,
+    editMode,
+  );
 
   const columnsForTotal = [
     {
@@ -148,39 +152,6 @@ const CreatePaint = () => {
     }
   };
 
-  // const finalize = async () => {
-  //   setSaveOnlyValidation(false);
-  //
-  //   setTimeout(() => {
-  //     form
-  //       .validateFields()
-  //       .then((values) => {
-  //         if (!editMode) {
-  //           const updatedValues = { ...values, status: "PAID" };
-  //           const data = {
-  //             values: updatedValues,
-  //             urlPath: API_ROUTES.paints,
-  //             method: "POST",
-  //           };
-  //           createItem(data);
-  //         } else {
-  //           const updatedValues = { ...values, status: "PAID" };
-  //           const data = {
-  //             values: updatedValues,
-  //             urlPath: `${API_ROUTES.paints}/${id}`,
-  //             method: "PUT",
-  //           };
-  //           updateItem(data);
-  //         }
-  //
-  //         console.log("Form values:", values);
-  //       })
-  //       .catch((errorInfo) => {
-  //         console.error("Validation failed:", errorInfo);
-  //       });
-  //   }, 0);
-  // };
-
   function handleMoreDetailChanged(checked) {
     setMoreDetails(checked);
   }
@@ -218,15 +189,15 @@ const CreatePaint = () => {
       <Divider orientation="left" plain>
         Items
       </Divider>
-      <PaintSection />
+      <PaintSection viewMode={viewMode} />
       <PaymentSection viewMode={viewMode} />
       {includeEstimateAmount && (
-        <Space>
-          <div>
-            <Switch checked={moreDetails} onChange={handleMoreDetailChanged} />
+
+          <Space>
+            <Switch checked={moreDetails} disabled={false} onChange={handleMoreDetailChanged} />
             {!moreDetails ? <h4>Show more details</h4> : <h4>Hide details</h4>}
-          </div>
-        </Space>
+          </Space>
+
       )}
       <PaymentSummary
         updateTotalSummary={updateTotalSummary}
@@ -255,7 +226,9 @@ const CreatePaint = () => {
                 Save for later
               </Button>
 
-              <Button type="primary">Finalize</Button>
+              <Button type="primary" onClick={finalizePaint}>
+                Finalize
+              </Button>
             </>
           )}
         </Space>
