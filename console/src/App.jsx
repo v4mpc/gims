@@ -47,19 +47,37 @@ export default function App() {
             <Route path="stock-on-hand" element={<StockOnhand />} />
             <Route path="buy" element={<Buy />} />
             <Route path="sell" element={<Sell />} />
-              <Route path="customers" element={<Customer />} />
+            <Route path="customers" element={<Customer />} />
 
             <Route path="reports" element={<Reports />} />
 
             <Route path="paint" element={<ListPaint />} />
-            <Route path="paint/:id/edit" element={<CreatePaint key="edit-paint" />} />
-            <Route path="paint/:id/view" element={<CreatePaint key="view-paint" />} />
-            <Route path="paint/create" element={<CreatePaint key="create-paint" />} />
+            <Route
+              path="paint/:id/edit"
+              element={<CreatePaint key="edit-paint" />}
+            />
+            <Route
+              path="paint/:id/view"
+              element={<CreatePaint key="view-paint" />}
+            />
+            <Route
+              path="paint/create"
+              element={<CreatePaint key="create-paint" />}
+            />
 
             <Route path="service" element={<ListService />} />
-            <Route path="service/:id/edit" element={<CreateService key="edit-service" />} />
-            <Route path="service/:id/view" element={<CreateService key="view-service" />} />
-            <Route path="service/create" element={<CreateService key="create-service" />} />
+            <Route
+              path="service/:id/edit"
+              element={<CreateService key="edit-service" />}
+            />
+            <Route
+              path="service/:id/view"
+              element={<CreateService key="view-service" />}
+            />
+            <Route
+              path="service/create"
+              element={<CreateService key="create-service" />}
+            />
 
             <Route path="settings/units" element={<Unit />} />
             <Route path="settings/categories" element={<Category />} />
