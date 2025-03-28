@@ -13,14 +13,12 @@ import {
   DEFAULT_PAGE_SIZE,
   thousanSeparatorformatter,
   thousanSeparatorparser,
-  updateTotalCost,
 } from "../../utils.jsx";
 
 import { StatusTag } from "../../components/StatusTag.jsx";
 import CustomerSection from "../../components/CustomerSection.jsx";
 import PaintSection from "../../components/PaintSection.jsx";
 import PaymentSection from "../../components/PaymentSection.jsx";
-import CollapseSection from "../../components/CollapseSection.jsx";
 import styles from "../../components/CustomForm.module.css";
 import { usePaintFormPatch } from "../../hooks/usePaintFormPatch.jsx";
 import { DownloadOutlined } from "@ant-design/icons";
