@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { API_ROUTES, BASE_URL, openNotification } from "../utils.jsx";
 import { useServiceMutation } from "./useServiceMutation.jsx";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,6 +16,17 @@ export function useSaveServiceForm(form, id, editMode) {
       "Record save successfully",
     );
     queryClient.invalidateQueries("services");
+  }
+
+  function createPaintItemSuccessCallBack(jsonResponse) {
+    navigate(`/paint/${jsonResponse.data}/edit`);
+    openNotification(
+      "post-success",
+      "success",
+      "Success",
+      "Record save successfully",
+    );
+    queryClient.invalidateQueries("paints");
   }
 
   function editPrintSuccessCallBack(jsonResponse) {
@@ -45,8 +55,24 @@ export function useSaveServiceForm(form, id, editMode) {
     );
   }
 
+
+    function updatePaintItemSuccessCallBack() {
+        queryClient.invalidateQueries({ queryKey: ["singlePaint", id] });
+        queryClient.invalidateQueries("paints");
+        openNotification(
+            "post-success",
+            "success",
+            "Success",
+            "Record updated successfully",
+        );
+    }
+
   const { mutate: createItem } = useServiceMutation({
     successCallBack: createItemSuccessCallBack,
+  });
+
+  const { mutate: createPaintItem } = useServiceMutation({
+    successCallBack: createPaintItemSuccessCallBack,
   });
 
   // const { mutate: createFinalize } = useServiceMutation({
@@ -64,6 +90,11 @@ export function useSaveServiceForm(form, id, editMode) {
   const { mutate: updateItem } = useServiceMutation({
     successCallBack: updateItemSuccessCallBack,
   });
+
+
+    const { mutate: updatePaintItem } = useServiceMutation({
+        successCallBack: updatePaintItemSuccessCallBack,
+    });
 
   function createPayload(values, url, httpMethod, status = "DRAFT") {
     const { services, spares } = values;
@@ -87,6 +118,18 @@ export function useSaveServiceForm(form, id, editMode) {
       ...values,
       services: _services,
       spares: _spares,
+      status: status,
+    };
+    return {
+      values: updatedValues,
+      urlPath: url,
+      method: httpMethod,
+    };
+  }
+
+  function createPaintPayload(values, url, httpMethod, status = "DRAFT") {
+    const updatedValues = {
+      ...values,
       status: status,
     };
     return {
@@ -126,6 +169,21 @@ export function useSaveServiceForm(form, id, editMode) {
         console.log(values);
 
         editPrintMutation(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const savePaintForLater = async () => {
+    try {
+      const values = await form.validateFields();
+      if (!editMode) {
+        const data = createPaintPayload(values, API_ROUTES.paints, "POST");
+        createPaintItem(data);
+      } else {
+        const data = createPaintPayload(values, `${API_ROUTES.paints}/${id}`, "PUT");
+        updatePaintItem(data);
       }
     } catch (e) {
       console.error(e);
@@ -246,5 +304,6 @@ export function useSaveServiceForm(form, id, editMode) {
     saveForLater,
     editPrint: saveAndPrint,
     finalize,
+    savePaintForLater,
   };
 }

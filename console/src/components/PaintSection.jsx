@@ -9,17 +9,6 @@ const PaintSection = () => {
   return (
     <Form.List
       name="paints"
-      rules={[
-          {
-              validator: async (_, names) => {
-                  if (!names || names.length < 1) {
-                      return Promise.reject(
-                          new Error("At least 1 Item required"),
-                      );
-                  }
-              },
-          },
-      ]}
     >
       {(fields, { add, remove }, { errors }) => (
         <>

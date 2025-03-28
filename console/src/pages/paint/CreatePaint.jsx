@@ -26,7 +26,8 @@ import { usePaintFormPatch } from "../../hooks/usePaintFormPatch.jsx";
 import { DownloadOutlined } from "@ant-design/icons";
 import PaymentSummary from "../../components/PaymentSummary.jsx";
 import ThousandSeparator from "../../components/ThousandSeparator.jsx";
-import { useRef, useState } from "react";
+import { useSaveServiceForm } from "../../hooks/useSaveServiceForm.jsx";
+import {useState} from "react";
 
 const CreatePaint = () => {
   const navigate = useNavigate();
@@ -34,11 +35,11 @@ const CreatePaint = () => {
   const { id } = useParams();
   const { paintQuery, editMode, viewMode } = usePaintFormPatch(form, id);
   const [moreDetails, setMoreDetails] = useState(true);
-  const storedEstimatedAmount = useRef(null);
   const paymentsForTotal = Form.useWatch("payments", form) ?? [];
   const paintForTotal = Form.useWatch("paints", form) ?? [];
   const includeEstimateAmount = Form.useWatch("includeEstimateAmount", form);
-  const estimateAmount = Form.useWatch("estimateAmount", form)??0;
+  const estimateAmount = Form.useWatch("estimateAmount", form) ?? 0;
+  const { savePaintForLater } = useSaveServiceForm(form, id, editMode);
 
   const columnsForTotal = [
     {
@@ -114,9 +115,7 @@ const CreatePaint = () => {
         label: "Remaining Amount",
       },
       {
-        amount: includeEstimateAmount
-          ? paymentTotal - estimateAmount
-          : 0,
+        amount: includeEstimateAmount ? paymentTotal - estimateAmount : 0,
         id: 5,
         label: "Net Profit",
       },
@@ -149,77 +148,6 @@ const CreatePaint = () => {
     }
   };
 
-  // const saveForLater = () => {
-  //   setSaveOnlyValidation(true);
-  //
-  //   form.setFields([
-  //     {
-  //       name: "paints",
-  //       errors: [], // Clear any existing errors
-  //     },
-  //     {
-  //       name: "initialPayment",
-  //       errors: [],
-  //     },
-  //
-  //     {
-  //       name: "initialPaymentDate",
-  //       errors: [],
-  //     },
-  //
-  //     {
-  //       name: "finalPaymentDate",
-  //       errors: [],
-  //     },
-  //   ]);
-  //
-  //   const fields = form.getFieldValue("paints") || [];
-  //   // TODO understand flatmap
-  //   form.setFields(
-  //     fields.flatMap((_, index) => [
-  //       { name: ["paints", index, "item"], errors: [] },
-  //       { name: ["paints", index, "price"], errors: [] },
-  //       { name: ["paints", index, "quantity"], errors: [] },
-  //     ]),
-  //   );
-  //
-  //   setTimeout(() => {
-  //     form
-  //       .validateFields()
-  //       .then((values) => {
-  //         let status = "DRAFT";
-  //         const { estimateAmount, initialPayment, finalPayment } = values;
-  //         if (initialPayment + finalPayment < estimateAmount) {
-  //           status = "PARTIALLY_PAID";
-  //         }
-  //         if (initialPayment + finalPayment === 0) {
-  //           status = "UNPAID";
-  //         }
-  //
-  //         if (!editMode) {
-  //           const updatedValues = { ...values, status: status };
-  //           const data = {
-  //             values: updatedValues,
-  //             urlPath: API_ROUTES.paints,
-  //             method: "POST",
-  //           };
-  //           createItem(data);
-  //         } else {
-  //           const updatedValues = { ...values, status: status };
-  //           const data = {
-  //             values: updatedValues,
-  //             urlPath: `${API_ROUTES.paints}/${id}`,
-  //             method: "PUT",
-  //           };
-  //           updateItem(data);
-  //         }
-  //       })
-  //       .catch((errorInfo) => {
-  //         console.error("Validation failed:", errorInfo);
-  //       });
-  //   }, 0);
-  // };
-  //
   // const finalize = async () => {
   //   setSaveOnlyValidation(false);
   //
@@ -253,18 +181,7 @@ const CreatePaint = () => {
   //   }, 0);
   // };
 
-  function saveForLater() {
-    form.validateFields();
-  }
-
   function handleMoreDetailChanged(checked) {
-    // if (checked) {
-    //   form.setFieldsValue({
-    //     estimateAmount: storedEstimatedAmount.current,
-    //   });
-    // } else {
-    //   storedEstimatedAmount.current = form.getFieldValue("estimateAmount");
-    // }
     setMoreDetails(checked);
   }
 
@@ -330,7 +247,11 @@ const CreatePaint = () => {
         <Space>
           {viewMode || (
             <>
-              <Button type="primary" htmlType="button" onClick={saveForLater}>
+              <Button
+                type="primary"
+                htmlType="button"
+                onClick={savePaintForLater}
+              >
                 Save for later
               </Button>
 

@@ -1,7 +1,14 @@
 import { Divider, Form, Table } from "antd";
 import ThousandSeparator from "./ThousandSeparator.jsx";
 
-export default function PaymentSummary({ updateTotalSummary, columns }) {
+export default function PaymentSummary({
+  updateTotalSummary,
+  columns,
+}) {
+
+
+
+
   return (
     <>
       <Divider orientation="left" plain>

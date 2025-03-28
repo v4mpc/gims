@@ -20,6 +20,7 @@ export function usePaintFormPatch(form, id) {
     ],
   });
   const [paintQuery] = results;
+  console.log(paintQuery.data)
 
   const editMode = pathname.toLowerCase().endsWith("edit") && id !== undefined;
   const viewMode =
@@ -46,7 +47,7 @@ export function usePaintFormPatch(form, id) {
         plateNumber: paintQuery.data.paint?.customerCar.plateNumber,
         model: paintQuery.data.paint?.customerCar.model,
         make: paintQuery.data.paint?.customerCar.make,
-        estimateAmount: paintQuery.data.paint?.esitamteAmount,
+          estimateAmount: paintQuery.data.paint?.estimateAmount,
         includeEstimateAmount: paintQuery.data.paint?.includeEstimateAmount,
         status: paintQuery.data.paint?.status,
         paints: paintQuery.data.paint?.paints.map((p) => ({

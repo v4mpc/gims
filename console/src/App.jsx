@@ -52,7 +52,8 @@ export default function App() {
             <Route path="reports" element={<Reports />} />
 
             <Route path="paint" element={<ListPaint />} />
-            <Route path="paint/:id" element={<CreatePaint key="edit-paint" />} />
+            <Route path="paint/:id/edit" element={<CreatePaint key="edit-paint" />} />
+            <Route path="paint/:id/view" element={<CreatePaint key="view-paint" />} />
             <Route path="paint/create" element={<CreatePaint key="create-paint" />} />
 
             <Route path="service" element={<ListService />} />

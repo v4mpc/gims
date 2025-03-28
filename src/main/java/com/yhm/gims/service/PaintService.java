@@ -89,6 +89,7 @@ public class PaintService {
         Paint updatePaint = paintRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Paint not exist with id " + id));
         updatePaint.setCustomerCar(paint.getCustomerCar());
         updatePaint.setEstimateAmount(paint.getEstimateAmount());
+        updatePaint.setIncludeEstimateAmount(paint.getIncludeEstimateAmount());
         updatePaint.setStatus(paint.getStatus());
         updatePaint.getPaints().clear();
         for (PaintLineItem p : paint.getPaints()) {

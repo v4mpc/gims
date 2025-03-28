@@ -46,17 +46,34 @@ const listPaintColumns = [
     key: "amounts",
     dataIndex: "amounts",
     render: (_, record) => {
-      const totalPaid = record.paint.initialPayment + record.paint.finalPayment;
-      const estimateAmount = record.paint.estimateAmount;
-      const remain =
-        estimateAmount - totalPaid >= 0 ? estimateAmount - totalPaid : 0;
-      return (
-        <Flex vertical key='am'>
-          <Space key={`make${record.paint.id}12`}>Total : {<ThousandSeparator key={`make${record.paint.id}124`} value={estimateAmount} />}</Space>
-          <Space key={`model${record.paint.id}13`}>Paid : {<ThousandSeparator key={`make${record.paint.id}12g`} value={totalPaid} />}</Space>
-          <Space key={`model${record.paint.id}34`}>Remaining : {<ThousandSeparator key={`make${record.paint.id}12k`} value={remain} />}</Space>
-        </Flex>
-      );
+        const totalPaid = record.paint.payments.reduce(
+            (acc, curr) => acc + curr.amount,
+            0,
+        );
+        const grandTotal =
+            record.paint.paints.reduce(
+                (acc, cr) => acc + cr.quantity * cr.price,
+                0,
+            )
+        const remain =Math.max(
+            record.paint.includeEstimateAmount
+                ? record.paint.estimateAmount - totalPaid
+                : grandTotal - totalPaid,
+            0,
+        );
+        return (
+            <Flex vertical key={`amount${record.paint.id}`}>
+                <Space key={`cost${record.paint.id}`}>
+                    Total cost : {<ThousandSeparator value={grandTotal} />}
+                </Space>
+                <Space key={`paid${record.paint.id}`}>
+                    Paid : {<ThousandSeparator value={totalPaid} />}
+                </Space>
+                <Space key={`rem${record.paint.id}`}>
+                    Remaining : {<ThousandSeparator value={remain} />}
+                </Space>
+            </Flex>
+        );
     },
   },
 

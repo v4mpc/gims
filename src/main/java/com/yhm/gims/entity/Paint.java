@@ -29,9 +29,9 @@ public class Paint extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private CustomerCar customerCar;
 
-    @NotNull
+
     @Column(name = "estimate_amount")
-    private Float estimateAmount;
+    private Float estimateAmount = 0F;
 
 
     @OneToMany(mappedBy = "paint", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -46,7 +46,7 @@ public class Paint extends BaseEntity {
     private Status status;
 
 
-    private Boolean includeEstimateAmount;
+    private Boolean includeEstimateAmount = true;
 
 
     public void addLineItem(PaintLineItem pli) {
@@ -60,30 +60,5 @@ public class Paint extends BaseEntity {
         sp.setPaint(this);
     }
 
-
-    public InvoicePdf generateInvoice() {
-        List<InvoicePdfItem> items = new ArrayList<>();
-        for (PaintLineItem paintLineItem : this.getPaints()) {
-            InvoicePdfItem invoicePdfItem = InvoicePdfItem.builder()
-                    .description(paintLineItem.getItem())
-                    .price(paintLineItem.getPrice())
-                    .quantity(paintLineItem.getQuantity().floatValue())
-                    .build();
-            items.add(invoicePdfItem);
-        }
-        Date today = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        String formattedDate = formatter.format(today);
-
-        return InvoicePdf.builder()
-                .customerName(this.getCustomerCar().getCustomer().getName())
-                .address(this.customerCar.getCustomer().getAddress())
-                .invoiceDate(formattedDate)
-                .percentageVatInDecimal(0F)
-                .invoiceNumber("AV-INV-" + this.getId())
-                .items(items)
-                .subTotal(items.stream().map(InvoicePdfItem::getTotalPrice).reduce(0F, Float::sum))
-                .build();
-    }
 
 }
