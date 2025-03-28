@@ -13,7 +13,8 @@ import { useFormPatch } from "../../hooks/useFormPatch.jsx";
 import PaymentSummary from "../../components/PaymentSummary.jsx";
 import { useState } from "react";
 import { useSaveServiceForm } from "../../hooks/useSaveServiceForm.jsx";
-import {DownloadOutlined} from "@ant-design/icons";
+import { DownloadOutlined } from "@ant-design/icons";
+import ThousandSeparator from "../../components/ThousandSeparator.jsx";
 
 const CreateService = () => {
   const [form] = Form.useForm();
@@ -21,29 +22,49 @@ const CreateService = () => {
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
-  const { serviceQuery,editMode,viewMode } = useFormPatch(
+  const { serviceQuery, editMode, viewMode } = useFormPatch(
     form,
     id,
     setSpares,
     setServices,
   );
 
-  const {saveForLater, editPrint, finalize } =
-    useSaveServiceForm(form, id, editMode);
+  const paymentsForTotal = Form.useWatch("payments",form) ?? [];
+  const sparesForTotal = Form.useWatch("spares",form) ?? [];
+  const servicesForTotal = Form.useWatch("services",form) ?? [];
 
+  const columnsForTotal = [
+    {
+      dataIndex: "label",
+      rowScope: "row",
+      key: "label",
+      width: "40%",
+    },
+    {
+      dataIndex: "amount",
+      key: "amount",
+      render: (_, record) => (
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <span>
+            <ThousandSeparator value={record.amount} />
+          </span>
+          <span>TZS</span>
+        </div>
+      ),
+    },
+  ];
 
-
-
-
+  const { saveForLater, editPrint, finalize } = useSaveServiceForm(
+    form,
+    id,
+    editMode,
+  );
   const onValueChanged = (changed, all) => {
-
     if (Object.hasOwn(changed, "payments")) {
       form.setFieldsValue({
         totals: updateTotalCost(form),
       });
     }
-
-
     if (Object.hasOwn(changed, "services")) {
       form.setFieldsValue({
         totals: updateTotalCost(form),
@@ -65,6 +86,38 @@ const CreateService = () => {
     }
   };
 
+
+    function updateTotalSummary() {
+      const paymentTotal =
+        paymentsForTotal.reduce(
+          (acc, curr) => Number(acc) + Number(curr?.amount ?? 0),
+          0,
+        ) ?? 0;
+
+      const serviceTotal = servicesForTotal.reduce(
+        (acc, curr) =>
+          Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+        0,
+      );
+      const spareTotal =
+        sparesForTotal.reduce(
+          (acc, curr) =>
+            Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+          0,
+        ) ?? 0;
+
+      return [
+        { amount: serviceTotal + spareTotal, id: 1, label: "Total Cost" },
+        { amount: paymentTotal, id: 2, label: "Total Paid" },
+        {
+          amount: Math.max(serviceTotal + spareTotal - paymentTotal, 0),
+          id: 3,
+          label: "Remaining Amount",
+        },
+      ];
+    }
+
+
   return (
     <Form
       key="serviceForm"
@@ -79,7 +132,12 @@ const CreateService = () => {
       <Flex justify="space-between">
         <StatusTag status={serviceQuery.data.service?.status} />
         <h3>Service details</h3>
-        <Button type="dashed" disabled={false} icon={<DownloadOutlined />} onClick={editPrint}>
+        <Button
+          type="dashed"
+          disabled={false}
+          icon={<DownloadOutlined />}
+          onClick={editPrint}
+        >
           Download invoice
         </Button>
       </Flex>
@@ -95,14 +153,10 @@ const CreateService = () => {
         setServices={setServices}
       />
 
-      <SpareSection
-        viewMode={viewMode}
-        spares={spares}
-        setSpares={setSpares}
-      />
+      <SpareSection viewMode={viewMode} spares={spares} setSpares={setSpares} />
 
       <PaymentSection viewMode={viewMode} />
-      <PaymentSummary />
+      <PaymentSummary updateTotalSummary={updateTotalSummary} columns={columnsForTotal} />
 
       <Divider orientation="left" plain />
       <Flex justify="space-between">
@@ -119,8 +173,6 @@ const CreateService = () => {
           </Button>
         </Space>
         <Space>
-
-
           {viewMode || (
             <>
               <Button type="primary" onClick={saveForLater} htmlType="button">

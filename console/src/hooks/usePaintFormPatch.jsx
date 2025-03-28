@@ -32,11 +32,12 @@ export function usePaintFormPatch(form, id) {
       payments: [],
       paints: [],
       status: "DRAFT",
+      estimateAmount: null,
+      includeEstimateAmount: true,
     });
   }, []);
 
   useEffect(() => {
-
     if ((editMode || viewMode) && paintQuery.data) {
       form.setFieldsValue({
         customerName: paintQuery.data.customerName,
@@ -45,11 +46,12 @@ export function usePaintFormPatch(form, id) {
         plateNumber: paintQuery.data.paint?.customerCar.plateNumber,
         model: paintQuery.data.paint?.customerCar.model,
         make: paintQuery.data.paint?.customerCar.make,
+        estimateAmount: paintQuery.data.paint?.esitamteAmount,
         status: paintQuery.data.paint?.status,
-          paints: paintQuery.data.paint?.paints.map((p) => ({
-              ...p,
-              total: p.quantity * p.price,
-          })),
+        paints: paintQuery.data.paint?.paints.map((p) => ({
+          ...p,
+          total: p.quantity * p.price,
+        })),
         payments: paintQuery.data.paint?.payments.map((p) => {
           return {
             payment_date: dayjs(p.paymentDate),
