@@ -1,5 +1,6 @@
 package com.yhm.gims.domain;
 
+import com.yhm.gims.domain.enumaration.Status;
 import com.yhm.gims.entity.*;
 import com.yhm.gims.exception.ResourceNotFoundException;
 import com.yhm.gims.repository.PaintRepository;
@@ -18,7 +19,7 @@ public class PaintInvoice extends BaseInvoice {
     private final Integer id;
 
     public InvoicePdf generateInvoice() {
-        Paint paint = paintRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not exist with id " + id));
+        Paint paint = paintRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("paint not exist with id " + id));
         List<InvoicePdfItem> items = new ArrayList<>();
         for (PaintLineItem paintLineItem : paint.getPaints()) {
             InvoicePdfItem invoicePdfItem = InvoicePdfItem.builder()
@@ -33,9 +34,17 @@ public class PaintInvoice extends BaseInvoice {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         String formattedDate = formatter.format(today);
 
+
+
+        String title = "PROFORMA INVOICE";
+        if (paint.getStatus().equals(Status.FINALIZED)) {
+            title = "TAX INVOICE";
+        }
+
         return InvoicePdf.builder()
                 .customerName(paint.getCustomerCar().getCustomer().getName())
                 .address(paint.getCustomerCar().getCustomer().getAddress())
+                .title(title)
                 .invoiceDate(formattedDate)
                 .percentageVatInDecimal(0F)
                 .invoiceNumber("AV-INV-" + paint.getId())

@@ -1,6 +1,7 @@
 package com.yhm.gims.controller;
 
 
+import com.yhm.gims.domain.ApiResponse;
 import com.yhm.gims.dto.PaintDto;
 import com.yhm.gims.dto.PaintDto;
 import com.yhm.gims.entity.Paint;
@@ -29,17 +30,18 @@ public class PaintController {
     }
 
     @PostMapping
-    public ResponseEntity<Paint> save(@Valid @RequestBody Paint paint) {
-        paintService.save(paint);
-        return ResponseEntity.ok(paint);
+    public ResponseEntity<ApiResponse<Integer>> save(@Valid @RequestBody Paint paint) {
+        Paint dpaint = paintService.save(paint);
+        ApiResponse<Integer> response = new ApiResponse<>(true, "Success", dpaint.getId());
+        return ResponseEntity.ok(response);
     }
 
 
-
     @PutMapping("{id}")
-    public ResponseEntity<Paint> update(@PathVariable int id, @RequestBody Paint paint) {
+    public ResponseEntity<ApiResponse<Integer>> update(@PathVariable int id, @RequestBody Paint paint) {
         Paint p = paintService.update(paint, id);
-        return ResponseEntity.ok(p);
+        ApiResponse<Integer> response = new ApiResponse<>(true, "Success", id);
+        return ResponseEntity.ok(response);
     }
 
 
@@ -48,7 +50,6 @@ public class PaintController {
         PaintDto p = paintService.get(id);
         return ResponseEntity.ok(p);
     }
-
 
 
     @GetMapping("/all")

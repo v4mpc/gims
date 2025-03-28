@@ -23,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "paints")
-public class Paint extends BaseEntity  {
+public class Paint extends BaseEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
@@ -34,46 +34,30 @@ public class Paint extends BaseEntity  {
     private Float estimateAmount;
 
 
-    @Column(name = "initial_payment_date")
-    private LocalDate initialPaymentDate;
-
-
-    @Column(name = "initial_payment_amount")
-    private Float initialPayment;
-
-
-    @Column(name = "final_payment_date")
-    private LocalDate finalPaymentDate;
-
-
-    @Column(name = "final_payment_amount")
-    private Float finalPayment;
-
-
     @OneToMany(mappedBy = "paint", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PaintLineItem> paints = new ArrayList<>();
 
 
-    @NotNull
-    @ManyToOne
-    private PaymentCatalog paymentMethod;
-
-
-    @Column(name = "pay_via_insurance")
-    private Boolean payViaInsurance = false;
-
-
-    private String insuranceName;
-
+    @OneToMany(mappedBy = "paint", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PaintPayments> payments = new ArrayList<>();
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private Status status;
 
 
+    private Boolean includeEstimateAmount;
+
+
     public void addLineItem(PaintLineItem pli) {
         paints.add(pli);
         pli.setPaint(this);
+    }
+
+
+    public void addPayments(PaintPayments sp) {
+        payments.add(sp);
+        sp.setPaint(this);
     }
 
 

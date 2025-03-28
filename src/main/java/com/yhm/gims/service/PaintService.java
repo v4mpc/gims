@@ -63,41 +63,42 @@ public class PaintService {
 
     public PaintDto get(Integer paintId) {
         Paint paint = paintRepository.findById(paintId).orElseThrow(() -> new ResourceNotFoundException("Paint not exist with id " + paintId));
-        return toPaintDto(paint, paint.getCustomerCar().getCustomer().getName(),paint.getCustomerCar().getCustomer().getPhone());
+        return toPaintDto(paint, paint.getCustomerCar().getCustomer().getName(), paint.getCustomerCar().getCustomer().getPhone());
     }
 
 
     @Transactional
-    public void save(Paint paint) {
+    public Paint save(Paint paint) {
         for (PaintLineItem paintLineItem : paint.getPaints()) {
             paintLineItem.setPaint(paint);
         }
-        paintRepository.save(paint);
+
+        for (PaintPayments paintPayment : paint.getPayments()) {
+            paintPayment.setPaint(paint);
+        }
+       return paintRepository.save(paint);
     }
 
 
-
-
-    public List<Paint> findByMonthAndYear(int month, int year){
+    public List<Paint> findByMonthAndYear(int month, int year) {
 //        TODO :: filter only those with is_sale=true;
-        return paintRepository.findByMonthAndYear(month,year);
+        return paintRepository.findByMonthAndYear(month, year);
     }
 
     public Paint update(Paint paint, int id) {
         Paint updatePaint = paintRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Paint not exist with id " + id));
         updatePaint.setCustomerCar(paint.getCustomerCar());
         updatePaint.setEstimateAmount(paint.getEstimateAmount());
-        updatePaint.setInitialPaymentDate(paint.getInitialPaymentDate());
-        updatePaint.setInitialPayment(paint.getInitialPayment());
-        updatePaint.setFinalPaymentDate(paint.getFinalPaymentDate());
-        updatePaint.setFinalPayment(paint.getFinalPayment());
-        updatePaint.setPaymentMethod(paint.getPaymentMethod());
-        updatePaint.setPayViaInsurance(paint.getPayViaInsurance());
-        updatePaint.setInsuranceName(paint.getInsuranceName());
         updatePaint.setStatus(paint.getStatus());
         updatePaint.getPaints().clear();
         for (PaintLineItem p : paint.getPaints()) {
             updatePaint.addLineItem(p);
+        }
+
+
+        updatePaint.getPayments().clear();
+        for (PaintPayments p : paint.getPayments()) {
+            updatePaint.addPayments(p);
         }
         paintRepository.save(updatePaint);
         return updatePaint;

@@ -47,6 +47,7 @@ export function usePaintFormPatch(form, id) {
         model: paintQuery.data.paint?.customerCar.model,
         make: paintQuery.data.paint?.customerCar.make,
         estimateAmount: paintQuery.data.paint?.esitamteAmount,
+        includeEstimateAmount: paintQuery.data.paint?.includeEstimateAmount,
         status: paintQuery.data.paint?.status,
         paints: paintQuery.data.paint?.paints.map((p) => ({
           ...p,

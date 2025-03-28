@@ -68,7 +68,7 @@ public class DashboardService {
     }
 
     public Float getPaintTotalSells(List<Paint> paints) {
-        return paints.stream().map(p -> (p.getInitialPayment() + p.getFinalPayment())).reduce(0F, Float::sum);
+        return paints.stream().map(p -> (p.getPayments().stream().map(PaintPayments::getAmount).reduce(0F, Float::sum))).reduce(0F, Float::sum);
     }
 
 
@@ -103,12 +103,12 @@ public class DashboardService {
         return localDates.stream().map((d) -> sales.stream().filter(fp -> (fp.getCreatedAt().isEqual(d))).map(sf -> sf.getSalePrice() * sf.getQuantity()).reduce(0F, Float::sum)).toList();
 
     }
-
-    public List<Float> getPaintTrend(List<Paint> paints, Integer daysInMonth, YearMonth yearMonth) {
-        List<LocalDate> localDates = DateUtil.getLocalDateList(daysInMonth, yearMonth);
-        return localDates.stream().map((d) -> paints.stream().filter(fp -> (fp.getCreatedAt().isEqual(d) && fp.getStatus().equals(Status.FINALIZED))).map(sf -> sf.getInitialPayment() + sf.getFinalPayment()).reduce(0F, Float::sum)).toList();
-
-    }
+//
+//    public List<Float> getPaintTrend(List<Paint> paints, Integer daysInMonth, YearMonth yearMonth) {
+//        List<LocalDate> localDates = DateUtil.getLocalDateList(daysInMonth, yearMonth);
+//        return localDates.stream().map((d) -> paints.stream().filter(fp -> (fp.getCreatedAt().isEqual(d) && fp.getStatus().equals(Status.FINALIZED))).map(sf -> sf.getInitialPayment() + sf.getFinalPayment()).reduce(0F, Float::sum)).toList();
+//
+//    }
 
 
     public List<Float> getServiceTrend(List<GService> services, Integer daysInMonth, YearMonth yearMonth) {
