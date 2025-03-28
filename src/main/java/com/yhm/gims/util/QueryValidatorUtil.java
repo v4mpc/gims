@@ -27,12 +27,6 @@ public class QueryValidatorUtil {
             }
         }
 
-        // Check for allowed keywords (optional)
-        for (String word : words) {
-            if (!ALLOWED_KEYWORDS.contains(word) && !word.matches("[A-Z_]+")) {
-                return false;
-            }
-        }
 
         return true;
     }
