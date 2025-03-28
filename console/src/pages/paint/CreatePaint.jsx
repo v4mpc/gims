@@ -38,6 +38,7 @@ const CreatePaint = () => {
   const paymentsForTotal = Form.useWatch("payments", form) ?? [];
   const paintForTotal = Form.useWatch("paints", form) ?? [];
   const includeEstimateAmount = Form.useWatch("includeEstimateAmount", form);
+  const estimateAmount = Form.useWatch("estimateAmount", form)??0;
 
   const columnsForTotal = [
     {
@@ -104,14 +105,18 @@ const CreatePaint = () => {
       { amount: paymentTotal, id: 3, label: "Total Paid" },
       {
         amount: Math.max(
-          form.getFieldValue("estimateAmount") - paymentTotal,
+          includeEstimateAmount
+            ? estimateAmount - paymentTotal
+            : paintTotal - paymentTotal,
           0,
         ),
         id: 4,
         label: "Remaining Amount",
       },
       {
-        amount: paymentTotal - form.getFieldValue("estimateAmount"),
+        amount: includeEstimateAmount
+          ? paymentTotal - estimateAmount
+          : 0,
         id: 5,
         label: "Net Profit",
       },
@@ -129,8 +134,8 @@ const CreatePaint = () => {
     if (Object.hasOwn(changed, "includeEstimateAmount")) {
       if (!changed.includeEstimateAmount) {
         setMoreDetails(false);
-      }else{
-          setMoreDetails(true);
+      } else {
+        setMoreDetails(true);
       }
     }
 
