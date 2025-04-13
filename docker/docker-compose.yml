@@ -3,7 +3,7 @@ version: '3.7'
 services:
   gims-app:
     container_name: gims-application
-    image: vampc/gims:latest
+    image: vampc/gims:v005
     restart:  unless-stopped
     depends_on:
       gims-db:
@@ -15,6 +15,7 @@ services:
 
   gims-db:
     image: postgres:13.0-alpine
+    container_name: gims-database
     restart:  unless-stopped
     ports:
       - 5432:5432

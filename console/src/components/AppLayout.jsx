@@ -11,13 +11,13 @@ import {
     UploadOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme } from "antd";
-import BreadCrumbNav from "./BreadCrumbNav.jsx";
 import {
   API_ROUTES,
   BASE_URL,
   DEFAULT_PAGE_SIZE,
   openNotification,
 } from "../utils.jsx";
+import {useAuth} from "../providers/AuthProvider.jsx";
 
 const { Header, Content, Footer, Sider } = Layout;
 const items = [
@@ -174,17 +174,57 @@ const items = [
       },
     ],
   },
-  // {
-  //     key: "logout",
-  //     icon: <LogoutOutlined/>,
-  //     label: "Logout"
-  // },
+  {
+      key: "logout",
+      icon: <LogoutOutlined/>,
+      label: "Logout"
+  },
 ];
 
 const AppLayout = () => {
   const location = useLocation();
+    const { logout } = useAuth();
 
-  const {
+
+
+
+    async function logoutRequest() {
+
+        let initData = {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        };
+
+        const resp = await fetch(`${BASE_URL}/${API_ROUTES.logout}`,initData);
+        try {
+            if (!resp.ok) {
+
+                throw new Error("Network response was not ok");
+            }
+            logout();
+
+        } catch (e) {
+            console.error(e);
+            openNotification(e.message, "error", "Error", e.message);
+        }
+    }
+
+    const handleClick = (e) => {
+        console.log('Click:', e);
+        switch (e.key) {
+            case 'logout':
+                logoutRequest();
+                break;
+            default:
+                console.log('Unknown action');
+        }
+    };
+
+
+    const {
     token: { colorBgContainer, borderRadiusLG, headerBg },
   } = theme.useToken();
   return (
@@ -201,7 +241,7 @@ const AppLayout = () => {
       >
         <div className="demo-logo-vertical" />
         <Menu
-          onClick={() => {}}
+            onClick={handleClick}
           theme="dark"
           mode="inline"
           defaultOpenKeys={["settings"]}

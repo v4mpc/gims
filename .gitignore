@@ -34,3 +34,6 @@ build/
 .vscode/
 .DS_Store
 .env
+assets/*.css
+assets/*.js
+templates/index.html
