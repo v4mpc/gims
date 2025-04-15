@@ -43,7 +43,6 @@ pipeline {
         stage('Publish Container') {
             agent any
             steps {
-                sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                 script{
                     if (env.BRANCH_NAME == 'main') {
                         sh "docker push vampc/gims:latest"
@@ -58,6 +57,7 @@ pipeline {
     }
 
     post {
+        agent any
         always {
             sh 'docker logout'
         }
