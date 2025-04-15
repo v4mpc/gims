@@ -7,7 +7,7 @@ services:
     restart:  unless-stopped
     container_name: gims-database-local
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
