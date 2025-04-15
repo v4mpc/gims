@@ -1,7 +1,7 @@
 pipeline {
     agent none
 
-    stages{
+    stages {
         stage('Build Frontend (Node.js with Yarn)') {
             agent {
                 docker {
@@ -22,9 +22,8 @@ pipeline {
         stage('Build Backend (Spring Boot)') {
             agent any
             steps {
-                dir('src') {
-                    sh './mvnw clean package -DskipTests'
-                }
+                sh './mvnw clean package -DskipTests'
+
             }
         }
     }
