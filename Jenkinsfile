@@ -29,6 +29,7 @@ pipeline {
         }
 
         stage('Login to Docker') {
+            agent any
             steps {
                 withCredentials([
                         string(credentialsId: 'DOCKER_USERNAME', variable: 'DOCKER_USERNAME'),
