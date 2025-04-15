@@ -19,19 +19,23 @@ pipeline {
                 }
             }
         }
-        stage('Build Backend') {
+
+        stage('Build Image') {
             agent any
             steps {
-                sh './mvnw clean package -DskipTests'
+                sh 'docker build --tag vampc/gims:latest --tag vampc/gims:v${BUILD_ID} -f docker/Dockerfile .'
 
             }
         }
 
-        stage('Build Container') {
-            agent any
+        stage('Login to Docker') {
             steps {
-                sh 'docker build --no-cache --tag vampc/gims:latest --tag vampc/gims:v${BUILD_ID} -f docker/Dockerfile .'
-
+                withCredentials([
+                        string(credentialsId: 'DOCKER_USERNAME', variable: 'DOCKER_USERNAME'),
+                        string(credentialsId: 'DOCKER_PASSWORD', variable: 'DOCKER_PASSWORD')
+                ]) {
+                    sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                }
             }
         }
 
