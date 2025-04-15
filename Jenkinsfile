@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
 
     stages {
         stage('Build Frontend') {
@@ -58,9 +58,7 @@ pipeline {
 
     post {
         always {
-            node {
-                sh 'docker logout'
-            }
+            sh 'docker logout'
         }
     }
 
