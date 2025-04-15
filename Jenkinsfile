@@ -39,8 +39,10 @@ pipeline {
             agent any
             steps {
                 sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                if (env.BRANCH_NAME == 'main') {
-                    sh "docker push vampc/gims:latest"
+                script{
+                    if (env.BRANCH_NAME == 'main') {
+                        sh "docker push vampc/gims:latest"
+                    }
                 }
                 sh 'docker push vampc/gims:v${BUILD_ID}'
 
