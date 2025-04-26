@@ -69,6 +69,7 @@ jobs:
 
     # Build Tauri Windows Installer
     - name: Build Tauri App
+      working-directory: src-tauri
       run: yarn tauri build
 
     # Upload Installer
