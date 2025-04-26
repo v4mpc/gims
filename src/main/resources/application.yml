@@ -1,18 +1,25 @@
 spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
   profiles:
     active: ${ACTIVE_PROFILE:dev}
   application:
     name: gims
   datasource:
-    url: jdbc:postgresql://${POSTGRESQL_HOST}:${POSTGRESQL_PORT}/${POSTGRESQL_DATABASE}
-    username: ${POSTGRESQL_USERNAME}
-    password: ${POSTGRESQL_PASSWORD}
+    url: jdbc:h2:file:./data/testdb;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
   jpa:
     show-sql: false
     hibernate:
       ddl-auto: ${DDL_AUTO:update}
     properties:
       format_sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
   web:
     resources:
       static-locations: classpath:/static/

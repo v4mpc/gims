@@ -16,7 +16,7 @@ public interface ExpenseRepository extends JpaRepository<Expense,Integer> {
 
 
     @Query("SELECT u FROM Expense u WHERE " +
-            "LOWER(u.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-            "CAST(u.amount AS string) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+            "u.name LIKE CONCAT('%', :searchTerm, '%') OR " +
+            "CAST(u.amount AS string) LIKE CONCAT('%', :searchTerm, '%')")
     Page<Expense> search(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

@@ -32,7 +32,7 @@ public class ExpenseService {
         if (searchTerm == null || searchTerm.isEmpty()) {
             return expenseRepository.findAll(pageable);
         } else {
-            return expenseRepository.search(searchTerm, pageable);
+            return expenseRepository.search(searchTerm.toLowerCase(), pageable);
         }
 
     }
