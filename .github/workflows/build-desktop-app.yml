@@ -31,10 +31,9 @@ jobs:
 
     # Setup Node.js and Yarn
     - name: Set up Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v3
       with:
-        node-version: '20'
-        cache: 'yarn'
+        node-version: 18
 
     - name: Install global Tauri CLI
       run: yarn global add @tauri-apps/cli
