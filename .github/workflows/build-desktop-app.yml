@@ -51,7 +51,7 @@ jobs:
         mkdir -p src/main/resources/static/
         cp -r console/dist/* src/main/resources/static/
         mkdir -p src/main/resources/templates
-        cp console/dist/index.html /src/main/resources/templates/index.html
+        cp console/dist/index.html /src/main/resources/templates/
 
     # Build Spring Boot Backend (with embedded frontend)
     - name: Build Spring Boot App
