@@ -48,7 +48,6 @@ jobs:
     # Copy React build into Spring Boot resources
     - name: Copy React build to Spring Boot static resources
       run: |
-        mkdir -p src/main/resources/static
         cp -r console/dist/* src/main/resources/static/
         cp console/dist/index.html /src/main/resources/templates/
 
