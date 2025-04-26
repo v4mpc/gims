@@ -10,7 +10,7 @@ use std::time::Duration;
 fn main() {
     // Start Spring Boot Backend
     Command::new("java")
-        .args(["-jar", "bin/app.jar"])
+        .args(["-jar", "bin/app.jar","--spring.profiles.active=prod"])
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .spawn()
