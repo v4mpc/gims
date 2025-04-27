@@ -37,3 +37,4 @@ build/
 assets/*.css
 assets/*.js
 templates/index.html
+*.db

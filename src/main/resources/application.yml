@@ -19,7 +19,6 @@ spring:
       ddl-auto: ${DDL_AUTO:update}
     properties:
       format_sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
   web:
     resources:
       static-locations: classpath:/static/

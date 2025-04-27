@@ -3,36 +3,58 @@
     windows_subsystem = "windows"
 )]
 
+use std::{
+    path::PathBuf,
+    process::{Child, Command},
+    sync::{Arc, Mutex},
+};
 
-use std::process::Command;
-use std::thread;
+use tauri::{Manager, RunEvent};
+
+use tauri::path::BaseDirectory;
 
 fn main() {
+    let java_process = Arc::new(Mutex::new(None));
+
     tauri::Builder::default()
-        .setup(|_app| {
-            // Start Spring Boot server in a background thread
-            thread::spawn(|| {
-                let java = if cfg!(target_os = "windows") {
-                    "java.exe"
+        .setup({
+            let java_process = Arc::clone(&java_process);
+            move |app| {
+                let app_handle = app.handle();
+
+                // Correct resolve with 2 arguments
+                let java_path: PathBuf = if cfg!(target_os = "windows") {
+                    app_handle
+                        .path()
+                        .resolve("jre/bin/java.exe", BaseDirectory::Resource)
+                        .expect("Failed to resolve path to bundled Java executable")
                 } else {
-                    "java"
+                    PathBuf::from("java")
                 };
 
-                let result = Command::new(java)
-                    .args(&["-jar", "bin/app.jar","--spring.profiles.active=dev"])
-                    .spawn();
+                let jar_path = app_handle
+                    .path()
+                    .resolve("bin/app.jar", BaseDirectory::Resource)
+                    .expect("Failed to resolve path to bundled JAR");
 
-                match result {
-                    Ok(_child) => {
-                        println!("Spring Boot server started successfully.");
-                    },
-                    Err(e) => {
-                        println!("Failed to start Spring Boot server: {:?}", e);
+                let child = Command::new(&java_path)
+                    .args(&["-jar", jar_path.to_str().unwrap(),"--spring.profiles.active=prod"])
+                    .spawn()?;
+
+                *java_process.lock().unwrap() = Some(child);
+                Ok(())
+            }
+        })
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run({
+            let java_process = Arc::clone(&java_process);
+            move |_app_handle, event| {
+                if let RunEvent::ExitRequested { .. } = event {
+                    if let Some(mut child) = java_process.lock().unwrap().take() {
+                        let _ = child.kill();
                     }
                 }
-            });
-            Ok(())
-        })
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+            }
+        });
 }
