@@ -23,15 +23,7 @@ fn main() {
                 let app_handle = app.handle();
 
                 // Correct resolve with 2 arguments
-                let java_path: PathBuf = if cfg!(target_os = "windows") {
-                    app_handle
-                        .path()
-                        .resolve("jre/bin/java.exe", BaseDirectory::Resource)
-                        .expect("Failed to resolve path to bundled Java executable")
-                } else {
-                    PathBuf::from("java")
-                };
-
+                let java_path=PathBuf::from("java")
                 let jar_path = app_handle
                     .path()
                     .resolve("bin/app.jar", BaseDirectory::Resource)
