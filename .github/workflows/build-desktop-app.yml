@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       # Setup Java (for Spring Boot)
       - name: Set up Java 17
@@ -32,16 +32,25 @@ jobs:
         with:
           node-version: 18
 
+
+      - name: Install Yarn
+        working-directory: ./console
+        run: corepack enable
+
+
+      - name: Install dependencies
+        working-directory: ./console
+        run: yarn install --frozen-lockfile
+
       # Build React frontend inside console/
       - name: Build React Frontend (console/)
-        working-directory: console
-        run: |
-          corepack enable
-          yarn install --immutable
-          yarn build
+        working-directory: ./console
+        run: yarn build
+
+
 
       - name: Install Tauri CLI
-        working-directory: console
+        working-directory: ./console
         run: cargo install tauri-cli
 
 
