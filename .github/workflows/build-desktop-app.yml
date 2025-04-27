@@ -49,10 +49,10 @@ jobs:
 
 
 
-      - name: Install Tauri CLI
-        working-directory: ./console
-        run: cargo install tauri-cli
-
+#      - name: Install Tauri CLI
+#        working-directory: ./console
+#        run: cargo install tauri-cli
+#
 
       # Build Spring Boot Backend (with embedded frontend)
       - name: Build Spring Boot App
