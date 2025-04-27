@@ -40,7 +40,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./console
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       # Build React frontend inside console/
       - name: Build React Frontend (console/)

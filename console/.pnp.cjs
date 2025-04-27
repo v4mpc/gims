@@ -31,6 +31,8 @@ const RAW_RUNTIME_STATE =
           ["@tanstack/eslint-plugin-query", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.51.15"],\
           ["@tanstack/react-query", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.51.16"],\
           ["@tanstack/react-query-devtools", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.51.16"],\
+          ["@tauri-apps/api", "npm:2.5.0"],\
+          ["@tauri-apps/cli", "npm:2.5.0"],\
           ["@types/react", "npm:18.3.3"],\
           ["@types/react-dom", "npm:18.3.0"],\
           ["@vitejs/plugin-react-swc", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:3.7.0"],\
@@ -1209,6 +1211,134 @@ const RAW_RUNTIME_STATE =
           "@types/react",\
           "@types/tanstack__react-query",\
           "react"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/api", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/@tauri-apps-api-npm-2.5.0-6661c8d53b-10c0.zip/node_modules/@tauri-apps/api/",\
+        "packageDependencies": [\
+          ["@tauri-apps/api", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/@tauri-apps-cli-npm-2.5.0-b079e9c74f-10c0.zip/node_modules/@tauri-apps/cli/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli", "npm:2.5.0"],\
+          ["@tauri-apps/cli-darwin-arm64", "npm:2.5.0"],\
+          ["@tauri-apps/cli-darwin-x64", "npm:2.5.0"],\
+          ["@tauri-apps/cli-linux-arm-gnueabihf", "npm:2.5.0"],\
+          ["@tauri-apps/cli-linux-arm64-gnu", "npm:2.5.0"],\
+          ["@tauri-apps/cli-linux-arm64-musl", "npm:2.5.0"],\
+          ["@tauri-apps/cli-linux-riscv64-gnu", "npm:2.5.0"],\
+          ["@tauri-apps/cli-linux-x64-gnu", "npm:2.5.0"],\
+          ["@tauri-apps/cli-linux-x64-musl", "npm:2.5.0"],\
+          ["@tauri-apps/cli-win32-arm64-msvc", "npm:2.5.0"],\
+          ["@tauri-apps/cli-win32-ia32-msvc", "npm:2.5.0"],\
+          ["@tauri-apps/cli-win32-x64-msvc", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-darwin-arm64", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-darwin-arm64-npm-2.5.0-989480dbe3/node_modules/@tauri-apps/cli-darwin-arm64/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-darwin-arm64", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-darwin-x64", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-darwin-x64-npm-2.5.0-2cc0f3606b/node_modules/@tauri-apps/cli-darwin-x64/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-darwin-x64", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-linux-arm-gnueabihf", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-linux-arm-gnueabihf-npm-2.5.0-7dc841944c/node_modules/@tauri-apps/cli-linux-arm-gnueabihf/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-linux-arm-gnueabihf", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-linux-arm64-gnu", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-linux-arm64-gnu-npm-2.5.0-d17b85d417/node_modules/@tauri-apps/cli-linux-arm64-gnu/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-linux-arm64-gnu", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-linux-arm64-musl", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-linux-arm64-musl-npm-2.5.0-026186c935/node_modules/@tauri-apps/cli-linux-arm64-musl/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-linux-arm64-musl", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-linux-riscv64-gnu", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-linux-riscv64-gnu-npm-2.5.0-ba8e2182db/node_modules/@tauri-apps/cli-linux-riscv64-gnu/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-linux-riscv64-gnu", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-linux-x64-gnu", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-linux-x64-gnu-npm-2.5.0-47858a95b4/node_modules/@tauri-apps/cli-linux-x64-gnu/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-linux-x64-gnu", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-linux-x64-musl", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-linux-x64-musl-npm-2.5.0-3ff41b5f50/node_modules/@tauri-apps/cli-linux-x64-musl/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-linux-x64-musl", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-win32-arm64-msvc", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-win32-arm64-msvc-npm-2.5.0-4ef7b681b9/node_modules/@tauri-apps/cli-win32-arm64-msvc/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-win32-arm64-msvc", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-win32-ia32-msvc", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-win32-ia32-msvc-npm-2.5.0-1509b7be8e/node_modules/@tauri-apps/cli-win32-ia32-msvc/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-win32-ia32-msvc", "npm:2.5.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@tauri-apps/cli-win32-x64-msvc", [\
+      ["npm:2.5.0", {\
+        "packageLocation": "./.yarn/unplugged/@tauri-apps-cli-win32-x64-msvc-npm-2.5.0-80e99966d8/node_modules/@tauri-apps/cli-win32-x64-msvc/",\
+        "packageDependencies": [\
+          ["@tauri-apps/cli-win32-x64-msvc", "npm:2.5.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3098,6 +3228,8 @@ const RAW_RUNTIME_STATE =
           ["@tanstack/eslint-plugin-query", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.51.15"],\
           ["@tanstack/react-query", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.51.16"],\
           ["@tanstack/react-query-devtools", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:5.51.16"],\
+          ["@tauri-apps/api", "npm:2.5.0"],\
+          ["@tauri-apps/cli", "npm:2.5.0"],\
           ["@types/react", "npm:18.3.3"],\
           ["@types/react-dom", "npm:18.3.0"],\
           ["@vitejs/plugin-react-swc", "virtual:c70b345fbc46ee7ec18eb0d3737c605a67ee8c411f3b3cc7495017f4447f2a0910fac869dc0ea2019cfadace2dc2b9549963f7d148ccb5fcc351da1ee686aae5#npm:3.7.0"],\
