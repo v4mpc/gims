@@ -2,8 +2,8 @@ name: Build Windows Setup Installer
 
 on:
   push:
-       tags:
-         - 'v*'
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -12,71 +12,61 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # Setup Java (for Spring Boot)
-    - name: Set up Java 17
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      # Setup Java (for Spring Boot)
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
-    # Setup Rust (for Tauri)
-    - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
+      # Setup Rust (for Tauri)
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
 
-    # Setup Node.js and Yarn
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
+      # Setup Node.js and Yarn
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - name: Install global Tauri CLI
-      run: yarn global add @tauri-apps/cli
+      # Build React frontend inside console/
+      - name: Build React Frontend (console/)
+        working-directory: console
+        run: |
+          corepack enable
+          yarn install
+          yarn build
 
-    # Build React frontend inside console/
-    - name: Build React Frontend (console/)
-      working-directory: console
-      run: |
-        yarn install
-        yarn build
+      - name: Install Tauri CLI
+        working-directory: console
+        run: cargo install tauri-cli
 
-    # Copy React build into Spring Boot resources
-    - name: Copy React build to Spring Boot static resources
-      run: |
-        mkdir -p src/main/resources/static/
-        cp -r console/dist/* src/main/resources/static/
-        mkdir -p src/main/resources/templates
-        cp console/dist/index.html src/main/resources/templates/
 
-    # Build Spring Boot Backend (with embedded frontend)
-    - name: Build Spring Boot App
-      run: ./mvnw clean package
+      # Build Spring Boot Backend (with embedded frontend)
+      - name: Build Spring Boot App
+        run: ./mvnw clean package
 
-    # Copy Spring Boot jar to Tauri bin/
-    - name: Copy Spring Boot JAR to Tauri project
-      run: |
-        mkdir -p src-tauri/bin
-        cp target/*.jar src-tauri/bin/app.jar
+      # Copy Spring Boot jar to Tauri bin/
+      - name: Copy Spring Boot JAR to Tauri project
+        run: |
+          mkdir -p console/src-tauri/bin
+          cp target/*.jar console/src-tauri/bin/app.jar
 
-    # Install Tauri app dependencies
-    - name: Install Tauri dependencies
-      run: yarn install
 
-    # Build Tauri Windows Installer
-    - name: Build Tauri App
-      working-directory: src-tauri
-      run: yarn tauri build
 
-    # Upload Installer
-    - name: Upload Installer
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-installer
-        path: |
-          src-tauri/target/release/bundle/msi/*.msi
-          src-tauri/target/release/bundle/msi/*.exe
+      # Build Tauri Windows Installer
+      - name: Build Tauri App
+        working-directory: console
+        run: yarn tauri build
+
+      # Upload Installer
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            console/src-tauri/target/release/bundle/msi/*.msi
+            console/src-tauri/target/release/bundle/msi/*.exe
