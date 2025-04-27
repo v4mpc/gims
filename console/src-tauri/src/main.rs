@@ -23,7 +23,7 @@ fn main() {
                 let app_handle = app.handle();
 
                 // Correct resolve with 2 arguments
-                let java_path=PathBuf::from("java")
+                let java_path=PathBuf::from("java");
                 let jar_path = app_handle
                     .path()
                     .resolve("bin/app.jar", BaseDirectory::Resource)
