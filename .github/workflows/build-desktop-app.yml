@@ -37,7 +37,7 @@ jobs:
         working-directory: console
         run: |
           corepack enable
-          yarn install
+          yarn install --frozen-lockfil
           yarn build
 
       - name: Install Tauri CLI
