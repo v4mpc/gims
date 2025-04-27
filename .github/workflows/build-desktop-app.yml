@@ -68,7 +68,7 @@ jobs:
 
       # Build Tauri Windows Installer
       - name: Build Tauri App
-        working-directory: console
+        working-directory: ./console
         run: yarn tauri build
 
       # Upload Installer
