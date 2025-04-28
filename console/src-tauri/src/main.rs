@@ -27,7 +27,15 @@ fn main() {
             move |app| {
                 let app_handle = app.handle();
 
-         let java_path = PathBuf::from("/Users/v4mpc/.sdkman/candidates/java/current/bin/java");
+
+
+                     let java_path: PathBuf = if cfg!(target_os = "windows") {
+                                    PathBuf::from("java")
+                                } else {
+                                   PathBuf::from("/Users/v4mpc/.sdkman/candidates/java/current/bin/java")
+                                };
+
+//          let java_path = PathBuf::from("/Users/v4mpc/.sdkman/candidates/java/current/bin/java");
                 let jar_path = app_handle
                     .path()
                     .resolve("bin/app.jar", BaseDirectory::Resource)
@@ -39,7 +47,7 @@ fn main() {
 
                 // Spawn Java backend
                 let mut cmd = Command::new(java_path);
-                cmd.args(&["-jar", jar_path.to_str().unwrap(),"--spring.profiles.active=dev"]);
+                cmd.args(&["-jar", jar_path.to_str().unwrap(),"--spring.profiles.active=prod"]);
 
                 #[cfg(target_os = "windows")]
                 {

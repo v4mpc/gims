@@ -41,10 +41,12 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
-                    var cfg = new CorsConfiguration();
-                    cfg.setAllowedOrigins(List.of("*"));
+                    CorsConfiguration cfg = new CorsConfiguration();
+                    cfg.setAllowedOriginPatterns(List.of("*"));
                     cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     cfg.setAllowedHeaders(List.of("*"));
+                    cfg.setAllowCredentials(true);
+                    cfg.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION));
                     return cfg;
                 }))
                 .authorizeHttpRequests(authz -> authz
@@ -62,31 +64,5 @@ public class SecurityConfig {
 
     }
 
-//
-//    @Bean
-//    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(userDetailsService);
-//        authenticationProvider.setPasswordEncoder(passwordEncoder);
-//
-//        return new ProviderManager(authenticationProvider);
-//    }
-
-
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-
-        CorsConfiguration cfg = new CorsConfiguration();
-        cfg.setAllowedOriginPatterns(List.of("*"));
-        cfg.setAllowedMethods(List.of("*"));
-        cfg.setAllowedHeaders(List.of("*"));
-        cfg.setAllowCredentials(true);
-        cfg.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION));
-
-        UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
-        src.registerCorsConfiguration("/**", cfg);
-        return src;
-    }
 
 }

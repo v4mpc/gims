@@ -158,15 +158,9 @@ export function toSalePayload(data, isSale) {
     }));
 }
 
-export async function putItem(data) {
-    let initData = {
-        method: data.method,
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    };
-    let modifiedData = data.values;
+export async function putItem(formData) {
+
+    let modifiedData = formData.values;
 
     if (Object.hasOwn(modifiedData, "createdAt")) {
         Date.prototype.toISOString = function () {
@@ -174,7 +168,7 @@ export async function putItem(data) {
         };
         modifiedData = {
             ...modifiedData,
-            createdAt: data.values.createdAt.format(DATE_FORMAT),
+            createdAt: formData.values.createdAt.format(DATE_FORMAT),
         };
     }
 
@@ -185,7 +179,7 @@ export async function putItem(data) {
         modifiedData = {
             ...modifiedData,
             // payments: data.values.finalPaymentDate.format(DATE_FORMAT),
-            payments: data.values.payments.map((p) => ({
+            payments: formData.values.payments.map((p) => ({
                 ...p,
                 paymentDate: p.payment_date.format(DATE_FORMAT),
                 paymentMethod: {id: p.payment_method_id},
@@ -214,13 +208,23 @@ export async function putItem(data) {
         };
     }
 
-    initData.body = JSON.stringify(modifiedData);
+    try {
+        if (formData.method === "POST") {
+            const {data} = await axiosClient.post(`${BASE_URL}/${formData.urlPath}`, modifiedData);
+            console.log("Created:", data);
+            return data;
+        } else {
+            const {data} = await axiosClient.put(`${BASE_URL}/${formData.urlPath}`, modifiedData);
+            console.log("updated:", data);
+            return data;
+        }
 
-    const resp = await fetch(`${BASE_URL}/${data.urlPath}`, initData);
-    if (!resp.ok) {
-        throw new Error("Network response was not ok");
+    } catch (err) {
+        console.error(err);
+        throw err;
     }
-    return resp.json();
+
+
 }
 
 export function optionLabelFilter(input, option) {
@@ -318,18 +322,13 @@ export async function bulkTx(data) {
     Date.prototype.toISOString = function () {
         return dayjs(this).format(DATE_FORMAT);
     };
-
-    const resp = await fetch(`${BASE_URL}/${API_ROUTES.bulkSale}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(toSalePayload(data.postData, data.isSale)),
-    });
-
-    if (!resp.ok) {
-        throw new Error("Network response was not ok");
+    let payload = toSalePayload(data.postData, data.isSale);
+    try {
+        const {data} = await axiosClient.post(`${BASE_URL}/${API_ROUTES.bulkSale}`, payload);
+        console.log("Created:", data);
+        return data;
+    } catch (err) {
+        console.error("Create failed:", err.response?.data || err.message);
+        throw err;
     }
-
-    return resp.json();
 }
