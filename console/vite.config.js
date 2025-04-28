@@ -5,6 +5,8 @@ import react from "@vitejs/plugin-react-swc";
 export default defineConfig({
   clearScreen: false,
   server: {
+    port: 5173,
+    strictPort: true,
     watch: {
       // tell vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],

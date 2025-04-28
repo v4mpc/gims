@@ -1,11 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 
 import PageNotFound from "./pages/PageNotFound.jsx";
-import AppLayout from "./components/AppLayout.jsx";
 import Unit from "./pages/unit/Unit.jsx";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { QUERY_STALE_TIME } from "./utils.jsx";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {QUERY_STALE_TIME} from "./utils.jsx";
+import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import Category from "./pages/category/Category.jsx";
 import Product from "./pages/product/Product.jsx";
 import ServiceCatalog from "./pages/serviceCatalog/serviceCatalog.jsx";
@@ -24,88 +23,94 @@ import ListService from "./pages/garage-service/ListService.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import ReportDesigner from "./pages/report/ReportDesigner.jsx";
 import Reports from "./pages/report/Reports.jsx";
-import { AuthProvider } from "./providers/AuthProvider.jsx";
+import {AuthProvider} from "./providers/AuthProvider.jsx";
 import Login from "./pages/Login.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 
+const QUERY_STALE_TIME_SEC = 1;
+
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: QUERY_STALE_TIME * 60 * 1000,
+    defaultOptions: {
+        queries: {
+            staleTime: QUERY_STALE_TIME_SEC * 1000,
+        },
     },
-  },
 });
 
 export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Navigate to="login" />} />
-            <Route path="/login" element={<Login />} />
-            <Route  element={<PrivateRoute />}>
-              <Route index element={<Navigate to="dashboard" />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="expense" element={<Expense />} />
-              <Route path="tx-success" element={<BuySuccess />} />
-              <Route path="stock-on-hand" element={<StockOnhand />} />
-              <Route path="buy" element={<Buy />} />
-              <Route path="sell" element={<Sell />} />
-              <Route path="customers" element={<Customer />} />
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools initialIsOpen={false}/>
 
-              <Route path="reports" element={<Reports />} />
+            <BrowserRouter>
+                <AuthProvider>
 
-              <Route path="paint" element={<ListPaint />} />
-              <Route
-                path="paint/:id/edit"
-                element={<CreatePaint key="edit-paint" />}
-              />
-              <Route
-                path="paint/:id/view"
-                element={<CreatePaint key="view-paint" />}
-              />
-              <Route
-                path="paint/create"
-                element={<CreatePaint key="create-paint" />}
-              />
+                    <Routes>
+                        <Route path="/" element={<Navigate to="login" replace={true}/>}/>
+                        <Route path="/login" element={<Login/>}/>
+                        <Route element={<PrivateRoute/>}>
+                            <Route index element={<Navigate to="dashboard" replace={true}/>}/>
+                            <Route path="dashboard" element={<Dashboard/>}/>
+                            <Route path="expense" element={<Expense/>}/>
+                            <Route path="tx-success" element={<BuySuccess/>}/>
+                            <Route path="stock-on-hand" element={<StockOnhand/>}/>
+                            <Route path="buy" element={<Buy/>}/>
+                            <Route path="sell" element={<Sell/>}/>
+                            <Route path="customers" element={<Customer/>}/>
 
-              <Route path="service" element={<ListService />} />
-              <Route
-                path="service/:id/edit"
-                element={<CreateService key="edit-service" />}
-              />
-              <Route
-                path="service/:id/view"
-                element={<CreateService key="view-service" />}
-              />
-              <Route
-                path="service/create"
-                element={<CreateService key="create-service" />}
-              />
+                            <Route path="reports" element={<Reports/>}/>
 
-              <Route path="settings/units" element={<Unit />} />
-              <Route path="settings/categories" element={<Category />} />
-              <Route path="settings/products" element={<Product />} />
-              <Route
-                path="settings/payment-catalog"
-                element={<PaymentCatalog />}
-              />
-              <Route
-                path="settings/GService-catalogs"
-                element={<ServiceCatalog />}
-              />
-              <Route path="settings/vehicles" element={<Vehicle />} />
-              <Route
-                path="settings/report-designer"
-                element={<ReportDesigner />}
-              />
-            </Route>
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  );
+                            <Route path="paint" element={<ListPaint/>}/>
+                            <Route
+                                path="paint/:id/edit"
+                                element={<CreatePaint key="edit-paint"/>}
+                            />
+                            <Route
+                                path="paint/:id/view"
+                                element={<CreatePaint key="view-paint"/>}
+                            />
+                            <Route
+                                path="paint/create"
+                                element={<CreatePaint key="create-paint"/>}
+                            />
+
+                            <Route path="service" element={<ListService/>}/>
+                            <Route
+                                path="service/:id/edit"
+                                element={<CreateService key="edit-service"/>}
+                            />
+                            <Route
+                                path="service/:id/view"
+                                element={<CreateService key="view-service"/>}
+                            />
+                            <Route
+                                path="service/create"
+                                element={<CreateService key="create-service"/>}
+                            />
+
+                            <Route path="settings/units" element={<Unit/>}/>
+                            <Route path="settings/categories" element={<Category/>}/>
+                            <Route path="settings/products" element={<Product/>}/>
+                            <Route
+                                path="settings/payment-catalog"
+                                element={<PaymentCatalog/>}
+                            />
+                            <Route
+                                path="settings/GService-catalogs"
+                                element={<ServiceCatalog/>}
+                            />
+                            <Route path="settings/vehicles" element={<Vehicle/>}/>
+                            <Route
+                                path="settings/report-designer"
+                                element={<ReportDesigner/>}
+                            />
+                        </Route>
+                        <Route path="*" element={<PageNotFound/>}/>
+                    </Routes>
+
+
+                </AuthProvider>
+            </BrowserRouter>
+        </QueryClientProvider>
+    );
 }

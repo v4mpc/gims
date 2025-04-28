@@ -1,14 +1,20 @@
 import {
-  Navigate,
+    Navigate,
 } from "react-router-dom";
-import { useAuth } from "../providers/AuthProvider.jsx";
+import {useAuth} from "../providers/AuthProvider.jsx";
 import AppLayout from "./AppLayout.jsx";
+import {Spin} from "antd";
 
 const PrivateRoute = () => {
-  const { isAuthenticated } = useAuth();
+    const {isAuthenticated, loading} = useAuth();
+    if (loading) {
+        return <Spin tip="Checking authentication..." fullscreen/>;
+    }
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace/>;
+    }
 
-  let next = "/login";
-  return isAuthenticated ? <AppLayout /> : <Navigate to={next} />;
+    return <AppLayout/>;
 };
 
 export default PrivateRoute;

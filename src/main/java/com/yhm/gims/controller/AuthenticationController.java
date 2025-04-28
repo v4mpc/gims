@@ -1,7 +1,7 @@
 package com.yhm.gims.controller;
 
 
-import com.yhm.gims.domain.LoginRequest;
+import com.yhm.gims.dto.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -33,7 +33,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) throws RuntimeException {
 
-        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
+        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.getUsername(), loginRequest.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
         SecurityContext context = securityContextHolderStrategy.createEmptyContext();
         context.setAuthentication(authenticationResponse);
@@ -43,13 +43,23 @@ public class AuthenticationController {
     }
 
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(HttpSession session) {
+        Object user = session.getAttribute("user");
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(401).build();
+        }
+    }
+
     @GetMapping("/status")
     public ResponseEntity<Map<String, Boolean>> checkAuthStatus(HttpServletRequest request) {
         Map<String, Boolean> authStatus = new HashMap<>();
         if (request.getSession(false) != null && request.getSession(false).getAttribute("user") != null) {
             authStatus.put("isAuthenticated", true);
         } else {
-            authStatus.put("isAuthenticated", true);
+            authStatus.put("isAuthenticated", false);
         }
         return ResponseEntity.ok(authStatus);
     }

@@ -5,7 +5,7 @@
 
 use std::{
     path::PathBuf,
-    process::{Child, Command},
+    process::{Command},
     sync::{Arc, Mutex},
 };
 
@@ -27,10 +27,10 @@ fn main() {
             move |app| {
                 let app_handle = app.handle();
 
-         let java_path = PathBuf::from("java");
+         let java_path = PathBuf::from("/Users/v4mpc/.sdkman/candidates/java/current/bin/java");
                 let jar_path = app_handle
                     .path()
-                    .resolve("bin/my-app.jar", BaseDirectory::Resource)
+                    .resolve("bin/app.jar", BaseDirectory::Resource)
                     .expect("Failed to resolve JAR path");
 
                 // Check if paths exist
@@ -39,7 +39,7 @@ fn main() {
 
                 // Spawn Java backend
                 let mut cmd = Command::new(java_path);
-                cmd.args(&["-jar", jar_path.to_str().unwrap()]);
+                cmd.args(&["-jar", jar_path.to_str().unwrap(),"--spring.profiles.active=dev"]);
 
                 #[cfg(target_os = "windows")]
                 {

@@ -1,7 +1,9 @@
-import { notification, DatePicker, Form } from "antd";
+import {notification, DatePicker, Form} from "antd";
 import dayjs from "dayjs";
 import qs from "qs";
 import ProductSelect from "./components/ProductSelect.jsx";
+import {jwtDecode as jwt_decode} from 'jwt-decode';
+import axiosClient from "./axiosClient.jsx";
 
 // export const BASE_URL = "http://localhost:3000";
 export const BASE_URL = "http://localhost:8080/api";
@@ -20,298 +22,314 @@ export const DASHBOARD_METRICS_PRECISION = 0;
 export const DASHBOARD_DIVIDER_ORIENTATION = "left";
 export const LINE_TENSION = 0.3;
 
-const { RangePicker } = DatePicker;
+const {RangePicker} = DatePicker;
 
 export const isEmpty = (obj) => {
-  return Object.keys(obj).length === 0;
+    return Object.keys(obj).length === 0;
 };
 
 export const API_ROUTES = {
-  products: "products",
-  expenses: "expenses",
-  dashboard: "dashboard",
-  sales: "sales",
-  paints: "paints",
-  stockOnhand: "stock-on-hand",
-  adjust: "stock-on-hand/adjust",
-  stockOnhandAll: "stock-on-hand/all",
-  units: "units",
-  services: "services",
-  vehicles: "vehicles",
-  vehiclesAll: "vehicles/all",
-  serviceCatalogs: "serviceCatalogs",
-  serviceCatalogsAll: "serviceCatalogs/all",
-  paymentCatalog: "paymentCatalog",
-  paymentCatalogAll: "paymentCatalog/all",
-  customers: "customers",
-  customersAll: "customers/all",
-  customerCars: "customers/cars",
-  categories: "categories",
-  categoriesAll: "categories/all",
-  unitsAll: "units/all",
-  bulkSale: "sales/bulk",
-  customReport: "custom-report",
-  productAll: "products/all",
-  fetchReportData: "custom-report/fetch-report",
-  users: "users",
-  exportInvoice: "export/invoice",
-  login: "auth/login",
-  logout: "auth/logout",
-  authStatus: "auth/status",
+    products: "products",
+    expenses: "expenses",
+    dashboard: "dashboard",
+    sales: "sales",
+    paints: "paints",
+    stockOnhand: "stock-on-hand",
+    adjust: "stock-on-hand/adjust",
+    stockOnhandAll: "stock-on-hand/all",
+    units: "units",
+    services: "services",
+    vehicles: "vehicles",
+    vehiclesAll: "vehicles/all",
+    serviceCatalogs: "serviceCatalogs",
+    serviceCatalogsAll: "serviceCatalogs/all",
+    paymentCatalog: "paymentCatalog",
+    paymentCatalogAll: "paymentCatalog/all",
+    customers: "customers",
+    customersAll: "customers/all",
+    customerCars: "customers/cars",
+    categories: "categories",
+    categoriesAll: "categories/all",
+    unitsAll: "units/all",
+    bulkSale: "sales/bulk",
+    customReport: "custom-report",
+    productAll: "products/all",
+    fetchReportData: "custom-report/fetch-report",
+    users: "users",
+    exportInvoice: "export/invoice",
+    login: "auth/login",
+    logout: "auth/logout",
+    authStatus: "auth/status",
 };
 
 export function openNotification(key, type, title, description) {
-  notification[type]({
-    key: key,
-    message: title,
-    description: description,
-  });
+    notification[type]({
+        key: key,
+        message: title,
+        description: description,
+    });
 }
 
 export function toCustomerCars(customers) {
-  const cars = customers.map((customer) => {
-    return customer.cars.map((car) => ({
-      id: car.id,
-      customerName: customer.name,
-      customerPhone: customer.phone,
-      plateNumber: car.plateNumber,
-      make: car.make,
-      model: car.model,
-      name: `${car.plateNumber}/${car.make}/${car.model}/${customer.name}`,
-    }));
-  });
+    const cars = customers.map((customer) => {
+        return customer.cars.map((car) => ({
+            id: car.id,
+            customerName: customer.name,
+            customerPhone: customer.phone,
+            plateNumber: car.plateNumber,
+            make: car.make,
+            model: car.model,
+            name: `${car.plateNumber}/${car.make}/${car.model}/${customer.name}`,
+        }));
+    });
 
-  return cars.reduce((acc, curr) => acc.concat(curr), []);
+    return cars.reduce((acc, curr) => acc.concat(curr), []);
 }
 
 
 export function generateSpareName(product) {
-  return `${product.isOil ? "💧" : "⚙️"}${product.code}/${product.name}/${product.category.name}`;
+    return `${product.isOil ? "💧" : "⚙️"}${product.code}/${product.name}/${product.category.name}`;
 }
 
 const getItemParams = (tableParams, searchQuery, searchCategory) => ({
-  size: tableParams.pagination?.pageSize,
-  page: tableParams.pagination?.current - 1,
-  sort: "id,desc",
-  q: searchQuery,
-  c: searchCategory,
+    size: tableParams.pagination?.pageSize,
+    page: tableParams.pagination?.current - 1,
+    sort: "id,desc",
+    q: searchQuery,
+    c: searchCategory,
 });
 
 export function thousanSeparatorformatter(value) {
-  return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export function thousanSeparatorparser(value) {
-  return value.replace(/\$\s?|(,*)/g, "");
+    return value.replace(/\$\s?|(,*)/g, "");
+}
+
+
+export function isJwtValid(token) {
+    if (!token) return false;
+    try {
+        const {exp} = jwt_decode(token);
+        return typeof exp === "number" && exp * 1000 > Date.now();
+    } catch {
+        return false;
+    }
 }
 
 export async function getData(
-  listPath,
-  tableParams,
-  searchQuery,
-  searchCategory,
+    listPath,
+    tableParams,
+    searchQuery,
+    searchCategory,
 ) {
-  const resp = await fetch(
-    `${BASE_URL}/${listPath}?${qs.stringify(getItemParams(tableParams, searchQuery, searchCategory))}`,
-  );
 
-  if (!resp.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return resp.json();
+
+    try {
+        const {data} = await axiosClient.get(
+            `${BASE_URL}/${listPath}?${qs.stringify(getItemParams(tableParams, searchQuery, searchCategory))}`,
+        );
+        return data;
+    } catch (err) {
+        console.error(err);
+    }
+
 }
 
 export async function getLookupData(listPath) {
-  const resp = await fetch(`${BASE_URL}/${listPath}`);
-
-  if (!resp.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return resp.json();
+    try {
+        const {data} = await axiosClient.get(
+            `${BASE_URL}/${listPath}`,
+        );
+        return data;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 export function toSalePayload(data, isSale) {
-  return data.map((item) => ({
-    productId: item.id,
-    isSale: isSale,
-    saleAdjustment: 0,
-    adjustmentQuantity: item.saleQuantity,
-    adjustmentDate: dayjs(item.saleDate, DATE_FORMAT),
-  }));
+    return data.map((item) => ({
+        productId: item.id,
+        isSale: isSale,
+        saleAdjustment: 0,
+        adjustmentQuantity: item.saleQuantity,
+        adjustmentDate: dayjs(item.saleDate, DATE_FORMAT),
+    }));
 }
 
 export async function putItem(data) {
-  let initData = {
-    method: data.method,
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  let modifiedData = data.values;
-
-  if (Object.hasOwn(modifiedData, "createdAt")) {
-    Date.prototype.toISOString = function () {
-      return dayjs(this).format(DATE_FORMAT);
+    let initData = {
+        method: data.method,
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
     };
-    modifiedData = {
-      ...modifiedData,
-      createdAt: data.values.createdAt.format(DATE_FORMAT),
-    };
-  }
+    let modifiedData = data.values;
 
-  if (Object.hasOwn(modifiedData, "payments")) {
-    Date.prototype.toISOString = function () {
-      return dayjs(this).format(DATE_FORMAT);
-    };
-    modifiedData = {
-      ...modifiedData,
-      // payments: data.values.finalPaymentDate.format(DATE_FORMAT),
-      payments: data.values.payments.map((p) => ({
-        ...p,
-        paymentDate: p.payment_date.format(DATE_FORMAT),
-        paymentMethod: { id: p.payment_method_id },
-      })),
-    };
-  }
+    if (Object.hasOwn(modifiedData, "createdAt")) {
+        Date.prototype.toISOString = function () {
+            return dayjs(this).format(DATE_FORMAT);
+        };
+        modifiedData = {
+            ...modifiedData,
+            createdAt: data.values.createdAt.format(DATE_FORMAT),
+        };
+    }
 
-  if (Object.hasOwn(modifiedData, "unitOfMeasure")) {
-    modifiedData = {
-      ...modifiedData,
-      unitOfMeasure: { id: modifiedData.unitOfMeasure },
-    };
-  }
+    if (Object.hasOwn(modifiedData, "payments")) {
+        Date.prototype.toISOString = function () {
+            return dayjs(this).format(DATE_FORMAT);
+        };
+        modifiedData = {
+            ...modifiedData,
+            // payments: data.values.finalPaymentDate.format(DATE_FORMAT),
+            payments: data.values.payments.map((p) => ({
+                ...p,
+                paymentDate: p.payment_date.format(DATE_FORMAT),
+                paymentMethod: {id: p.payment_method_id},
+            })),
+        };
+    }
 
-  if (Object.hasOwn(modifiedData, "customerCar")) {
-    modifiedData = {
-      ...modifiedData,
-      customerCar: { id: modifiedData.customerCar },
-    };
-  }
+    if (Object.hasOwn(modifiedData, "unitOfMeasure")) {
+        modifiedData = {
+            ...modifiedData,
+            unitOfMeasure: {id: modifiedData.unitOfMeasure},
+        };
+    }
 
-  if (Object.hasOwn(modifiedData, "category")) {
-    modifiedData = {
-      ...modifiedData,
-      category: { id: modifiedData.category },
-    };
-  }
+    if (Object.hasOwn(modifiedData, "customerCar")) {
+        modifiedData = {
+            ...modifiedData,
+            customerCar: {id: modifiedData.customerCar},
+        };
+    }
 
-  initData.body = JSON.stringify(modifiedData);
+    if (Object.hasOwn(modifiedData, "category")) {
+        modifiedData = {
+            ...modifiedData,
+            category: {id: modifiedData.category},
+        };
+    }
 
-  const resp = await fetch(`${BASE_URL}/${data.urlPath}`, initData);
-  if (!resp.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return resp.json();
+    initData.body = JSON.stringify(modifiedData);
+
+    const resp = await fetch(`${BASE_URL}/${data.urlPath}`, initData);
+    if (!resp.ok) {
+        throw new Error("Network response was not ok");
+    }
+    return resp.json();
 }
 
 export function optionLabelFilter(input, option) {
-  return option.label.toLowerCase().includes(input.toLowerCase());
+    return option.label.toLowerCase().includes(input.toLowerCase());
 }
 
 export function updateTotalCost(form) {
 
-  const totals = form.getFieldValue("totals") ?? [];
-  const services = form.getFieldValue("services") ?? [];
-  const payments = form.getFieldValue("payments") ?? [];
-  const paymentTotal =
-    payments.reduce(
-      (acc, curr) => Number(acc) + Number(curr?.amount ?? 0),
-      0,
-    ) ?? 0;
+    const totals = form.getFieldValue("totals") ?? [];
+    const services = form.getFieldValue("services") ?? [];
+    const payments = form.getFieldValue("payments") ?? [];
+    const paymentTotal =
+        payments.reduce(
+            (acc, curr) => Number(acc) + Number(curr?.amount ?? 0),
+            0,
+        ) ?? 0;
 
-  const serviceTotal = services.reduce(
-    (acc, curr) =>
-      Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
-    0,
-  );
-  const spares = form.getFieldValue("spares") ?? [];
-  const spareTotal =
-    spares.reduce(
-      (acc, curr) =>
-        Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
-      0,
-    ) ?? 0;
+    const serviceTotal = services.reduce(
+        (acc, curr) =>
+            Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+        0,
+    );
+    const spares = form.getFieldValue("spares") ?? [];
+    const spareTotal =
+        spares.reduce(
+            (acc, curr) =>
+                Number(acc) + Number(curr?.quantity ?? 0) * Number(curr?.price ?? 0),
+            0,
+        ) ?? 0;
 
-  return totals.map((total, key) => {
-    if (key === 0) {
-      return {
-        ...total,
-        amount: serviceTotal + spareTotal,
-      };
-    } else if (key === 1) {
-      return {
-        ...total,
-        amount: paymentTotal,
-      };
-    } else if (key === 2) {
-      return {
-        ...total,
-        amount: Math.max(serviceTotal + spareTotal - paymentTotal, 0),
-      };
-    } else {
-      console.error("Total key out of bound" + key);
-    }
-  });
+    return totals.map((total, key) => {
+        if (key === 0) {
+            return {
+                ...total,
+                amount: serviceTotal + spareTotal,
+            };
+        } else if (key === 1) {
+            return {
+                ...total,
+                amount: paymentTotal,
+            };
+        } else if (key === 2) {
+            return {
+                ...total,
+                amount: Math.max(serviceTotal + spareTotal - paymentTotal, 0),
+            };
+        } else {
+            console.error("Total key out of bound" + key);
+        }
+    });
 }
 
 export function filterOption(input, option) {
-  return (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+    return (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 }
 
 export function toObject(data) {
-  return JSON.parse(data);
+    return JSON.parse(data);
 }
 
 export function generateColumns(stringColumns) {
-  let objectColumns = toObject(stringColumns);
-  return objectColumns.map((column) => ({
-    title: column.displayName,
-    dataIndex: column.name,
-    key: column.name,
-    width: column.width,
-  }));
+    let objectColumns = toObject(stringColumns);
+    return objectColumns.map((column) => ({
+        title: column.displayName,
+        dataIndex: column.name,
+        key: column.name,
+        width: column.width,
+    }));
 }
 
 export function generateFilter(filter) {
-  if (filter.name === "product") {
-    return <ProductSelect key="product-select" />;
-  } else if (filter.name === "dateRange") {
-    return (
-      <Form.Item
-        label="Date range"
-        key="dateRange"
-        name="dateRange"
-        rules={[
-          {
-            required: true,
-            message: "Please date",
-          },
-        ]}
-      >
-        <RangePicker style={{ width: "100%" }} />
-      </Form.Item>
-    );
-  }
-  return null;
+    if (filter.name === "product") {
+        return <ProductSelect key="product-select"/>;
+    } else if (filter.name === "dateRange") {
+        return (
+            <Form.Item
+                label="Date range"
+                key="dateRange"
+                name="dateRange"
+                rules={[
+                    {
+                        required: true,
+                        message: "Please date",
+                    },
+                ]}
+            >
+                <RangePicker style={{width: "100%"}}/>
+            </Form.Item>
+        );
+    }
+    return null;
 }
 
 export async function bulkTx(data) {
-  Date.prototype.toISOString = function () {
-    return dayjs(this).format(DATE_FORMAT);
-  };
+    Date.prototype.toISOString = function () {
+        return dayjs(this).format(DATE_FORMAT);
+    };
 
-  const resp = await fetch(`${BASE_URL}/${API_ROUTES.bulkSale}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(toSalePayload(data.postData, data.isSale)),
-  });
+    const resp = await fetch(`${BASE_URL}/${API_ROUTES.bulkSale}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(toSalePayload(data.postData, data.isSale)),
+    });
 
-  if (!resp.ok) {
-    throw new Error("Network response was not ok");
-  }
+    if (!resp.ok) {
+        throw new Error("Network response was not ok");
+    }
 
-  return resp.json();
+    return resp.json();
 }

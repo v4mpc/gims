@@ -1,2 +1,11 @@
 src-tauri/data/testdb.trace.db
 src-tauri/data/testdb.mv.db
+app.jar
+
+
+data/*.mv.db
+data/*.trace.db
+logs/*.log
+tmp/
+*.pid
+/bin
